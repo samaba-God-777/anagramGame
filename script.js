@@ -410,28 +410,38 @@ if (!isSingleTense) {
   formLabel = $("formLabel");
 }
 
+function tenseToFilename(tense) {
+  return tense.toLowerCase().replace(/\s+/g, '-') + '.html';
+}
+
 function buildSidebar() {
   if (!sidebarNav) return;
   sidebarNav.innerHTML = "";
   TENSE_NAMES.forEach(tense => {
     const g = document.createElement("div"); g.className = "tense-group";
-    const t = document.createElement("button"); t.className = "tense-title"; t.textContent = tense; t.setAttribute("aria-expanded","false");
+    const h = document.createElement("div"); h.className = "tense-header";
+    const t = document.createElement("button"); t.className = "tense-title"; t.dataset.tense = tense; t.setAttribute("aria-expanded","false");
+    const ts = document.createElement("span"); ts.className = "tense-title-text"; ts.textContent = tense;
+    const ta = document.createElement("span"); ta.className = "tense-title-arrow"; ta.textContent = "▾";
+    t.appendChild(ts); t.appendChild(ta);
+    const l = document.createElement("a"); l.className = "tense-page-link"; l.href = tenseToFilename(tense); l.textContent = "↗"; l.title = `Open ${tense} page`; l.target = "_blank"; l.rel = "noopener"; l.setAttribute("aria-label", `${tense} page`);
+    h.appendChild(t); h.appendChild(l);
     const f = document.createElement("div"); f.className = "tense-forms";
     FORMS.forEach(form => {
       const b = document.createElement("button"); b.className = "form-btn"; b.textContent = FORM_LABELS[form]; b.dataset.tense = tense; b.dataset.form = form; f.appendChild(b);
     });
     t.addEventListener("click",()=>{ state.currentTense = tense; showTheory(tense); updateSidebarActive(); closeSidebar(); });
-    g.appendChild(t); g.appendChild(f); sidebarNav.appendChild(g);
+    g.appendChild(h); g.appendChild(f); sidebarNav.appendChild(g);
   });
 }
 
 function updateSidebarActive() {
   if (!sidebarNav) return;
-  sidebarNav.querySelectorAll(".tense-title").forEach(el => el.classList.toggle("active",el.textContent===state.currentTense));
+  sidebarNav.querySelectorAll(".tense-title").forEach(el => el.classList.toggle("active",el.dataset.tense===state.currentTense));
   sidebarNav.querySelectorAll(".form-btn").forEach(el => el.classList.toggle("active",el.dataset.tense===state.currentTense&&el.dataset.form===state.currentForm));
   sidebarNav.querySelectorAll(".tense-group").forEach(g => {
     const t = g.querySelector(".tense-title");
-    if (t.textContent===state.currentTense) { g.classList.add("open"); t.setAttribute("aria-expanded","true"); }
+    if (t.dataset.tense===state.currentTense) { g.classList.add("open"); t.setAttribute("aria-expanded","true"); }
     else { g.classList.remove("open"); t.setAttribute("aria-expanded","false"); }
   });
 }

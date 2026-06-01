@@ -215,22 +215,28 @@ body {
 .tense-group { border-bottom: 1px solid var(--color-border-light); }
 .tense-group:last-child { border-bottom: none; }
 
+.tense-header { display: flex; align-items: stretch; }
+
 .tense-title {
-  display: block; width: 100%; text-align: left; padding: 11px 20px;
+  flex: 1; display: flex; align-items: center; padding: 11px 16px 11px 20px;
   font-size: 13px; font-weight: 600; font-family: var(--font);
   color: var(--color-text); background: none; border: none; cursor: pointer;
-  transition: all var(--transition); position: relative;
+  transition: all var(--transition);
 }
-.tense-title::after {
-  content: ""; position: absolute; right: 18px; top: 50%;
-  transform: translateY(-50%);
-  border-left: 4px solid transparent; border-right: 4px solid transparent;
-  border-top: 5px solid var(--color-text-muted);
-  transition: transform var(--transition);
-}
-.tense-group.open .tense-title::after { transform: translateY(-50%) rotate(180deg); }
-.tense-title:hover { background: var(--color-sidebar-hover); padding-left: 24px; }
+.tense-title-text { flex: 1; text-align: left; }
+.tense-title-arrow { font-size: 10px; color: var(--color-text-muted); transition: transform var(--transition); line-height: 1; }
+.tense-group.open .tense-title-arrow { transform: rotate(180deg); }
+.tense-title:hover { background: var(--color-sidebar-hover); }
+.tense-title:hover .tense-title-text { padding-left: 4px; }
 .tense-title.active { color: var(--color-primary); background: var(--color-sidebar-active); font-weight: 700; }
+
+.tense-page-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; flex-shrink: 0;
+  font-size: 15px; color: var(--color-text-muted); text-decoration: none;
+  transition: all var(--transition);
+}
+.tense-page-link:hover { color: var(--color-primary); background: var(--color-sidebar-hover); }
 
 .tense-forms { display: none; padding: 0 0 6px; background: var(--color-sidebar-bg); }
 .tense-group.open .tense-forms { display: block; }
