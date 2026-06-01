@@ -364,6 +364,40 @@ let state = {
   isComplete: false,
 };
 
+/* ── PROGRESS PERSISTENCE ── */
+const STORAGE_KEY = "anagramGame_progress";
+function progKey() { return state.currentTense + "." + state.currentForm; }
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const all = JSON.parse(raw);
+    const saved = all[progKey()];
+    if (!saved) return;
+    state.score = saved.score ?? 0;
+    state.attempts = saved.attempts ?? 0;
+    state.streak = saved.streak ?? 0;
+    state.bestStreak = saved.bestStreak ?? 0;
+    state.completed = saved.completed ?? 0;
+    state.usedSentences = saved.usedSentences ?? [];
+  } catch(e) { /* ignore corrupt data */ }
+}
+function saveProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const all = raw ? JSON.parse(raw) : {};
+    all[progKey()] = {
+      score: state.score,
+      attempts: state.attempts,
+      streak: state.streak,
+      bestStreak: state.bestStreak,
+      completed: state.completed,
+      usedSentences: state.usedSentences,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  } catch(e) { /* ignore storage errors */ }
+}
+
 /* ── UTILITIES ── */
 const $ = id => document.getElementById(id);
 function shuffle(a) { const r = [...a]; for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]} return r; }
@@ -586,6 +620,7 @@ function loadGame() {
   state.hintLevel = 0; state.isComplete = false;
   const ph = document.createElement("div"); ph.className = "drop-placeholder"; ph.textContent = "Drop words here to build your sentence…"; dropArea.appendChild(ph);
   state.currentSentence = pickSentence();
+  if (state.currentForm === "questions") state.currentSentence += " ?";
   state.correctWords = state.currentSentence.split(" ");
   shuffle(state.correctWords).forEach(w => wordsArea.appendChild(createWordEl(w)));
   updateWordCounts(); enableDraggable(true); updateStats(); updateProgress();
@@ -663,11 +698,11 @@ function enableDraggable(on){document.querySelectorAll(".word").forEach(el=>{if(
 
 function showFeedback(msg,type){const fa=$("feedbackArea");const el=document.createElement("div");el.className=`temp-feedback ${type}`;el.textContent=msg;fa?.appendChild(el);if(feedbackTimeout)clearTimeout(feedbackTimeout);feedbackTimeout=setTimeout(()=>{if(el.parentElement)el.remove();},3000);}
 
-function checkAnswer(){if(state.isComplete){showFeedback("Sentence already complete! Try a new one.","info");return;}const dw=Array.from(dropArea.children).filter(c=>!c.classList.contains("drop-placeholder")).map(c=>c.textContent);if(dw.length===0){showFeedback("Drag some words to the drop area first!","info");return;}const us=dw.join(" ");const correct=us===state.currentSentence;state.attempts++;updateStats();if(correct){state.score++;state.streak++;state.completed++;if(state.streak>state.bestStreak)state.bestStreak=state.streak;state.isComplete=true;updateStats();updateProgress();resultDiv.textContent="Perfect! Correct sentence!";resultDiv.className="result-message success";dropArea.classList.add("success-pulse");setTimeout(()=>dropArea.classList.remove("success-pulse"),500);document.querySelectorAll("#dropArea .word").forEach(el=>{el.classList.add("correct");el.setAttribute("draggable","false");el.style.cursor="default";});enableDraggable(false);showFeedback("Great job! Try a new sentence.","success");spawnConfetti();}else{state.streak=0;updateStats();resultDiv.textContent="Not quite right. Try again!";resultDiv.className="result-message error";dropArea.classList.add("shake");setTimeout(()=>dropArea.classList.remove("shake"),400);const c=dw.length;const n=state.correctWords.length;if(c!==n){showFeedback(`You placed ${c} word${c!==1?"s":""}, but need ${n}.`,"info");}else{showFeedback("All words are there, but the order is wrong.","info");}}}
+function checkAnswer(){if(state.isComplete){showFeedback("Sentence already complete! Try a new one.","info");return;}const dw=Array.from(dropArea.children).filter(c=>!c.classList.contains("drop-placeholder")).map(c=>c.textContent);if(dw.length===0){showFeedback("Drag some words to the drop area first!","info");return;}const us=dw.join(" ");const correct=us===state.currentSentence;state.attempts++;updateStats();if(correct){state.score++;state.streak++;state.completed++;if(state.streak>state.bestStreak)state.bestStreak=state.streak;state.isComplete=true;updateStats();updateProgress();resultDiv.textContent="Perfect! Correct sentence!";resultDiv.className="result-message success";dropArea.classList.add("success-pulse");setTimeout(()=>dropArea.classList.remove("success-pulse"),500);document.querySelectorAll("#dropArea .word").forEach(el=>{el.classList.add("correct");el.setAttribute("draggable","false");el.style.cursor="default";});enableDraggable(false);showFeedback("Great job! Try a new sentence.","success");spawnConfetti();}else{state.streak=0;updateStats();resultDiv.textContent="Not quite right. Try again!";resultDiv.className="result-message error";dropArea.classList.add("shake");setTimeout(()=>dropArea.classList.remove("shake"),400);const c=dw.length;const n=state.correctWords.length;if(c!==n){showFeedback(`You placed ${c} word${c!==1?"s":""}, but need ${n}.`,"info");}else{showFeedback("All words are there, but the order is wrong.","info");}}saveProgress();}
 
 function resetGame(){if(state.isComplete){loadGame();return;}dropArea.innerHTML="";const ph=document.createElement("div");ph.className="drop-placeholder";ph.textContent="Drop words here to build your sentence…";dropArea.appendChild(ph);wordsArea.innerHTML="";shuffle(state.correctWords).forEach(w=>wordsArea.appendChild(createWordEl(w)));resultDiv.textContent="";resultDiv.className="result-message";hintArea?.setAttribute("hidden","");state.hintLevel=0;updateWordCounts();showFeedback("Reset! Arrange the words again.","info");}
 
-function loadNewSentence(){state.usedSentences.push(state.currentSentence);loadGame();showFeedback("New sentence! Try to arrange it correctly.","info");}
+function loadNewSentence(){const s=state.currentSentence.replace(/ \?$/,"");state.usedSentences.push(s);saveProgress();loadGame();showFeedback("New sentence! Try to arrange it correctly.","info");}
 
 function giveHint(){if(state.isComplete){showFeedback("Sentence is already complete!","info");return;}const w=state.correctWords;state.hintLevel=Math.min(state.hintLevel+1,w.length);const hw=w.map((w,i)=>{if(i<state.hintLevel)return w;return w.split("").map((ch,j)=>(j===0&&ch.match(/[a-zA-Z]/)?ch:"_")).join("");});if(hintText)hintText.textContent=hw.join(" ");hintArea?.removeAttribute("hidden");}
 
@@ -675,10 +710,11 @@ function spawnConfetti(){const c=document.createElement("div");c.className="conf
 
 /* ── FORM SELECTION (shared) ── */
 function selectTenseForm(tense,form) {
+  saveProgress();
   state.currentTense = tense;
   state.currentForm = form;
-  state.usedSentences = [];
   state.hintLevel = 0;
+  loadProgress();
   showGame();
   closeSidebar();
   loadGame();
@@ -726,6 +762,7 @@ function init() {
   initTabs();
 
   document.title = state.currentTense + " — English Tenses";
+  loadProgress();
   showTheory(state.currentTense);
 
   sidebarToggle?.addEventListener("click", toggleSidebar);
