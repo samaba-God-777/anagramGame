@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-tense="Present Continuous">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn and practice Present Continuous. Grammar rules, examples, and drag-and-drop exercises." />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Present Continuous — English Tenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="tense-page">
+
+    <!-- Top navigation bar with all tenses -->
+    <nav class="top-navbar" aria-label="All tenses">
+      <div class="navbar-inner">
+            <a href="present-simple.html" class="nav-link ">Present Simple</a>
+            <a href="present-continuous.html" class="nav-link active">Present Continuous</a>
+            <a href="present-perfect.html" class="nav-link ">Present Perfect</a>
+            <a href="present-perfect-continuous.html" class="nav-link ">Present Perfect Continuous</a>
+            <a href="past-simple.html" class="nav-link ">Past Simple</a>
+            <a href="past-continuous.html" class="nav-link ">Past Continuous</a>
+            <a href="past-perfect.html" class="nav-link ">Past Perfect</a>
+            <a href="past-perfect-continuous.html" class="nav-link ">Past Perfect Continuous</a>
+            <a href="future-simple.html" class="nav-link ">Future Simple</a>
+            <a href="future-continuous.html" class="nav-link ">Future Continuous</a>
+            <a href="future-perfect.html" class="nav-link ">Future Perfect</a>
+            <a href="future-perfect-continuous.html" class="nav-link ">Future Perfect Continuous</a>
+      </div>
+    </nav>
+
+    <header class="page-header">
+      <a href="index.html" class="home-link" aria-label="Back to all tenses">← All Tenses</a>
+      <div class="header-center">
+        <h1 class="tense-page-title">Present Continuous</h1>
+        <p class="tense-page-subtitle">Learn the rules &amp; practice</p>
+      </div>
+      <div class="header-right">
+        <div class="quick-stats">
+          <span class="stat-badge" title="Current Streak">🔥 <span id="streakDisplay">0</span></span>
+          <span class="stat-badge" title="Completed">✅ <span id="completedDisplay">0</span></span>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☀️</button>
+      </div>
+    </header>
+
+    <nav class="tab-bar" role="tablist" aria-label="Tense sections">
+      <button class="tab active" role="tab" aria-selected="true" data-view="theory">📖 Theory</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="affirmative">✅ Affirmative</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="negative">❌ Negative</button>
+      <button class="tab" role="tab" aria-selected="false" data-view="questions">❓ Questions</button>
+    </nav>
+
+    <main class="page-main">
+
+      <!-- Theory -->
+      <section class="theory-section-block active" id="theoryContent"></section>
+
+      <!-- Practice game -->
+      <section class="game-section-block" id="gameContent" hidden>
+
+        <div class="practice-stats-bar">
+          <div class="stat"><span class="stat-label">Score</span><span class="stat-value" id="score">0</span></div>
+          <div class="stat"><span class="stat-label">Attempts</span><span class="stat-value" id="attempts">0</span></div>
+          <div class="stat"><span class="stat-label">Accuracy</span><span class="stat-value" id="accuracyDisplay">0%</span></div>
+          <div class="stat"><span class="stat-label">Best Streak</span><span class="stat-value" id="bestStreakDisplay">0</span></div>
+        </div>
+
+        <div class="game-board">
+          <div class="board-section">
+            <div class="section-header">
+              <h2 class="section-title">Scrambled Words</h2>
+              <span class="word-count" id="wordCount">0 words</span>
+            </div>
+            <div class="words-area" id="wordsArea" role="list"></div>
+          </div>
+
+          <div class="board-connector" aria-hidden="true"><span class="connector-arrow">↓</span></div>
+
+          <div class="board-section">
+            <div class="section-header">
+              <h2 class="section-title">Your Sentence</h2>
+              <span class="word-count" id="dropCount">0 words</span>
+            </div>
+            <div class="drop-area" id="dropArea" role="list">
+              <div class="drop-placeholder">Drop words here to build your sentence…</div>
+            </div>
+          </div>
+
+          <div class="hint-area" id="hintArea" aria-live="polite" hidden>
+            <span class="hint-icon" aria-hidden="true">💡</span>
+            <span id="hintText"></span>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" id="checkBtn"><span class="btn-icon" aria-hidden="true">✓</span> Check</button>
+          <button class="btn btn-secondary" id="resetBtn"><span class="btn-icon" aria-hidden="true">↺</span> Reset</button>
+          <button class="btn btn-accent" id="newSentenceBtn"><span class="btn-icon" aria-hidden="true">→</span> New</button>
+          <button class="btn btn-ghost" id="hintBtn"><span class="btn-icon" aria-hidden="true">💡</span> Hint</button>
+          <button class="btn btn-secondary" id="theoryBtn"><span class="btn-icon" aria-hidden="true">📖</span> Theory</button>
+        </div>
+
+        <div id="result" class="result-message" role="alert" aria-live="assertive"></div>
+      </section>
+
+    </main>
+
+    <footer class="page-footer">
+      <div class="footer-nav">
+        <span class="footer-nav-title">Quick Links</span>
+        <div class="footer-links">
+            <a href="present-simple.html" class="footer-link">Present Simple</a>
+            <a href="present-continuous.html" class="footer-link">Present Continuous</a>
+            <a href="present-perfect.html" class="footer-link">Present Perfect</a>
+            <a href="present-perfect-continuous.html" class="footer-link">Present Perfect Continuous</a>
+            <a href="past-simple.html" class="footer-link">Past Simple</a>
+            <a href="past-continuous.html" class="footer-link">Past Continuous</a>
+            <a href="past-perfect.html" class="footer-link">Past Perfect</a>
+            <a href="past-perfect-continuous.html" class="footer-link">Past Perfect Continuous</a>
+            <a href="future-simple.html" class="footer-link">Future Simple</a>
+            <a href="future-continuous.html" class="footer-link">Future Continuous</a>
+            <a href="future-perfect.html" class="footer-link">Future Perfect</a>
+            <a href="future-perfect-continuous.html" class="footer-link">Future Perfect Continuous</a>
+        </div>
+      </div>
+      <div class="feedback-area" id="feedbackArea">
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">💡</span>
+          <span>Drag words to build the sentence. Click a word in the drop area to send it back. <kbd>Enter</kbd> check · <kbd>R</kbd> reset · <kbd>N</kbd> new · <kbd>H</kbd> hint · <kbd>T</kbd> theory</span>
+        </div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-bar-container"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+        <span class="progress-text" id="progressText">0 / 0 completed</span>
+      </div>
+      <div class="footer-bottom">
+        <span>English Tenses — Sentence Builder</span>
+        <a href="index.html">← Back to All Tenses</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>window.PAGE_TENSE = "Present Continuous";</script>
+  <script src="script.js"></script>
+</body>
+</html>
