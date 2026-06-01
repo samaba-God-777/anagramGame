@@ -347,11 +347,10 @@ const THEORY = {
 const TENSE_NAMES = TENSE_ORDER;
 const FORMS = ["affirmative","negative","questions"];
 const FORM_LABELS = { affirmative:"Affirmative", negative:"Negative", questions:"Questions" };
-const isSingleTense = typeof window.PAGE_TENSE === "string";
 
 /* ── STATE ── */
 let state = {
-  currentTense: isSingleTense ? window.PAGE_TENSE : "Present Simple",
+  currentTense: window.PAGE_TENSE || "Present Simple",
   currentForm: "affirmative",
   currentSentence: "",
   correctWords: [],
@@ -397,18 +396,16 @@ let draggedItem = null;
 let dropTarget = null;
 let feedbackTimeout = null;
 
-/* ── SIDEBAR (multi-tense only) ── */
+/* ── SIDEBAR ── */
 let sidebar, sidebarOverlay, sidebarToggle, sidebarClose, sidebarNav, tenseLabel, formLabel;
 
-if (!isSingleTense) {
-  sidebar = $("sidebar");
-  sidebarOverlay = $("sidebarOverlay");
-  sidebarToggle = $("sidebarToggle");
-  sidebarClose = $("sidebarClose");
-  sidebarNav = $("sidebarNav");
-  tenseLabel = $("tenseLabel");
-  formLabel = $("formLabel");
-}
+sidebar = $("sidebar");
+sidebarOverlay = $("sidebarOverlay");
+sidebarToggle = $("sidebarToggle");
+sidebarClose = $("sidebarClose");
+sidebarNav = $("sidebarNav");
+tenseLabel = $("tenseLabel");
+formLabel = $("formLabel");
 
 function tenseToFilename(tense) {
   return tense.toLowerCase().replace(/\s+/g, '-') + '.html';
@@ -430,7 +427,7 @@ function buildSidebar() {
     FORMS.forEach(form => {
       const b = document.createElement("button"); b.className = "form-btn"; b.textContent = FORM_LABELS[form]; b.dataset.tense = tense; b.dataset.form = form; f.appendChild(b);
     });
-    t.addEventListener("click",()=>{ state.currentTense = tense; showTheory(tense); updateSidebarActive(); closeSidebar(); });
+    t.addEventListener("click",()=>{ showTheory(tense); });
     g.appendChild(h); g.appendChild(f); sidebarNav.appendChild(g);
   });
 }
@@ -555,42 +552,31 @@ function renderTheoryHTML(tense) {
 }
 
 function showTheory(tense) {
-  if (isSingleTense) {
-    state.view = "theory";
-    const tc = $("theoryContent"); const gc = $("gameContent");
-    if(tc) { tc.innerHTML = renderTheoryHTML(tense); tc.classList.add("active"); tc.hidden = false; }
-    if(gc) { gc.hidden = true; gc.classList.remove("active"); }
-    setActiveTab("theory");
-  } else {
-    state.view = "theory";
-    const tv = $("theoryView"); const gv = $("gameView");
-    if(tv) { tv.innerHTML = renderTheoryHTML(tense); tv.hidden = false; }
-    if(gv) { gv.hidden = true; }
-    if(tenseLabel) tenseLabel.textContent = tense;
-    if(formLabel) formLabel.textContent = "Theory";
-    updateSidebarActive();
-  }
+  state.currentTense = tense;
+  state.view = "theory";
+  const tv = $("theoryView"); const gv = $("gameView");
+  if(tv) { tv.innerHTML = renderTheoryHTML(tense); tv.hidden = false; }
+  if(gv) { gv.hidden = true; }
+  if(tenseLabel) tenseLabel.textContent = tense;
+  if(formLabel) formLabel.textContent = "Theory";
+  updateSidebarActive();
+  setActiveTab("theory");
+  closeSidebar();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-/* ── GAME (shared) ── */
-
 function showGame() {
-  if (isSingleTense) {
-    state.view = "game";
-    const tc = $("theoryContent"); const gc = $("gameContent");
-    if(tc) { tc.hidden = true; tc.classList.remove("active"); }
-    if(gc) { gc.hidden = false; gc.classList.add("active"); }
-  } else {
-    state.view = "game";
-    const tv = $("theoryView"); const gv = $("gameView");
-    if(tv) tv.hidden = true;
-    if(gv) gv.hidden = false;
-    if(tenseLabel) tenseLabel.textContent = state.currentTense;
-    if(formLabel) formLabel.textContent = FORM_LABELS[state.currentForm];
-    updateSidebarActive();
-  }
+  state.view = "game";
+  const tv = $("theoryView"); const gv = $("gameView");
+  if(tv) tv.hidden = true;
+  if(gv) gv.hidden = false;
+  if(tenseLabel) tenseLabel.textContent = state.currentTense;
+  if(formLabel) formLabel.textContent = FORM_LABELS[state.currentForm];
+  updateSidebarActive();
+  setActiveTab(state.currentForm);
 }
+
+/* ── GAME (shared) ── */
 
 function loadGame() {
   wordsArea.innerHTML = "";
@@ -693,13 +679,8 @@ function selectTenseForm(tense,form) {
   state.currentForm = form;
   state.usedSentences = [];
   state.hintLevel = 0;
-  if (isSingleTense) {
-    setActiveTab(form);
-    showGame();
-  } else {
-    showGame();
-    closeSidebar();
-  }
+  showGame();
+  closeSidebar();
   loadGame();
   showFeedback(`Now practicing: ${tense} — ${FORM_LABELS[form]}`,"info");
 }
@@ -741,22 +722,19 @@ function toggleTheme() {
 function init() {
   initTheme();
   setupDropZone();
+  buildSidebar();
+  initTabs();
 
-  if (isSingleTense) {
-    document.title = state.currentTense + " — English Tenses";
-    showTheory(state.currentTense);
-    initTabs();
-  } else {
-    buildSidebar();
-    sidebarToggle?.addEventListener("click", toggleSidebar);
-    sidebarOverlay?.addEventListener("click", closeSidebar);
-    sidebarClose?.addEventListener("click", closeSidebar);
-    sidebarNav?.addEventListener("click", e => {
-      const btn = e.target.closest(".form-btn");
-      if (btn) selectTenseForm(btn.dataset.tense, btn.dataset.form);
-    });
-    showTheory("Present Simple");
-  }
+  document.title = state.currentTense + " — English Tenses";
+  showTheory(state.currentTense);
+
+  sidebarToggle?.addEventListener("click", toggleSidebar);
+  sidebarOverlay?.addEventListener("click", closeSidebar);
+  sidebarClose?.addEventListener("click", closeSidebar);
+  sidebarNav?.addEventListener("click", e => {
+    const btn = e.target.closest(".form-btn");
+    if (btn) selectTenseForm(btn.dataset.tense, btn.dataset.form);
+  });
 
   document.addEventListener("click", e => {
     const btn = e.target.closest(".practice-btn");
