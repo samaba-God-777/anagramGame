@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Adjective Order Game - Put adjectives in the correct English order (OSASCOMP)." />
+  <meta name="theme-color" content="#8b5cf6" />
+  <title>Adjective Order Game — English Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .game-layout { padding: 24px 28px; max-width: 780px; margin: 0 auto; text-align: center; }
+    .ao-question { font-size: 20px; font-weight: 700; color: var(--color-text); margin: 20px 0; line-height: 1.5; }
+    .ao-slots { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .ao-slot { min-width: 100px; max-width: 160px; height: 44px; border: 2px dashed var(--color-primary); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; background: var(--color-surface); transition: all var(--transition); color: var(--color-text); cursor: pointer; padding: 0 10px; }
+    .ao-slot.filled { border-style: solid; border-color: var(--color-success); background: var(--color-success-bg); cursor: pointer; }
+    .ao-noun { font-size: 28px; font-weight: 800; color: var(--color-primary); display: block; margin: 12px 0; }
+    .ao-word-bank { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px 0; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .ao-word { padding: 8px 16px !important; font-size: 14px !important; cursor: pointer !important; }
+    .ao-word.placed { opacity: 0.3; text-decoration: line-through; }
+    .order-key { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 11px; font-weight: 600; color: var(--color-text-muted); }
+    .order-key span { background: var(--color-bg-secondary); padding: 4px 8px; border-radius: 4px; }
+    @media (max-width: 640px) { .game-layout { padding: 16px; } .ao-slot { min-width: 75px; max-width: 120px; height: 38px; font-size: 12px; } .ao-word { font-size: 12px !important; padding: 6px 10px !important; } }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">📏</span>
+          <div>
+            <h1 class="game-title">Adjective Order Game</h1>
+            <p class="game-subtitle">Put adjectives in the correct OSASCOMP order</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+          <a href="adjective-positions.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">📖 Theory</a>
+        </div>
+      </header>
+
+      <div class="game-layout">
+        <div class="ao-question" id="aoQuestion">Put in correct order: <strong>___ house</strong></div>
+
+        <div class="order-key">
+          <span>Opinion</span> <span>Size</span> <span>Age</span> <span>Shape</span>
+          <span>Color</span> <span>Origin</span> <span>Material</span> <span>Purpose</span>
+        </div>
+
+        <div id="aoOptions"></div>
+
+        <div class="button-group" style="padding-top:16px;">
+          <button class="btn btn-primary" id="aoCheck">✓ Check</button>
+          <button class="btn btn-secondary" id="aoNext">→ Next</button>
+        </div>
+
+        <div id="aoResult" class="result-message" style="margin:14px 0;"></div>
+
+        <div class="game-stat" style="display:inline-block;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 24px;">
+          <div class="game-stat-label" style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--color-text-muted);">Score</div>
+          <div class="game-stat-value" style="font-size:28px;font-weight:800;color:var(--color-primary);" id="aoScore">0</div>
+        </div>
+      </div>
+
+      <div class="feedback-area" style="border-top:1px solid var(--color-border);">
+        <div class="tip"><span class="tip-icon" aria-hidden="true">💡</span><span>Tap adjectives in order: <strong>Opinion → Size → Age → Shape → Color → Origin → Material → Purpose</strong> (OSASCOMP). Click a filled slot to remove it.</span></div>
+      </div>
+    </main>
+  </div>
+  <script>window.PAGE_TENSE = "Hub";</script>
+  <script src="../script.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", initAdjectiveOrderGame);</script>
+</body>
+</html>
