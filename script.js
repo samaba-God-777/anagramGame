@@ -447,6 +447,7 @@ function tenseToFilename(tense) {
 
 const SIDEBAR_STRUCTURE = [
   { type: "link", icon: "🏠", label: "Home", href: "/" },
+  { type: "link", icon: "📖", label: "Dictionary", href: "/dictionary/index.html" },
   { type: "section", icon: "📚", label: "Grammar", children: [
     { type: "group", icon: "📖", label: "English Tenses", href: "/grammar/present-simple.html", isTense: true, forms: ["Affirmative","Negative","Questions"] },
     { type: "group", icon: "🔗", label: "Clauses", href: "/grammar/clauses.html", children: [

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="English-Spanish Dictionary with 100,000+ words. Bidirectional translation, autocomplete, and search history." />
+  <meta name="theme-color" content="#10b981" />
+  <title>Dictionary — English ↔ Spanish</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header" style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">📖</span>
+          <div>
+            <h1 class="game-title">Dictionary</h1>
+            <p class="game-subtitle">English ↔ Spanish — 100,000+ words</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="../index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+          <div class="quick-stats">
+            <span class="stat-badge" id="dictWordCount" title="Words in dictionary">📚 <span>0</span></span>
+          </div>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="icon-sun" aria-hidden="true">☀️</span>
+            <span class="icon-moon" aria-hidden="true">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="dict-container">
+        <div class="dict-main">
+          <div class="dict-hero">
+            <h2 class="dict-hero-title">English ↔ Spanish Dictionary</h2>
+            <p class="dict-hero-sub">Type any word to translate. Works in both directions.</p>
+          </div>
+
+          <div class="dict-search-card">
+            <div class="dict-search-inner">
+              <div class="dict-input-group">
+                <div class="dict-source-select">
+                  <span class="dict-lang-badge" id="sourceLang">EN</span>
+                  <span class="dict-swap-btn" id="swapBtn" title="Swap languages">⇄</span>
+                  <span class="dict-lang-badge" id="targetLang">ES</span>
+                </div>
+                <div class="dict-input-wrap">
+                  <input type="text" id="dictInput" class="dict-input" placeholder="Type a word to translate..." autocomplete="off" spellcheck="false" autofocus />
+                  <button class="dict-clear-btn" id="dictClear" hidden>✕</button>
+                </div>
+                <div class="dict-suggestions" id="dictSuggestions" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="dictResults" class="dict-results" hidden>
+            <div class="dict-results-header">
+              <span class="dict-result-count" id="resultCount"></span>
+              <span class="dict-source-info" id="sourceInfo"></span>
+            </div>
+            <div class="dict-results-list" id="resultsList"></div>
+            <div class="dict-pagination" id="dictPagination"></div>
+          </div>
+
+          <div id="dictEmpty" class="dict-empty">
+            <div class="dict-empty-icon">🔍</div>
+            <p class="dict-empty-title">Search for a word</p>
+            <p class="dict-empty-sub">Type in English or Spanish to see translations</p>
+          </div>
+
+          <div id="dictNoResults" class="dict-empty" hidden>
+            <div class="dict-empty-icon">😕</div>
+            <p class="dict-empty-title">No results found</p>
+            <p class="dict-empty-sub">Try a different spelling or search term</p>
+          </div>
+
+          <div id="dictLoading" class="dict-loading" hidden>
+            <div class="dict-spinner"></div>
+            <p>Loading dictionary...</p>
+          </div>
+
+          <div id="dictError" class="dict-error" hidden>
+            <div class="dict-empty-icon">⚠️</div>
+            <p class="dict-empty-title">Failed to load dictionary</p>
+            <p class="dict-empty-sub" id="dictErrorMsg">The dictionary.json file could not be loaded.</p>
+          </div>
+        </div>
+
+        <aside class="dict-sidebar-panel" id="historyPanel">
+          <div class="dict-panel-header">
+            <h3 class="dict-panel-title">📜 History</h3>
+            <button class="dict-panel-action" id="clearHistory" title="Clear history">Clear</button>
+          </div>
+          <div class="dict-panel-body" id="historyList">
+            <p class="dict-panel-empty">No searches yet</p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="feedback-area" style="border-top:1px solid var(--color-border);">
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">💡</span>
+          <span>Type in English or Spanish. Results update in real time. <span id="dictLoadStatus">Loading dictionary...</span></span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>window.PAGE_TENSE = "Hub";</script>
+  <script src="../script.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
