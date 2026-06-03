@@ -72,7 +72,7 @@ async function loadDictionary() {
   dictError.hidden = true;
   dictResults.hidden = true;
   try {
-    const resp = await fetch("dictionary.json");
+    const resp = await fetch("/dictionary/dictionary.json");
     if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
     const data = await resp.json();
     dictionary = data;
