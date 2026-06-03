@@ -1,17 +1,20 @@
 import os
+from pathlib import Path
 from flask import Flask, send_from_directory
+
+BASE_DIR = Path(__file__).resolve().parent
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(BASE_DIR, 'index.html')
 
 
 @app.route('/<path:path>')
 def serve_file(path):
-    return send_from_directory('.', path)
+    return send_from_directory(BASE_DIR, path)
 
 
 if __name__ == '__main__':
