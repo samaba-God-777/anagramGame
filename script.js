@@ -446,33 +446,33 @@ function tenseToFilename(tense) {
 }
 
 const SIDEBAR_STRUCTURE = [
-  { type: "link", icon: "🏠", label: "Home", href: "index.html" },
+  { type: "link", icon: "🏠", label: "Home", href: "/" },
   { type: "section", icon: "📚", label: "Grammar", children: [
-    { type: "group", icon: "📖", label: "English Tenses", href: "grammar/present-simple.html", isTense: true, forms: ["Affirmative","Negative","Questions"] },
-    { type: "group", icon: "🔗", label: "Clauses", href: "grammar/clauses.html", children: [
-      { label: "Noun Clauses", href: "grammar/noun-clauses.html" },
-      { label: "Adjective Clauses", href: "grammar/adjective-clauses.html" },
-      { label: "Adverb Clauses", href: "grammar/adverb-clauses.html" },
+    { type: "group", icon: "📖", label: "English Tenses", href: "/grammar/present-simple.html", isTense: true, forms: ["Affirmative","Negative","Questions"] },
+    { type: "group", icon: "🔗", label: "Clauses", href: "/grammar/clauses.html", children: [
+      { label: "Noun Clauses", href: "/grammar/noun-clauses.html" },
+      { label: "Adjective Clauses", href: "/grammar/adjective-clauses.html" },
+      { label: "Adverb Clauses", href: "/grammar/adverb-clauses.html" },
     ]},
-    { type: "link", icon: "📍", label: "Prepositions", href: "grammar/prepositions.html" },
-    { type: "link", icon: "🔗", label: "Conjunctions", href: "grammar/conjunctions.html" },
-    { type: "link", icon: "📏", label: "Adjective Positions", href: "grammar/adjective-positions.html" },
-    { type: "link", icon: "📍", label: "Adverb Positions", href: "grammar/adverb-positions.html" },
-    { type: "link", icon: "💬", label: "Phrasal Verbs", href: "grammar/phrasal-verbs.html" },
-    { type: "link", icon: "🎭", label: "Idiomatic Expressions", href: "grammar/idiomatic-expressions.html" },
+    { type: "link", icon: "📍", label: "Prepositions", href: "/grammar/prepositions.html" },
+    { type: "link", icon: "🔗", label: "Conjunctions", href: "/grammar/conjunctions.html" },
+    { type: "link", icon: "📏", label: "Adjective Positions", href: "/grammar/adjective-positions.html" },
+    { type: "link", icon: "📍", label: "Adverb Positions", href: "/grammar/adverb-positions.html" },
+    { type: "link", icon: "💬", label: "Phrasal Verbs", href: "/grammar/phrasal-verbs.html" },
+    { type: "link", icon: "🎭", label: "Idiomatic Expressions", href: "/grammar/idiomatic-expressions.html" },
   ]},
   { type: "section", icon: "🎮", label: "Games", children: [
-    { type: "link", icon: "🔤", label: "Anagram Game", href: "games/game-anagram.html" },
-    { type: "link", icon: "📝", label: "Sentence Unscramble", href: "games/game-unscramble.html" },
-    { type: "link", icon: "🔍", label: "Error Correction", href: "games/game-error-correction.html" },
-    { type: "link", icon: "⏰", label: "Verb Tense Challenge", href: "games/game-verb-tense.html" },
-    { type: "link", icon: "📏", label: "Word Order Challenge", href: "games/game-word-order.html" },
-    { type: "link", icon: "📍", label: "Preposition Challenge", href: "games/game-preposition.html" },
-    { type: "link", icon: "📏", label: "Adjective Order", href: "games/game-adjective-order.html" },
-    { type: "link", icon: "📍", label: "Adverb Placement", href: "games/game-adverb-placement.html" },
-    { type: "link", icon: "🔗", label: "Clause Identification", href: "games/game-clause-identification.html" },
+    { type: "link", icon: "🔤", label: "Anagram Game", href: "/games/game-anagram.html" },
+    { type: "link", icon: "📝", label: "Sentence Unscramble", href: "/games/game-unscramble.html" },
+    { type: "link", icon: "🔍", label: "Error Correction", href: "/games/game-error-correction.html" },
+    { type: "link", icon: "⏰", label: "Verb Tense Challenge", href: "/games/game-verb-tense.html" },
+    { type: "link", icon: "📏", label: "Word Order Challenge", href: "/games/game-word-order.html" },
+    { type: "link", icon: "📍", label: "Preposition Challenge", href: "/games/game-preposition.html" },
+    { type: "link", icon: "📏", label: "Adjective Order", href: "/games/game-adjective-order.html" },
+    { type: "link", icon: "📍", label: "Adverb Placement", href: "/games/game-adverb-placement.html" },
+    { type: "link", icon: "🔗", label: "Clause Identification", href: "/games/game-clause-identification.html" },
   ]},
-  { type: "link", icon: "🎯", label: "Daily Challenge", href: "games/daily-challenge.html", divider: true },
+  { type: "link", icon: "🎯", label: "Daily Challenge", href: "/games/daily-challenge.html", divider: true },
 ];
 
 let isTensePage = typeof window.PAGE_TENSE !== "undefined" && window.PAGE_TENSE !== "Hub";
