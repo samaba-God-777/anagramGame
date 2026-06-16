@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Daily English Challenge - 10 questions, grammar exercises, anagrams, and a quick quiz every day." />
+  <meta name="theme-color" content="#f97316" />
+  <title>Daily Challenge — English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .dc-container { padding: 24px 28px; max-width: 800px; margin: 0 auto; }
+    .dc-header { text-align: center; margin-bottom: 24px; }
+    .dc-date { font-size: 14px; color: var(--color-text-muted); font-weight: 600; }
+    .dc-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .dc-progress-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background: var(--color-surface); border: 2px solid var(--color-border); color: var(--color-text-muted); }
+    .dc-progress-dot.done { background: var(--color-success); border-color: var(--color-success); color: #fff; }
+    .dc-progress-dot.current { border-color: var(--color-primary); color: var(--color-primary); font-weight: 800; }
+    .dc-progress-dot.wrong { background: var(--color-error); border-color: var(--color-error); color: #fff; }
+    .dc-section-title { font-size: 18px; font-weight: 700; margin: 20px 0 12px; color: var(--color-primary); display: flex; align-items: center; gap: 8px; }
+    .dc-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .dc-question-text { font-size: 17px; font-weight: 600; margin-bottom: 14px; color: var(--color-text); }
+    .dc-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    .dc-option { padding: 10px 22px !important; font-size: 15px !important; }
+    .dc-option.correct-answer { background: var(--color-success) !important; color: #fff !important; border-color: var(--color-success) !important; }
+    .dc-option.wrong-answer { background: var(--color-error) !important; color: #fff !important; border-color: var(--color-error) !important; }
+    .dc-results { text-align: center; padding: 30px; }
+    .dc-score-big { font-size: 64px; font-weight: 800; color: var(--color-primary); }
+    .dc-score-label { font-size: 18px; color: var(--color-text-secondary); margin-top: 4px; }
+    .dc-quiz-feedback { font-size: 13px; font-weight: 600; margin-top: 8px; }
+    .dc-quiz-feedback.correct { color: var(--color-success-dark); }
+    .dc-quiz-feedback.incorrect { color: var(--color-error-dark); }
+    @media (max-width: 640px) { .dc-container { padding: 16px; } }
+  </style>
+  <script type="module" crossorigin src="/assets/main-Ba8yPvwy.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-mL3Nmd8n.css">
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%);">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">🎯</span>
+          <div>
+            <h1 class="game-title">Daily Challenge</h1>
+            <p class="game-subtitle">10 daily questions to test your English</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="../index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+        </div>
+      </header>
+
+      <div class="dc-container" id="dcContainer">
+        <div class="dc-header">
+          <p class="dc-date" id="dcDate"></p>
+          <h2 style="font-size:24px;font-weight:700;color:var(--color-text);">Today's Challenge</h2>
+          <p style="font-size:14px;color:var(--color-text-muted);">Complete all 10 questions to finish today's challenge</p>
+        </div>
+
+        <div class="dc-progress" id="dcProgress"></div>
+        <div id="dcContent"></div>
+      </div>
+
+      <div class="feedback-area" style="border-top:1px solid var(--color-border);">
+        <div class="tip"><span class="tip-icon" aria-hidden="true">💡</span><span>A new challenge every day! Complete all questions and check your score at the end.</span></div>
+      </div>
+    </main>
+  </div>
+  <script>window.PAGE_TENSE = "Hub";</script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const DAILY_QUESTIONS = [
+        { type: "tense", question: 'Identify the tense: "She has been studying for three hours."', options: ["Present Perfect", "Present Perfect Continuous", "Present Continuous", "Past Continuous"], answer: 1 },
+        { type: "preposition", question: "Choose the correct preposition: I was born ___ May.", options: ["in", "on", "at", "since"], answer: 0 },
+        { type: "clause", question: "Identify the clause type: I know that she is happy.", options: ["Noun Clause", "Adjective Clause", "Adverb Clause", "No clause"], answer: 0 },
+        { type: "error", question: "Fix the error: She don't like coffee.", options: ["She doesn't like coffee.", "She not like coffee.", "She don't likes coffee.", "She no like coffee."], answer: 0 },
+        { type: "tense", question: 'Identify the tense: "I will have finished by Friday."', options: ["Future Simple", "Future Continuous", "Future Perfect", "Future Perfect Continuous"], answer: 2 },
+        { type: "preposition", question: "Choose the correct preposition: The cat is ___ the table.", options: ["in", "on", "under", "between"], answer: 2 },
+        { type: "clause", question: "Identify the clause type: The boy who won the race is my friend.", options: ["Noun Clause", "Adjective Clause", "Adverb Clause", "No clause"], answer: 1 },
+        { type: "error", question: "Fix the error: When I will arrive, I will call you.", options: ["When I arrive, I will call you.", "When I arrived, I will call you.", "When I will arrive, I call you.", "When I arrive, I call you."], answer: 0 },
+        { type: "tense", question: 'Identify the tense: "They were playing soccer when it started to rain."', options: ["Past Simple", "Past Continuous", "Past Perfect", "Past Perfect Continuous"], answer: 1 },
+        { type: "preposition", question: "Choose the correct preposition: She walked ___ the room.", options: ["to", "into", "onto", "toward"], answer: 1 },
+      ];
+
+      const dateEl = document.getElementById("dcDate");
+      const progressEl = document.getElementById("dcProgress");
+      const contentEl = document.getElementById("dcContent");
+      const DC_STORAGE_KEY = "dailyChallenge";
+
+      let state = { current: 0, answers: [], score: 0, finished: false, date: "" };
+
+      function getToday() {
+        const d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(DC_STORAGE_KEY);
+          if (raw) {
+            const s = JSON.parse(raw);
+            if (s.date === getToday()) {
+              state = s;
+              return true;
+            }
+          }
+        } catch (e) {}
+        return false;
+      }
+
+      function saveState() {
+        try { localStorage.setItem(DC_STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      }
+
+      function renderProgress() {
+        progressEl.innerHTML = "";
+        for (let i = 0; i < DAILY_QUESTIONS.length; i++) {
+          const dot = document.createElement("div");
+          dot.className = "dc-progress-dot";
+          dot.textContent = i + 1;
+          if (state.answers[i] === true) dot.classList.add("done");
+          else if (state.answers[i] === false) dot.classList.add("wrong");
+          else if (i === state.current && !state.finished) dot.classList.add("current");
+          progressEl.appendChild(dot);
+        }
+      }
+
+      function renderResults() {
+        contentEl.innerHTML = `
+          <div class="dc-card dc-results">
+            <div class="dc-score-big">${state.score} / ${DAILY_QUESTIONS.length}</div>
+            <div class="dc-score-label">Challenge Complete!</div>
+            <div style="margin-top:16px;font-size:15px;color:var(--color-text-secondary);">
+              ${state.score === DAILY_QUESTIONS.length ? "Perfect score! Amazing! 🎉" :
+                state.score >= 8 ? "Great job! Almost perfect! 🌟" :
+                state.score >= 6 ? "Good work! Keep practicing! 💪" :
+                "Keep studying! You'll improve! 📚"}
+            </div>
+            <button class="btn btn-primary" style="margin-top:20px;" onclick="location.reload()">Reset Challenge</button>
+          </div>
+        `;
+      }
+
+      function renderQuestion() {
+        if (state.finished) { renderResults(); renderProgress(); return; }
+        const q = DAILY_QUESTIONS[state.current];
+        renderProgress();
+        const iconMap = { tense: "⏰", preposition: "📍", clause: "🔗", error: "🔍" };
+        contentEl.innerHTML = `
+          <div class="dc-card">
+            <div class="dc-section-title">${iconMap[q.type] || "❓"} Question ${state.current + 1} of ${DAILY_QUESTIONS.length}</div>
+            <div class="dc-question-text">${q.question}</div>
+            <div class="dc-options" id="dcOptions">
+              ${q.options.map((opt, i) => `<button class="btn btn-ghost dc-option" data-idx="${i}">${opt}</button>`).join("")}
+            </div>
+            <div id="dcFeedback" class="dc-quiz-feedback"></div>
+          </div>
+        `;
+
+        document.getElementById("dcOptions").addEventListener("click", function(e) {
+          const btn = e.target.closest(".dc-option");
+          if (!btn || btn.disabled) return;
+          const idx = parseInt(btn.dataset.idx);
+          const isCorrect = idx === q.answer;
+          const fb = document.getElementById("dcFeedback");
+
+          document.querySelectorAll(".dc-option").forEach(b => b.disabled = true);
+          state.answers[state.current] = isCorrect;
+          if (isCorrect) state.score++;
+
+          btn.classList.add(isCorrect ? "correct-answer" : "wrong-answer");
+          if (!isCorrect) {
+            document.querySelectorAll(".dc-option")[q.answer].classList.add("correct-answer");
+            fb.textContent = "Incorrect. The correct answer was selected.";
+            fb.className = "dc-quiz-feedback incorrect";
+          } else {
+            fb.textContent = "Correct!";
+            fb.className = "dc-quiz-feedback correct";
+          }
+
+          saveState();
+
+          setTimeout(() => {
+            if (state.current + 1 >= DAILY_QUESTIONS.length) {
+              state.finished = true;
+              saveState();
+              renderResults();
+              renderProgress();
+              try {
+                const gs = JSON.parse(localStorage.getItem("englishGames_progress") || "{}");
+                if (!gs.dailyChallenge) gs.dailyChallenge = { bestScore: 0, totalScore: 0, gamesPlayed: 0 };
+                gs.dailyChallenge.totalScore += state.score;
+                gs.dailyChallenge.gamesPlayed++;
+                if (state.score > gs.dailyChallenge.bestScore) gs.dailyChallenge.bestScore = state.score;
+                localStorage.setItem("englishGames_progress", JSON.stringify(gs));
+              } catch (e) {}
+            } else {
+              state.current++;
+              saveState();
+              renderQuestion();
+            }
+          }, 1200);
+        });
+      }
+
+      dateEl.textContent = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+      if (!loadState()) {
+        state = { current: 0, answers: [], score: 0, finished: false, date: getToday() };
+        saveState();
+      }
+
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>

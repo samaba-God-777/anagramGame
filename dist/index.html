@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive English grammar learning platform. Tenses, clauses, prepositions, and educational games." />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>English Learning Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/assets/manifest-fWqsSzmK.json" />
+  <style>
+    .hub-container { max-width: 1100px; margin: 0 auto; padding: 40px 28px; }
+    .hub-header { text-align: center; margin-bottom: 50px; }
+    .hub-title { font-size: 38px; font-weight: 800; color: var(--color-primary); letter-spacing: -0.8px; }
+    .hub-subtitle { font-size: 16px; color: var(--color-text-secondary); margin-top: 8px; }
+    .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .hub-card {
+      background: var(--color-surface); border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg); padding: 28px 24px;
+      transition: all var(--transition-bounce); cursor: pointer;
+      text-decoration: none; display: block;
+      box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+    }
+    .hub-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .hub-card:active { transform: scale(0.98); }
+    .hub-card-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .hub-card-title { font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+    .hub-card-desc { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+    .hub-card-badge {
+      display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: var(--radius-full); margin-top: 12px; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-tenses { background: var(--color-primary-bg); color: var(--color-primary); }
+    .badge-clauses { background: var(--color-accent-bg); color: var(--color-accent); }
+    .badge-prepositions { background: var(--color-success-bg); color: var(--color-success-dark); }
+    .badge-games { background: var(--color-info-bg); color: var(--color-info); }
+    .badge-daily { background: var(--color-error-bg); color: var(--color-error-dark); }
+    .hub-section-title { font-size: 24px; font-weight: 700; color: var(--color-text); margin: 50px 0 20px; padding-bottom: 12px; border-bottom: 2px solid var(--color-border); }
+    @media (max-width: 640px) {
+      .hub-container { padding: 24px 16px; }
+      .hub-title { font-size: 28px; }
+      .hub-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/main-Ba8yPvwy.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-mL3Nmd8n.css">
+</head>
+<body>
+  <div class="app-layout" style="min-height: auto;">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header" style="background: linear-gradient(135deg, var(--color-primary) 0%, #4338ca 50%, var(--color-primary-dark) 100%);">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">🏠</span>
+          <div>
+            <h1 class="game-title">English Learning Hub</h1>
+            <p class="game-subtitle">Grammar, Practice & Games</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <div class="quick-stats">
+            <span class="stat-badge" title="Current Streak">🔥 <span id="streakDisplay">0</span></span>
+            <span class="stat-badge" title="Completed">✅ <span id="completedDisplay">0</span></span>
+          </div>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="icon-sun" aria-hidden="true">☀️</span>
+            <span class="icon-moon" aria-hidden="true">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="hub-container">
+        <div class="hub-header">
+          <h2 class="hub-title">Master English Grammar</h2>
+          <p class="hub-subtitle">Interactive lessons, practice exercises, and fun games to improve your English</p>
+        </div>
+
+        <h3 class="hub-section-title">📖 Grammar Modules</h3>
+        <div class="hub-grid">
+          <a href="grammar/present-simple.html" class="hub-card">
+            <span class="hub-card-icon">📚</span>
+            <h3 class="hub-card-title">English Tenses</h3>
+            <p class="hub-card-desc">Learn all 12 English tenses with theory, examples, and interactive drag-and-drop practice exercises.</p>
+            <span class="hub-card-badge badge-tenses">12 Tenses</span>
+          </a>
+
+          <a href="grammar/clauses.html" class="hub-card">
+            <span class="hub-card-icon">🔗</span>
+            <h3 class="hub-card-title">Clauses</h3>
+            <p class="hub-card-desc">Noun clauses, adjective clauses (relative), and adverb clauses. Theory, examples, and interactive quizzes.</p>
+            <span class="hub-card-badge badge-clauses">3 Types</span>
+          </a>
+
+          <a href="grammar/prepositions.html" class="hub-card">
+            <span class="hub-card-icon">📍</span>
+            <h3 class="hub-card-title">Prepositions</h3>
+            <p class="hub-card-desc">Time, place, and movement prepositions. Multiple-choice, drag-and-drop, and fill-in-the-blank exercises.</p>
+            <span class="hub-card-badge badge-prepositions">30+ Prepositions</span>
+          </a>
+
+          <a href="grammar/adjective-positions.html" class="hub-card">
+            <span class="hub-card-icon">📏</span>
+            <h3 class="hub-card-title">Adjective Positions</h3>
+            <p class="hub-card-desc">Attributive, predicative, and postpositive positions. Learn the OSASCOMP order of multiple adjectives.</p>
+            <span class="hub-card-badge badge-clauses">3 Positions</span>
+          </a>
+
+          <a href="grammar/adverb-positions.html" class="hub-card">
+            <span class="hub-card-icon">📍</span>
+            <h3 class="hub-card-title">Adverb Positions</h3>
+            <p class="hub-card-desc">Front, mid, and end position for adverbs. Learn the correct order of multiple adverbs in a sentence.</p>
+            <span class="hub-card-badge badge-prepositions">3 Positions</span>
+          </a>
+        </div>
+
+        <h3 class="hub-section-title">🎮 Educational Games</h3>
+        <div class="hub-grid">
+          <a href="games/game-anagram.html" class="hub-card">
+            <span class="hub-card-icon">🔤</span>
+            <h3 class="hub-card-title">Anagram Game</h3>
+            <p class="hub-card-desc">Unscramble letters to form words. Multiple categories and difficulty levels with timer and scoring.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-unscramble.html" class="hub-card">
+            <span class="hub-card-icon">📝</span>
+            <h3 class="hub-card-title">Sentence Unscramble</h3>
+            <p class="hub-card-desc">Rearrange scrambled words to form correct English sentences. Drag & drop mode.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+          
+
+          <a href="games/game-error-correction.html" class="hub-card">
+            <span class="hub-card-icon">🔍</span>
+            <h3 class="hub-card-title">Error Correction</h3>
+            <p class="hub-card-desc">Find and fix grammatical errors in sentences. Covers tenses, articles, prepositions, and more.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-verb-tense.html" class="hub-card">
+            <span class="hub-card-icon">⏰</span>
+            <h3 class="hub-card-title">Verb Tense Challenge</h3>
+            <p class="hub-card-desc">Identify the correct verb tense in sentences. Test your knowledge of all 12 tenses.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-word-order.html" class="hub-card">
+            <span class="hub-card-icon">📏</span>
+            <h3 class="hub-card-title">Word Order Challenge</h3>
+            <p class="hub-card-desc">Practice English sentence structure patterns: S+V+O, S+V+C, S+V+O+O, S+V+O+C.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-preposition.html" class="hub-card">
+            <span class="hub-card-icon">📍</span>
+            <h3 class="hub-card-title">Preposition Challenge</h3>
+            <p class="hub-card-desc">Choose the correct preposition to complete sentences. Time, place, and movement prepositions.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-adjective-order.html" class="hub-card">
+            <span class="hub-card-icon">📏</span>
+            <h3 class="hub-card-title">Adjective Order Game</h3>
+            <p class="hub-card-desc">Put adjectives in the correct OSASCOMP order. Practice opinion, size, age, shape, color, origin, and material.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="games/game-adverb-placement.html" class="hub-card">
+            <span class="hub-card-icon">📍</span>
+            <h3 class="hub-card-title">Adverb Placement</h3>
+            <p class="hub-card-desc">Choose the correct position for adverbs: front, mid, or end. Covers frequency, manner, time, and place adverbs.</p>
+            <span class="hub-card-badge badge-games">Play</span>
+          </a>
+        </div>
+
+        <h3 class="hub-section-title">⭐ Daily Challenge</h3>
+        <div class="hub-grid">
+          <a href="games/daily-challenge.html" class="hub-card">
+            <span class="hub-card-icon">🎯</span>
+            <h3 class="hub-card-title">Daily Challenge</h3>
+            <p class="hub-card-desc">10 daily questions, 5 grammar exercises, 2 anagrams, 2 scrambled sentences, and 1 quick quiz.</p>
+            <span class="hub-card-badge badge-daily">New Daily</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="feedback-area" style="border-top: 1px solid var(--color-border);">
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">💡</span>
+          <span>Select a module above to start learning. Your progress is saved automatically in your browser.</span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>window.PAGE_TENSE = "Hub";</script>
+</body>
+</html>
