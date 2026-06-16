@@ -4,6 +4,7 @@
 
 :root {
   --color-bg: #f1f5f9;
+  --color-bg-secondary: #e8ecf1;
   --color-surface: #ffffff;
   --color-surface-hover: #f8fafc;
   --color-primary: #4f46e5;
@@ -1491,3 +1492,44 @@ body {
 .ref-table-wrap::-webkit-scrollbar { width: 8px; }
 .ref-table-wrap::-webkit-scrollbar-track { background: var(--color-bg); border-radius: 4px; }
 .ref-table-wrap::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+
+/* ── ONBOARDING MODAL ── */
+.onboarding-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:10000; }
+.onboarding-modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--color-surface); border-radius:20px; padding:40px; max-width:440px; width:90%; z-index:10001; box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center; }
+.onboarding-icon { font-size:48px; margin-bottom:16px; }
+.onboarding-step h2 { font-size:22px; font-weight:800; color:var(--color-text); margin-bottom:8px; }
+.onboarding-step p { font-size:14px; color:var(--color-text-secondary); line-height:1.6; }
+.onboarding-nav { display:flex; justify-content:space-between; align-items:center; margin-top:28px; }
+.onboarding-dots { display:flex; gap:8px; }
+.onboarding-dot { width:8px; height:8px; border-radius:50%; background:var(--color-border); transition:all 0.3s; }
+.onboarding-dot.active { background:var(--color-primary); width:24px; border-radius:4px; }
+
+/* ── BREADCRUMBS ── */
+.breadcrumb-nav { padding:10px 28px; font-size:12px; color:var(--color-text-muted); background:var(--color-surface); border-bottom:1px solid var(--color-border); }
+.breadcrumb-link { color:var(--color-primary); text-decoration:none; font-weight:500; }
+.breadcrumb-link:hover { text-decoration:underline; }
+.breadcrumb-sep { margin:0 6px; color:var(--color-text-muted); }
+.breadcrumb-current { color:var(--color-text-secondary); font-weight:600; }
+
+/* ── SCROLL TO TOP ── */
+.scroll-to-top { position:fixed; bottom:24px; right:24px; width:44px; height:44px; border-radius:50%; background:var(--color-primary); color:#fff; border:none; cursor:pointer; font-size:18px; font-weight:700; display:none; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(79,70,229,0.3); z-index:90; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.scroll-to-top:hover { transform:translateY(-3px) scale(1.1); }
+
+/* ── DASHBOARD ── */
+.dashboard-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; margin:32px 0; }
+.dashboard-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow-sm); }
+.dashboard-card h3 { font-size:18px; font-weight:700; color:var(--color-text); margin-bottom:12px; }
+.dashboard-stat { font-size:36px; font-weight:800; color:var(--color-primary); }
+.dashboard-label { font-size:13px; color:var(--color-text-muted); margin-top:4px; }
+.dashboard-progress-bar { width:100%; height:8px; background:var(--color-border-light); border-radius:4px; margin-top:12px; overflow:hidden; }
+.dashboard-progress-fill { height:100%; background:var(--color-primary); border-radius:4px; transition:width 0.5s ease; }
+
+/* ── QUIZ OPTION FIX ── */
+.fq-option, .quiz-option { cursor:pointer; transition:all 0.2s; }
+.fq-option:hover, .quiz-option:hover { background:var(--color-primary-bg); border-color:var(--color-primary); }
+.fq-option.selected, .quiz-option.selected { background:var(--color-primary-bg); border-color:var(--color-primary); color:var(--color-primary); font-weight:600; }
+.fq-option.correct, .quiz-option.correct { background:var(--color-success-bg); border-color:var(--color-success); color:var(--color-success-dark); }
+.fq-option.incorrect, .quiz-option.incorrect { background:var(--color-error-bg); border-color:var(--color-error); color:var(--color-error-dark); }
+
+/* ── DARK MODE ADDITIONS ── */
+.dark-mode { --color-bg: #0f172a; --color-bg-secondary: #1e293b; --color-surface: #1e293b; --color-surface-hover: #334155; --color-text: #f1f5f9; --color-text-secondary: #94a3b8; --color-text-muted: #64748b; --color-border: #334155; --color-border-light: #1e293b; --color-sidebar-bg: #1e293b; --color-sidebar-hover: #334155; --color-sidebar-active: #4f46e5; --color-word-bg: #6366f1; --color-words-bg: #312e81; --color-words-border: #818cf8; }

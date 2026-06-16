@@ -123,7 +123,13 @@
     </main>
   </div>
   <script>window.PAGE_TENSE = "Hub";</script>
-  <script src="../script.js"></script>
-  <script src="script.js"></script>
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    import { initDictionary } from '/src/features/dictionary.js';
+    initTheme();
+    buildGlobalSidebar({}, false);
+    initDictionary();
+  </script>
 </body>
 </html>

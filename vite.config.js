@@ -1,0 +1,54 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+
+export default defineConfig({
+  root: '.',
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        'game-anagram': resolve(__dirname, 'games/game-anagram.html'),
+        'game-unscramble': resolve(__dirname, 'games/game-unscramble.html'),
+        'game-error-correction': resolve(__dirname, 'games/game-error-correction.html'),
+        'game-verb-tense': resolve(__dirname, 'games/game-verb-tense.html'),
+        'game-word-order': resolve(__dirname, 'games/game-word-order.html'),
+        'game-preposition': resolve(__dirname, 'games/game-preposition.html'),
+        'game-adjective-order': resolve(__dirname, 'games/game-adjective-order.html'),
+        'game-adverb-placement': resolve(__dirname, 'games/game-adverb-placement.html'),
+        'game-clause-identification': resolve(__dirname, 'games/game-clause-identification.html'),
+        'daily-challenge': resolve(__dirname, 'games/daily-challenge.html'),
+        'present-simple': resolve(__dirname, 'grammar/present-simple.html'),
+        'present-continuous': resolve(__dirname, 'grammar/present-continuous.html'),
+        'present-perfect': resolve(__dirname, 'grammar/present-perfect.html'),
+        'present-perfect-continuous': resolve(__dirname, 'grammar/present-perfect-continuous.html'),
+        'past-simple': resolve(__dirname, 'grammar/past-simple.html'),
+        'past-continuous': resolve(__dirname, 'grammar/past-continuous.html'),
+        'past-perfect': resolve(__dirname, 'grammar/past-perfect.html'),
+        'past-perfect-continuous': resolve(__dirname, 'grammar/past-perfect-continuous.html'),
+        'future-simple': resolve(__dirname, 'grammar/future-simple.html'),
+        'future-continuous': resolve(__dirname, 'grammar/future-continuous.html'),
+        'future-perfect': resolve(__dirname, 'grammar/future-perfect.html'),
+        'future-perfect-continuous': resolve(__dirname, 'grammar/future-perfect-continuous.html'),
+        clauses: resolve(__dirname, 'grammar/clauses.html'),
+        'noun-clauses': resolve(__dirname, 'grammar/noun-clauses.html'),
+        'adjective-clauses': resolve(__dirname, 'grammar/adjective-clauses.html'),
+        'adverb-clauses': resolve(__dirname, 'grammar/adverb-clauses.html'),
+        prepositions: resolve(__dirname, 'grammar/prepositions.html'),
+        conjunctions: resolve(__dirname, 'grammar/conjunctions.html'),
+        'adjective-positions': resolve(__dirname, 'grammar/adjective-positions.html'),
+        'adverb-positions': resolve(__dirname, 'grammar/adverb-positions.html'),
+        'phrasal-verbs': resolve(__dirname, 'grammar/phrasal-verbs.html'),
+        'idiomatic-expressions': resolve(__dirname, 'grammar/idiomatic-expressions.html'),
+      },
+    },
+    cssCodeSplit: false,
+    assetsInlineLimit: 0,
+  },
+  server: {
+    port: 5000,
+    proxy: {
+      '/dictionary': 'http://localhost:5000',
+    },
+  },
+});
