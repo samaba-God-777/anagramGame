@@ -3,6 +3,8 @@
    ═══════════════════════════════════════════ */
 
 import { saveGameScore } from '../lib/storage.js';
+import { shuffle } from '../lib/utils.js';
+import { ANAGRAM_DATA } from '../data/games.js';
 
 function initAnagramGame() {
   const levelSelect = document.getElementById("anagramLevel");
@@ -46,12 +48,7 @@ function initAnagramGame() {
   }
 
   function shuffleWord(w) {
-    const a = w.split("");
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a.join("");
+    return shuffle(w.split("")).join("");
   }
 
   function newWord() {

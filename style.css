@@ -392,6 +392,24 @@ body {
 
 /* ── Main Content (multi-tense) ── */
 .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.main-content:has(.game-layout) { background: var(--color-bg-secondary); transition: background var(--transition-slow); }
+
+/* ── Game Layout Card ── */
+.game-layout {
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
+  margin: auto auto 28px;
+  padding: 36px 32px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+@media (max-width: 640px) {
+  .game-layout { padding: 24px 20px; margin: 20px auto; border-radius: var(--radius-lg); }
+}
 
 /* ── Game Header ── */
 .game-header {

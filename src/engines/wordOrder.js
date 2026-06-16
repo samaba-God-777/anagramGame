@@ -3,6 +3,8 @@
    ═══════════════════════════════════════════ */
 
 import { saveGameScore } from '../lib/storage.js';
+import { shuffle } from '../lib/utils.js';
+import { WORD_ORDER_EXERCISES } from '../data/games.js';
 
 function initWordOrderGame() {
   const wordArea = document.getElementById("woWords");
@@ -18,12 +20,6 @@ function initWordOrderGame() {
 
   let currentEx = null;
   let score = 0;
-
-  function shuffle(a) {
-    const r = [...a];
-    for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
-    return r;
-  }
 
   function loadExercise() {
     currentEx = WORD_ORDER_EXERCISES[Math.floor(Math.random() * WORD_ORDER_EXERCISES.length)];

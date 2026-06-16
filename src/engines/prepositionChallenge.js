@@ -3,8 +3,9 @@
    ═══════════════════════════════════════════ */
 
 import { saveGameScore } from '../lib/storage.js';
+import { PREPOSITION_EXERCISES } from '../data/prepositions.js';
 
-function initPrepositionChallenge() {
+function initPrepositionChallengeGame() {
   const questionEl = document.getElementById("pcQuestion");
   const optionsContainer = document.getElementById("pcOptions");
   const nextBtn = document.getElementById("pcNext");
@@ -24,7 +25,7 @@ function initPrepositionChallenge() {
     optionsContainer.innerHTML = "";
     currentEx.options.forEach((opt, i) => {
       const btn = document.createElement("button");
-      btn.className = "btn btn-ghost pc-option";
+      btn.className = "btn btn-game pc-option";
       btn.textContent = opt;
       btn.addEventListener("click", () => {
         if (btn.disabled) return;
@@ -49,4 +50,4 @@ function initPrepositionChallenge() {
   loadQuestion();
 }
 
-export { initPrepositionChallenge };
+export { initPrepositionChallengeGame };

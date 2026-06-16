@@ -416,28 +416,11 @@ function setupQuizHandler() {
     if (!container) return;
 
     // Determine which quiz set we're in
-    const containerId = container.id || "";
     let exercises = [];
     let feedbackId = "";
     let scoreId = "";
 
-    if (containerId.includes("passive")) {
-      // Passive voice quiz — lazy load
-      try {
-        const pvData = getPassiveVoiceExercises();
-        exercises = pvData;
-        feedbackId = `passiveQuizFeedback${qid}`;
-        scoreId = "passiveQuizScore";
-      } catch (e) { return; }
-    } else if (containerId.includes("cond")) {
-      // Conditionals quiz — lazy load
-      try {
-        const cdData = getConditionalsExercises();
-        exercises = cdData;
-        feedbackId = `condQuizFeedback${qid}`;
-        scoreId = "condQuizScore";
-      } catch (e) { return; }
-    } else if (document.querySelector('[data-page="prepositions"]')) {
+    if (document.querySelector('[data-page="prepositions"]')) {
       exercises = getPrepositionExercises();
       feedbackId = `prepQuizFeedback${qid}`;
       scoreId = "prepQuizScore";
@@ -534,15 +517,6 @@ function setupFinalQuizHandler() {
 }
 
 /* ── QUIZ DATA LAZY LOADERS ── */
-function getPassiveVoiceExercises() {
-  // This will be populated when the passive voice page loads
-  return window.__PASSIVE_VOICE_EXERCISES || [];
-}
-
-function getConditionalsExercises() {
-  return window.__CONDITIONALS_EXERCISES || [];
-}
-
 function getPrepositionExercises() {
   return window.__PREPOSITION_EXERCISES || [];
 }
@@ -594,6 +568,12 @@ async function loadGameEngine(engineName) {
       case 'preposition':
         const { initPrepositionChallengeGame } = await import('./engines/prepositionChallenge.js');
         return initPrepositionChallengeGame;
+      case 'adverbPlacement':
+        const { initAdverbPlacementGame } = await import('./engines/adverbPlacement.js');
+        return initAdverbPlacementGame;
+      case 'clauseIdentification':
+        const { initClauseIdentificationGame } = await import('./engines/clauseIdentification.js');
+        return initClauseIdentificationGame;
       default:
         return null;
     }
@@ -616,6 +596,8 @@ function detectPage() {
     isWordOrderPage: path.includes("game-word-order"),
     isPrepositionPage: path.includes("game-preposition"),
     isUnscramblePage: path.includes("game-unscramble"),
+    isAdverbPlacementPage: path.includes("game-adverb-placement"),
+    isClauseIdentificationPage: path.includes("game-clause-identification"),
     isDashboardPage: path.includes("dashboard"),
     isTensePage: typeof window.PAGE_TENSE !== "undefined" && window.PAGE_TENSE !== "Hub",
     page,
@@ -660,8 +642,6 @@ async function init() {
         "conjunctions": () => window.__renderConjunctionTheory?.() || "",
         "phrasal-verbs": () => window.__renderPhrasalVerbTheory?.() || "",
         "idiomatic-expressions": () => window.__renderIdiomaticExpressionTheory?.() || "",
-        "passive-voice": () => window.__renderPassiveVoiceTheory?.() || "",
-        "conditionals": () => window.__renderConditionalsTheory?.() || "",
         "clauses": pageInfo.clauseType && typeof window.__renderClauseFullLesson === "function"
           ? () => window.__renderClauseFullLesson(pageInfo.clauseType)
           : null,
@@ -712,6 +692,12 @@ async function init() {
     if (initFn) initFn();
   } else if (pageInfo.isPrepositionPage) {
     const initFn = await loadGameEngine('preposition');
+    if (initFn) initFn();
+  } else if (pageInfo.isAdverbPlacementPage) {
+    const initFn = await loadGameEngine('adverbPlacement');
+    if (initFn) initFn();
+  } else if (pageInfo.isClauseIdentificationPage) {
+    const initFn = await loadGameEngine('clauseIdentification');
     if (initFn) initFn();
   }
 

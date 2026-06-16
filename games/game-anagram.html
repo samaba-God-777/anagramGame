@@ -11,19 +11,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../style.css" />
   <style>
-    .game-layout { padding: 24px 28px; max-width: 700px; margin: 0 auto; text-align: center; }
     .anagram-word { font-size: 42px; font-weight: 800; letter-spacing: 12px; color: var(--color-primary); margin: 30px 0; font-family: 'SF Mono', monospace; text-transform: uppercase; }
     .game-controls-row { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
     .game-controls-row select { padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-family: var(--font); font-size: 14px; }
     .game-input { padding: 12px 20px; font-size: 18px; border: 2px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text); text-align: center; font-family: var(--font); width: 250px; max-width: 100%; }
     .game-input:focus { outline: none; border-color: var(--color-primary); box-shadow: var(--shadow-glow); }
     .game-stats { display: flex; gap: 20px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
-    .game-stat { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 12px 20px; }
+    .game-stat { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 12px 20px; transition: transform var(--transition), box-shadow var(--transition); }
+    .game-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
     .game-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-text-muted); letter-spacing: 0.5px; }
     .game-stat-value { font-size: 24px; font-weight: 800; color: var(--color-primary); }
     @media (max-width: 640px) {
       .anagram-word { font-size: 28px; letter-spacing: 8px; }
-      .game-layout { padding: 16px; }
     }
   </style>
 </head>

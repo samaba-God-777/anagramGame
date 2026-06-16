@@ -3,6 +3,8 @@
    ═══════════════════════════════════════════ */
 
 import { saveGameScore } from '../lib/storage.js';
+import { shuffle } from '../lib/utils.js';
+import { VERB_TENSE_EXAMPLES } from '../data/games.js';
 
 function initVerbTenseGame() {
   const questionEl = document.getElementById("vtQuestion");
@@ -17,14 +19,6 @@ function initVerbTenseGame() {
   let score = 0;
   let shuffledData = [...VERB_TENSE_EXAMPLES];
 
-  function shuffleArray(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   function loadQuestion() {
     currentIndex = Math.floor(Math.random() * shuffledData.length);
     const item = shuffledData[currentIndex];
@@ -33,13 +27,13 @@ function initVerbTenseGame() {
 
     const allTenses = [...new Set(VERB_TENSE_EXAMPLES.map(e => e.tense))];
     const wrongOptions = allTenses.filter(t => t !== item.tense);
-    const shuffledWrong = shuffleArray([...wrongOptions]).slice(0, 3);
-    const options = shuffleArray([item.tense, ...shuffledWrong]);
+    const shuffledWrong = shuffle(wrongOptions).slice(0, 3);
+    const options = shuffle([item.tense, ...shuffledWrong]);
 
     optionsContainer.innerHTML = "";
     options.forEach(opt => {
       const btn = document.createElement("button");
-      btn.className = "btn btn-ghost vt-option";
+      btn.className = "btn btn-game vt-option";
       btn.textContent = opt;
       btn.addEventListener("click", () => {
         if (btn.disabled) return;
