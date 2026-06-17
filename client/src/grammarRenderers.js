@@ -47,8 +47,35 @@ async function renderPhrasalVerbTheory() {
     byParticle[particle].push(pv);
   });
 
-  // Fetch Wikipedia info
-  const wikiData = await fetchWiki("Phrasal_verb");
+  // Group by type
+  const byType = { separable: [], inseparable: [], intransitive: [], 'three-word': [] };
+  data.forEach(pv => {
+    const type = (pv.type || 'separable').toLowerCase();
+    if (byType[type]) byType[type].push(pv);
+    else byType.separable.push(pv);
+  });
+
+  // Fetch Wikipedia info for phrasal verbs and particles
+  const [wikiData, upWiki, downWiki, outWiki] = await Promise.all([
+    fetchWiki("Phrasal_verb"),
+    fetchWiki("English_phrasal_verbs_(up)"),
+    fetchWiki("English_phrasal_verbs_(down)"),
+    fetchWiki("English_phrasal_verbs_(out)")
+  ]);
+
+  // Particle meanings
+  const particleMeanings = {
+    up: { meaning: "completion, increase, or direction", icon: "⬆️", examples: ["finish up", "cheer up", "stand up"] },
+    down: { meaning: "reduction, decrease, or lower position", icon: "⬇️", examples: ["calm down", "turn down", "break down"] },
+    out: { meaning: "extinction, distribution, or completion", icon: "🔚", examples: ["find out", "give out", "run out"] },
+    off: { meaning: "separation, departure, or completion", icon: "👋", examples: ["take off", "put off", "set off"] },
+    on: { meaning: "continuation, contact, or dependence", icon: "➡️", examples: ["carry on", "turn on", "rely on"] },
+    away: { meaning: "removal, distance, or continuous action", icon: "🏃", examples: ["give away", "throw away", "pass away"] },
+    back: { meaning: "return, reversal, or restraint", icon: "↩️", examples: ["come back", "pay back", "hold back"] },
+    over: { meaning: "excess, control, or movement", icon: "🔄", examples: ["turn over", "get over", "take over"] },
+    into: { meaning: "transformation or entry", icon: "🔀", examples: ["turn into", "run into", "break into"] },
+    through: { meaning: "completion or passage", icon: "✅", examples: ["get through", "go through", "look through"] }
+  };
 
   let html = `
     <div class="theory-hero theory-hero-pv">
@@ -58,7 +85,7 @@ async function renderPhrasalVerbTheory() {
       <div class="theory-hero-stats">
         <div class="hero-stat"><span class="hero-stat-num">${data.length}+</span><span class="hero-stat-label">Phrasal Verbs</span></div>
         <div class="hero-stat"><span class="hero-stat-num">${Object.keys(byParticle).length}</span><span class="hero-stat-label">Particles</span></div>
-        <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-label">Types</span></div>
+        <div class="hero-stat"><span class="hero-stat-num">4</span><span class="hero-stat-label">Types</span></div>
       </div>
     </div>
 
@@ -66,16 +93,22 @@ async function renderPhrasalVerbTheory() {
 
     <div class="theory-card">
       <h3 class="theory-section-title">🎯 What are Phrasal Verbs?</h3>
-      <p class="theory-desc">A <strong>phrasal verb</strong> is a verb combined with one or more particles (prepositions or adverbs) that together create a new meaning different from the original verb.</p>
+      <p class="theory-desc">A <strong>phrasal verb</strong> is a verb combined with one or more particles (prepositions or adverbs) that together create a <strong>new meaning</strong> different from the original verb. They are extremely common in spoken English.</p>
       <div class="theory-example-box">
-        <div class="example-label">Example:</div>
+        <div class="example-label">The magic of particles:</div>
         <div class="example-sentence">
           <span class="ex-verb">give</span> = entregar
           <span class="ex-separator">→</span>
           <span class="ex-verb">give up</span> = rendirse
           <span class="ex-separator">→</span>
           <span class="ex-verb">give away</span> = regalar
+          <span class="ex-separator">→</span>
+          <span class="ex-verb">give in</span> = ceder
         </div>
+      </div>
+      <div class="theory-warning">
+        <span class="warning-icon">⚠️</span>
+        <span>The meaning of a phrasal verb is usually <strong>NOT</strong> predictable from the individual words. You must learn them as units!</span>
       </div>
     </div>
 
@@ -86,31 +119,40 @@ async function renderPhrasalVerbTheory() {
           <div class="pv-type-header">
             <span class="pv-type-icon">✅</span>
             <h4>Separable</h4>
+            <span class="pv-type-count">${byType.separable.length} verbs</span>
           </div>
           <p>Object can go <strong>between</strong> verb and particle OR after it.</p>
           <div class="pv-type-example">
-            <code>"Turn off the light"</code> →
-            <code>"Turn the light off"</code> →
+            <code>"Turn off the light"</code> ✓
+            <code>"Turn the light off"</code> ✓
             <code>"Turn it off"</code> ✓
           </div>
-          <p class="pv-type-note">⚠️ Pronouns MUST go between: <code>"Turn it off"</code> ✓</p>
+          <p class="pv-type-note">⚠️ Pronouns MUST go between: <code>"Turn it off"</code> ✓ <code>"Turn off it"</code> ✗</p>
+          <div class="pv-type-verbs">
+            ${byType.separable.slice(0, 5).map(pv => `<span class="pv-inline-verb">${pv.phrasal}</span>`).join('')}
+          </div>
         </div>
         <div class="pv-type-card inseparable">
           <div class="pv-type-header">
             <span class="pv-type-icon">🔒</span>
             <h4>Inseparable</h4>
+            <span class="pv-type-count">${byType.inseparable.length} verbs</span>
           </div>
           <p>Object MUST come <strong>after</strong> the particle. Cannot be separated.</p>
           <div class="pv-type-example">
-            <code>"Look after her"</code> ✓ →
+            <code>"Look after her"</code> ✓
             <code>"Look her after"</code> ✗
           </div>
           <p class="pv-type-note">💡 Always keep verb + particle together</p>
+          <div class="pv-type-verbs">
+            ${byType.inseparable.slice(0, 5).map(pv => `<span class="pv-inline-verb">${pv.phrasal}</span>`).join('')}
+          </div>
         </div>
         <div class="pv-type-card intransitive">
           <div class="pv-type-header">
             <span class="pv-type-icon">🎯</span>
             <h4>Intransitive</h4>
+            <span class="pv-type-count">${byType.intransitive.length} verbs</span>
           </div>
           <p>No object needed. Complete meaning on its own.</p>
           <div class="pv-type-example">
@@ -119,26 +161,90 @@ async function renderPhrasalVerbTheory() {
             <code>"Break down"</code>
           </div>
           <p class="pv-type-note">🎯 Used without an object</p>
+          <div class="pv-type-verbs">
+            ${byType.intransitive.slice(0, 5).map(pv => `<span class="pv-inline-verb">${pv.phrasal}</span>`).join('')}
+          </div>
+        </div>
+        <div class="pv-type-card three-word">
+          <div class="pv-type-header">
+            <span class="pv-type-icon">🔗</span>
+            <h4>Three-Word</h4>
+            <span class="pv-type-count">${byType['three-word'].length} verbs</span>
+          </div>
+          <p>Verb + two particles. Fixed structure.</p>
+          <div class="pv-type-example">
+            <code>"Look forward to"</code> •
+            <code>"Get away with"</code>
+          </div>
+          <p class="pv-type-note">📚 Always three parts together</p>
+          <div class="pv-type-verbs">
+            ${byType['three-word'].slice(0, 5).map(pv => `<span class="pv-inline-verb">${pv.phrasal}</span>`).join('')}
+          </div>
         </div>
       </div>
     </div>
 
     <div class="theory-card">
-      <h3 class="theory-section-title">Most Common Phrasal Verbs by Particle</h3>
+      <h3 class="theory-section-title">Particle Power: How Particles Change Meaning</h3>
+      <p class="theory-desc">Each particle adds a specific "flavor" to the verb. Understanding particles helps you guess meanings!</p>
+      <div class="pv-particle-meanings-grid">
   `;
 
-  // Show top particles
-  const topParticles = ["up", "down", "out", "off", "on", "away", "back", "over", "into", "with"];
+  // Render particle meanings
+  Object.entries(particleMeanings).forEach(([particle, info]) => {
+    const count = byParticle[particle]?.length || 0;
+    html += `
+      <div class="pv-particle-meaning-card">
+        <div class="pv-pm-header">
+          <span class="pv-pm-icon">${info.icon}</span>
+          <span class="pv-pm-particle">+ ${particle}</span>
+          <span class="pv-pm-count">${count}</span>
+        </div>
+        <p class="pv-pm-meaning">${info.meaning}</p>
+        <div class="pv-pm-examples">
+          ${info.examples.map(ex => `<code>${ex}</code>`).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div></div>`;
+
+  // Add Wikipedia cards for specific particles
+  if (upWiki || downWiki || outWiki) {
+    html += `
+      <div class="theory-card">
+        <h3 class="theory-section-title">📚 Learn More from Wikipedia</h3>
+        <div class="pv-wiki-grid">
+          ${upWiki ? wikiCard(upWiki, "Phrasal verbs (up)") : ''}
+          ${downWiki ? wikiCard(downWiki, "Phrasal verbs (down)") : ''}
+          ${outWiki ? wikiCard(outWiki, "Phrasal verbs (out)") : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // Main phrasal verbs by particle
+  html += `
+    <div class="theory-card">
+      <h3 class="theory-section-title">Most Common Phrasal Verbs by Particle</h3>
+      <p class="theory-desc">Click on a particle to see all phrasal verbs with that particle.</p>
+  `;
+
+  // Show top particles with expandable sections
+  const topParticles = ["up", "down", "out", "off", "on", "away", "back", "over", "into", "with", "through", "around"];
   topParticles.forEach(particle => {
     const verbs = byParticle[particle];
     if (!verbs || !verbs.length) return;
+    const info = particleMeanings[particle] || { meaning: "", icon: "📌" };
 
     html += `
       <div class="pv-particle-section">
         <h4 class="pv-particle-title">
-          <span class="pv-particle-badge">+ ${particle}</span>
+          <span class="pv-particle-badge">${info.icon} + ${particle}</span>
           <span class="pv-particle-count">${verbs.length} verbs</span>
         </h4>
+        <p class="pv-particle-desc">${info.meaning}</p>
         <div class="pv-grid">
     `;
 
@@ -148,6 +254,7 @@ async function renderPhrasalVerbTheory() {
           <div class="pv-card-phrasal">${pv.phrasal}</div>
           <div class="pv-card-meaning">${pv.meaning}</div>
           <div class="pv-card-example">${pv.example}</div>
+          ${pv.type ? `<div class="pv-card-type">${pv.type}</div>` : ''}
         </div>
       `;
     });
