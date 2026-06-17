@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-page="verb-tenses">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Overview of all 12 English verb tenses: Present, Past, and Future in Simple, Continuous, Perfect, and Perfect Continuous forms." />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Verb Tenses — English Grammar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">📚</span>
+          <div>
+            <h1 class="game-title">Verb Tenses</h1>
+            <p class="game-subtitle">All 12 English tenses — theory, examples & practice</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="../index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="theory-view" id="theoryView">
+        <div class="theory-card">
+          <div class="theory-hero">
+            <h2 class="theory-title"><span class="theory-icon">📚</span> English Verb Tenses</h2>
+            <p class="theory-subtitle">12 tenses organized by time (Present, Past, Future) and aspect (Simple, Continuous, Perfect, Perfect Continuous).</p>
+          </div>
+
+          <!-- PRESENT TENSES -->
+          <section class="theory-section">
+            <h3 class="theory-section-title">🕐 Present Tenses</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+              <a href="present-simple.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-time" style="font-size:14px;">Present Simple</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Habits, routines, general truths, permanent states.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + verb(s/es)</code>
+              </a>
+
+              <a href="present-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-movement" style="font-size:14px;">Present Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Actions happening now, temporary situations, future plans.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + am/is/are + verb-ing</code>
+              </a>
+
+              <a href="present-perfect.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-change" style="font-size:14px;">Present Perfect</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Past actions with present results, experiences, unfinished time.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + have/has + past participle</code>
+              </a>
+
+              <a href="present-perfect-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-alt" style="font-size:14px;">Present Perfect Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Actions that started in the past and continue to now, duration emphasis.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + have/has + been + verb-ing</code>
+              </a>
+            </div>
+          </section>
+
+          <!-- PAST TENSES -->
+          <section class="theory-section">
+            <h3 class="theory-section-title">🕑 Past Tenses</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+              <a href="past-simple.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-time" style="font-size:14px;">Past Simple</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Completed actions at a specific time in the past.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + verb-ed / irregular past</code>
+              </a>
+
+              <a href="past-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-movement" style="font-size:14px;">Past Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Ongoing past actions, background events, interrupted actions.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + was/were + verb-ing</code>
+              </a>
+
+              <a href="past-perfect.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-change" style="font-size:14px;">Past Perfect</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Actions completed before another past action.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + had + past participle</code>
+              </a>
+
+              <a href="past-perfect-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-alt" style="font-size:14px;">Past Perfect Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Ongoing actions before another past event, duration emphasis.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + had + been + verb-ing</code>
+              </a>
+            </div>
+          </section>
+
+          <!-- FUTURE TENSES -->
+          <section class="theory-section">
+            <h3 class="theory-section-title">🕒 Future Tenses</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+              <a href="future-simple.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-time" style="font-size:14px;">Future Simple</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Predictions, spontaneous decisions, promises, future facts.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + will + verb</code>
+              </a>
+
+              <a href="future-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-movement" style="font-size:14px;">Future Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Actions in progress at a future time, polite inquiries.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + will + be + verb-ing</code>
+              </a>
+
+              <a href="future-perfect.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-change" style="font-size:14px;">Future Perfect</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Actions completed before a specific future time.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + will + have + past participle</code>
+              </a>
+
+              <a href="future-perfect-continuous.html" style="text-decoration:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:20px;display:block;transition:transform .15s,border-color .15s;" onmouseover="this.style.borderColor='var(--color-accent)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='none'">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                  <span class="theory-badge badge-alt" style="font-size:14px;">Future Perfect Continuous</span>
+                </div>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 8px 0;">Duration of an action up to a point in the future.</p>
+                <code style="font-size:12px;background:var(--color-bg-secondary);padding:4px 8px;border-radius:6px;display:block;">Subject + will + have + been + verb-ing</code>
+              </a>
+            </div>
+          </section>
+
+          <!-- Quick Reference -->
+          <section class="theory-section">
+            <h3 class="theory-section-title">📋 Quick Reference Table</h3>
+            <table class="theory-table">
+              <thead><tr><th>Tense</th><th>Structure</th><th>Example</th><th>Signal Words</th></tr></thead>
+              <tbody>
+                <tr><td><span class="theory-badge badge-time">Present Simple</span></td><td>V(s/es)</td><td>I <strong>work</strong> every day.</td><td>always, usually, every day</td></tr>
+                <tr><td><span class="theory-badge badge-movement">Present Continuous</span></td><td>am/is/are + V-ing</td><td>I <strong>am working</strong> now.</td><td>now, right now, at the moment</td></tr>
+                <tr><td><span class="theory-badge badge-change">Present Perfect</span></td><td>have/has + V3</td><td>I <strong>have worked</strong> here for 3 years.</td><td>already, yet, since, for</td></tr>
+                <tr><td><span class="theory-badge badge-alt">Present Perfect Cont.</span></td><td>have/has + been + V-ing</td><td>I <strong>have been working</strong> all day.</td><td>for, since, all day, how long</td></tr>
+                <tr><td><span class="theory-badge badge-time">Past Simple</span></td><td>V2 / V-ed</td><td>I <strong>worked</strong> yesterday.</td><td>yesterday, last week, ago</td></tr>
+                <tr><td><span class="theory-badge badge-movement">Past Continuous</span></td><td>was/were + V-ing</td><td>I <strong>was working</strong> at 8pm.</td><td>while, when, at that time</td></tr>
+                <tr><td><span class="theory-badge badge-change">Past Perfect</span></td><td>had + V3</td><td>I <strong>had worked</strong> before she arrived.</td><td>before, after, by the time</td></tr>
+                <tr><td><span class="theory-badge badge-alt">Past Perfect Cont.</span></td><td>had + been + V-ing</td><td>I <strong>had been working</strong> for 2 hours.</td><td>for, since, before, how long</td></tr>
+                <tr><td><span class="theory-badge badge-time">Future Simple</span></td><td>will + V</td><td>I <strong>will work</strong> tomorrow.</td><td>tomorrow, next week, soon</td></tr>
+                <tr><td><span class="theory-badge badge-movement">Future Continuous</span></td><td>will + be + V-ing</td><td>I <strong>will be working</strong> at 9am.</td><td>at this time tomorrow, in an hour</td></tr>
+                <tr><td><span class="theory-badge badge-change">Future Perfect</span></td><td>will + have + V3</td><td>I <strong>will have worked</strong> by 5pm.</td><td>by tomorrow, by next week</td></tr>
+                <tr><td><span class="theory-badge badge-alt">Future Perfect Cont.</span></td><td>will + have + been + V-ing</td><td>I <strong>will have been working</strong> for 3 hours.</td><td>for, by, how long</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>window.PAGE_TENSE = "Hub";</script>
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    initTheme();
+    buildGlobalSidebar({}, false);
+  </script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

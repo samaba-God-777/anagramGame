@@ -48,6 +48,7 @@ export default defineConfig({
         'adverb-positions': resolve(__dirname, 'grammar/adverb-positions.html'),
         'phrasal-verbs': resolve(__dirname, 'grammar/phrasal-verbs.html'),
         'idiomatic-expressions': resolve(__dirname, 'grammar/idiomatic-expressions.html'),
+        'verb-tenses': resolve(__dirname, 'grammar/verb-tenses.html'),
         'dashboard': resolve(__dirname, 'games/dashboard.html'),
       },
     },
