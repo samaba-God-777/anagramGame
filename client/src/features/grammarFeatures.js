@@ -1,7 +1,15 @@
 /* ═══════════════════════════════════════════
    GRAMMAR FEATURES MODULE
    Progress tracking, quizzes, bookmarks, notes
+   Uses hybrid storage (localStorage + Supabase)
    ═══════════════════════════════════════════ */
+
+import { 
+  loadGrammarProgress, saveGrammarProgress,
+  loadBookmarks, toggleBookmark as toggleBookmarkHybrid, isBookmarked as isBookmarkedHybrid,
+  loadNote, saveNote as saveNoteHybrid,
+  loadQuizScore, saveQuizScore as saveQuizScoreHybrid
+} from '../lib/hybridStorage.js';
 
 const STORAGE_PREFIX = "grammar_";
 const API_BASE = window.location.hostname === "localhost" ? "http://localhost:3001" : "";
@@ -110,8 +118,8 @@ function setLocal(key, value) {
 
 /* ── Progress Tracking ── */
 export function getProgress(userId = "anonymous") {
-  const local = getLocal("progress");
-  if (local) return local;
+  const local = loadGrammarProgress();
+  if (local && Object.keys(local).length > 0) return local;
   // Initialize with all lessons at 0%
   const progress = {};
   GRAMMAR_LESSONS.forEach(l => { progress[l.id] = { completed: false, score: 0, lastAccess: null }; });
@@ -122,18 +130,14 @@ export function saveProgress(lessonId, data, userId = "anonymous") {
   const progress = getProgress(userId);
   progress[lessonId] = { ...progress[lessonId], ...data, lastAccess: Date.now() };
   setLocal("progress", progress);
-  // Sync to server
-  syncProgressToServer(lessonId, data, userId);
-}
-
-async function syncProgressToServer(lessonId, data, userId) {
-  try {
-    await fetch(`${API_BASE}/api/grammar/progress`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, lessonId, ...data }),
-    });
-  } catch {}
+  // Sync to Supabase via hybrid storage
+  saveGrammarProgress(lessonId, {
+    completed: data.completed || false,
+    score: data.score || 0,
+    max_score: 100,
+    time_spent_seconds: data.time_spent_seconds || 0,
+    attempts: data.attempts || 0
+  });
 }
 
 export function getCompletionPercent() {
@@ -145,41 +149,24 @@ export function getCompletionPercent() {
 
 /* ── Bookmarks ── */
 export function getBookmarks() {
-  return getLocal("bookmarks") || [];
+  return loadBookmarks();
 }
 
 export function toggleBookmark(lessonId) {
-  const bookmarks = getBookmarks();
-  const idx = bookmarks.indexOf(lessonId);
-  if (idx === -1) bookmarks.push(lessonId);
-  else bookmarks.splice(idx, 1);
-  setLocal("bookmarks", bookmarks);
-  return bookmarks.includes(lessonId);
+  return toggleBookmarkHybrid(lessonId);
 }
 
 export function isBookmarked(lessonId) {
-  return getBookmarks().includes(lessonId);
+  return isBookmarkedHybrid(lessonId);
 }
 
 /* ── Notes ── */
 export function getNotes(lessonId) {
-  return getLocal(`note_${lessonId}`) || "";
+  return loadNote(lessonId) || "";
 }
 
 export function saveNote(lessonId, note) {
-  setLocal(`note_${lessonId}`, note);
-  // Sync to server
-  syncNoteToServer(lessonId, note);
-}
-
-async function syncNoteToServer(lessonId, note) {
-  try {
-    await fetch(`${API_BASE}/api/grammar/notes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lessonId, note }),
-    });
-  } catch {}
+  saveNoteHybrid(lessonId, note);
 }
 
 /* ── Quiz System ── */
@@ -198,6 +185,16 @@ export function saveQuizScore(lessonId, score, total) {
   prev.attempts++;
   prev.lastScore = newScore;
   setLocal(`quiz_${lessonId}`, prev);
+  
+  // Save to Supabase via hybrid storage
+  saveQuizScoreHybrid(lessonId, {
+    score: score,
+    total_questions: total,
+    correct_answers: score,
+    time_taken_seconds: 0,
+    answers: []
+  });
+  
   // Mark lesson as completed if score > 60%
   if (newScore.percent >= 60) {
     saveProgress(lessonId, { completed: true, score: newScore.percent });

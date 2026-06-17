@@ -1,19 +1,16 @@
 /* ═══════════════════════════════════════════
    SIDEBAR MODULE
+   Uses hybrid storage (localStorage + Supabase)
    ═══════════════════════════════════════════ */
 
-const STORAGE_PREFIX = "grammar_";
-
-function getLocal(key) {
-  try { return JSON.parse(localStorage.getItem(STORAGE_PREFIX + key)); } catch { return null; }
-}
+import { loadGrammarProgress, loadBookmarks, isBookmarked } from './hybridStorage.js';
 
 function getProgress() {
-  return getLocal("progress") || {};
+  return loadGrammarProgress();
 }
 
 function getBookmarks() {
-  return getLocal("bookmarks") || [];
+  return loadBookmarks();
 }
 
 const SIDEBAR_STRUCTURE = [
@@ -74,9 +71,8 @@ function getProgressBadge(href) {
 }
 
 function getBookmarkIcon(href) {
-  const bookmarks = getBookmarks();
   const lessonId = href.split("/").pop()?.replace(".html", "");
-  return bookmarks.includes(lessonId) ? "⭐" : "";
+  return isBookmarked(lessonId) ? "⭐" : "";
 }
 
 function buildGlobalSidebar(state, isTensePage) {

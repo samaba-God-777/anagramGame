@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════
    SPACED REPETITION SYSTEM MODULE
+   Uses hybrid storage (localStorage + Supabase)
    ═══════════════════════════════════════════ */
 
 /**
@@ -7,6 +8,8 @@
  * and exercises the user got wrong, and prioritizing them in game selection.
  * @module features/spacedRepetition
  */
+
+import { loadSpacedRepetition, saveSpacedRepetition } from '../lib/hybridStorage.js';
 
 const STORAGE_KEY = "spacedRepetition";
 
@@ -26,16 +29,11 @@ const DEFAULT_ITEM = {
  * @returns {Object} Map of item IDs to review data objects
  */
 function loadAll() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
+  return loadSpacedRepetition();
 }
 
 /**
- * Saves all spaced repetition data to localStorage.
+ * Saves all spaced repetition data to localStorage and Supabase.
  * @param {Object} data - The complete SR data to save
  */
 function saveAll(data) {
@@ -95,6 +93,9 @@ export function recordAnswer(id, correct, meta = {}) {
 
   all[id] = item;
   saveAll(all);
+  
+  // Sync to Supabase via hybrid storage
+  saveSpacedRepetition(id, item);
 }
 
 /**

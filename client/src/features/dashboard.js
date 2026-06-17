@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════
    PROGRESS DASHBOARD MODULE
+   Uses hybrid storage (localStorage + Supabase)
    ═══════════════════════════════════════════ */
 
 /**
@@ -7,6 +8,8 @@
  * with stats per tense and per game, including progress bars.
  * @module features/dashboard
  */
+
+import { loadAllTenseProgress, loadGameScores, loadSpacedRepetition } from '../lib/hybridStorage.js';
 
 const STORAGE_KEY = "anagramGame_progress";
 const GAME_STORAGE_KEY = "englishGames_progress";
@@ -31,42 +34,27 @@ const GAME_NAMES = {
 };
 
 /**
- * Reads all tense progress from localStorage.
+ * Reads all tense progress from hybrid storage.
  * @returns {Object} Map of tense.form keys to progress objects
  */
 function readTenseProgress() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
+  return loadAllTenseProgress();
 }
 
 /**
- * Reads all game progress from localStorage.
+ * Reads all game progress from hybrid storage.
  * @returns {Object} Map of game names to score/stats objects
  */
 function readGameProgress() {
-  try {
-    const raw = localStorage.getItem(GAME_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
+  return loadGameScores();
 }
 
 /**
- * Reads spaced repetition data from localStorage.
+ * Reads spaced repetition data from hybrid storage.
  * @returns {Object} SR data with wrong answers, review counts, etc.
  */
 function readSpacedRepetition() {
-  try {
-    const raw = localStorage.getItem(SR_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
+  return loadSpacedRepetition();
 }
 
 /**
