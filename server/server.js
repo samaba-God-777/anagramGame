@@ -39,11 +39,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: Date.now() });
 });
 
-// ── OpenAI Chat Proxy ──
+// ── GitHub Models Chat Proxy ──
 app.post('/api/chat', async (req, res) => {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'OpenAI API key not configured on server' });
+  const githubToken = process.env.GITHUB_TOKEN;
+  if (!githubToken) {
+    return res.status(500).json({ error: 'GitHub token not configured on server' });
   }
 
   const { messages, systemPrompt } = req.body;
@@ -52,14 +52,14 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://models.github.ai/inference/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${githubToken}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'openai/gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt || 'You are a helpful English tutor.' },
           ...messages,
@@ -71,15 +71,15 @@ app.post('/api/chat', async (req, res) => {
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      console.error('OpenAI API error:', response.status, err);
-      return res.status(response.status).json({ error: err.error?.message || 'OpenAI API error' });
+      console.error('GitHub Models API error:', response.status, err);
+      return res.status(response.status).json({ error: err.error?.message || 'GitHub Models API error' });
     }
 
     const data = await response.json();
     res.json(data);
   } catch (err) {
-    console.error('OpenAI fetch error:', err.message);
-    res.status(500).json({ error: 'Failed to connect to OpenAI API' });
+    console.error('GitHub Models fetch error:', err.message);
+    res.status(500).json({ error: 'Failed to connect to GitHub Models API' });
   }
 });
 
@@ -96,5 +96,5 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
   console.log(`   Static files: ${existsSync(distPath) ? distPath : '(not built yet)'}`);
-  console.log(`   OpenAI API: ${process.env.OPENAI_API_KEY ? 'configured ✓' : 'NOT SET ✗'}`);
+  console.log(`   GitHub Models: ${process.env.GITHUB_TOKEN ? 'configured ✓' : 'NOT SET ✗'}`);
 });
