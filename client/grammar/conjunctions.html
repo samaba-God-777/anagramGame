@@ -44,8 +44,24 @@
         </div>
       </header>
       <section class="theory-view" id="theoryView"></section>
+      
+      <!-- Quiz Section -->
+      <section class="quiz-section" id="quizSection" style="display:none;">
+        <div class="quiz-container">
+          <h2 class="quiz-title">📝 Conjunctions Quiz</h2>
+          <p class="quiz-subtitle">Test your knowledge with 20 multiple choice questions</p>
+          <div id="quizContent"></div>
+          <div id="quizResults" style="display:none;"></div>
+        </div>
+      </section>
+
       <div class="feedback-area" style="border-top:1px solid var(--color-border);">
         <div class="tip"><span class="tip-icon" aria-hidden="true">💡</span><span>Study the three types of conjunctions above, then complete the quiz to test your understanding!</span></div>
+        <div class="nav-buttons" style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn-nav-quiz" id="startQuizBtn">📝 Take Quiz</button>
+          <a href="idiomatic-expressions.html" class="btn-nav-prev">← Idiomatic Expressions</a>
+          <a href="prepositions.html" class="btn-nav-next">📍 Prepositions →</a>
+        </div>
       </div>
     </main>
   </div>
