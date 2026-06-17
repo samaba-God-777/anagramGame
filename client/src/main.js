@@ -14,6 +14,7 @@
 
 import { initTheme, toggleTheme } from './lib/theme.js';
 import { buildGlobalSidebar, closeSidebar, toggleSidebar } from './lib/sidebar.js';
+import { initOnboarding } from './ux/onboarding.js';
 import { $, shuffle, spawnConfetti, showFeedback } from './lib/utils.js';
 import { state, loadProgress, saveProgress, loadGameState } from './lib/storage.js';
 import { renderTheoryHTML, renderClauseFullLesson, renderClauseTheory } from './lib/renderers.js';
@@ -609,6 +610,7 @@ function detectPage() {
 async function init() {
   initTheme();
   buildGlobalSidebar(state, isTensePage);
+  initOnboarding();
 
   const pageInfo = detectPage();
 

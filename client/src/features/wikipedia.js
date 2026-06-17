@@ -51,7 +51,7 @@ export function getWikiPageUrl(data) {
 }
 
 /**
- * Create a Wikipedia info card element
+ * Create a Wikipedia info card element with thumbnail and link
  */
 export function createWikiCard(data, term) {
   if (!data) return null;
@@ -97,22 +97,4 @@ export async function renderWikiInfo(container, term) {
     const card = createWikiCard(data, term);
     if (card) container.appendChild(card);
   }
-}
-
-function createWikiCard(data, term) {
-  const extract = getWikiExtract(data);
-  if (!extract) return null;
-
-  const card = document.createElement("div");
-  card.className = "wiki-card";
-  card.innerHTML = `
-    <div class="wiki-header">
-      <span class="wiki-icon">📚</span>
-      <span class="wiki-title">${term}</span>
-    </div>
-    <div class="wiki-content">
-      <p class="wiki-extract">${extract}</p>
-    </div>
-  `;
-  return card;
 }

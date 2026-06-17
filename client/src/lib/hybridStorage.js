@@ -95,21 +95,7 @@ export function loadAllTenseProgress() {
  * @param {object} scoreData - Score data
  */
 export async function saveGameScore(gameName, scoreData) {
-  const key = `englishGames_progress`;
-  const all = loadLocal(key) || {};
-  
-  // Update local
-  if (!all[gameName]) {
-    all[gameName] = { bestScore: 0, totalScore: 0, gamesPlayed: 0 };
-  }
-  all[gameName].gamesPlayed++;
-  all[gameName].totalScore += scoreData.score || 0;
-  if ((scoreData.score || 0) > all[gameName].bestScore) {
-    all[gameName].bestScore = scoreData.score;
-  }
-  saveLocal(key, all);
-  
-  // Sync to Supabase
+  // localStorage is handled by storage.js — only sync to Supabase here
   try {
     const { error } = await supabase
       .from('game_scores')

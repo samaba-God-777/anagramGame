@@ -4,7 +4,7 @@ export const CLAUSE_FULL_LESSONS = {
   "Adjective Clauses": {
     intro: {
       text: "An adjective clause (also called a relative clause) is a dependent clause that modifies a noun or pronoun. It begins with a relative pronoun (who, whom, whose, which, that) or a relative adverb (where, when, why).",
-      spanish: "Una cláusula adjetiva (también llamada cláusula relativa) es una cláusula dependiente que modifica un sustantivo o pronombre.",
+      spanish: "An adjective clause (also called a relative clause) is a dependent clause that modifies a noun or pronoun.",
       examples: [
         { text: "The girl <strong>who is wearing a red dress</strong> is my sister.", note: "The adjective clause modifies 'the girl'." },
         { text: "I know the man <strong>who lives next door</strong>.", note: "The clause modifies 'the man'." },
@@ -15,11 +15,11 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "relative-pronouns",
         title: "Relative Pronouns",
-        spanish: "Pronombres Relativos",
+        spanish: "Relative Pronouns",
         sections: [
           {
             title: "Who",
-            spanish: "Quien — Personas (Sujeto)",
+            spanish: "Who — People (Subject)",
             text: "Use <strong>who</strong> when the relative pronoun is the subject of the clause and refers to a person.",
             examples: [
               "The teacher <strong>who</strong> teaches English is very friendly.",
@@ -28,11 +28,11 @@ export const CLAUSE_FULL_LESSONS = {
               "Do you know the woman <strong>who</strong> called me?",
               "The artist <strong>who</strong> painted this is famous."
             ],
-            note: "Who siempre se refiere a personas y funciona como sujeto del verbo que le sigue."
+            note: "Who always refers to people and functions as the subject of the verb that follows."
           },
           {
             title: "Whom",
-            spanish: "Quien — Personas (Objeto)",
+            spanish: "Whom — People (Object)",
             text: "Use <strong>whom</strong> when the relative pronoun is the object of the verb in the clause. In informal English, <strong>who</strong> often replaces <strong>whom</strong>.",
             examples: [
               "The woman <strong>whom</strong> I met yesterday is a doctor.",
@@ -41,11 +41,11 @@ export const CLAUSE_FULL_LESSONS = {
               "She is the person <strong>whom</strong> I admire most.",
               "The candidate <strong>whom</strong> they selected has experience."
             ],
-            note: "Whom se usa en contextos formales. En inglés informal se puede usar 'who' u omitir el pronombre."
+            note: "Whom is used in formal contexts. In informal English, you can use 'who' or omit the pronoun."
           },
           {
             title: "Which",
-            spanish: "El/La cual — Cosas, Animales, Ideas",
+            spanish: "Which — Things, Animals, Ideas",
             text: "Use <strong>which</strong> for things, animals, and ideas. In defining clauses, <strong>that</strong> is more common. In non-defining clauses, only <strong>which</strong> can be used.",
             examples: [
               "The book <strong>which</strong> I bought is interesting.",
@@ -54,11 +54,11 @@ export const CLAUSE_FULL_LESSONS = {
               "My phone, <strong>which</strong> I bought last year, is already broken.",
               "The decision <strong>which</strong> changed everything was made quickly."
             ],
-            note: "Which se usa para cosas. En cláusulas defining, 'that' es más común. En non-defining, SOLO 'which' es correcto."
+            note: "'Which' is used for things. In defining clauses, 'that' is more common. In non-defining clauses, ONLY 'which' is correct."
           },
           {
             title: "That",
-            spanish: "Que — Personas, Animales y Cosas",
+            spanish: "That — People, Animals, and Things",
             text: "Use <strong>that</strong> for people, animals, and things. It replaces <strong>who</strong> and <strong>which</strong> in DEFINING clauses only.",
             examples: [
               "The girl <strong>that</strong> lives next door is friendly.",
@@ -67,11 +67,11 @@ export const CLAUSE_FULL_LESSONS = {
               "The man <strong>that</strong> called is my boss.",
               "Is this the only option <strong>that</strong> we have?"
             ],
-            note: "That puede reemplazar a who y which SOLO en cláusulas defining (sin comas). Nunca se usa en non-defining."
+            note: "'That' can replace 'who' and 'which' ONLY in defining clauses (without commas). It is NEVER used in non-defining clauses."
           },
           {
             title: "Whose",
-            spanish: "Cuyo/a — Posesión",
+            spanish: "Whose — Possession",
             text: "Use <strong>whose</strong> to show possession. It works for both people and things and is always followed by a noun.",
             examples: [
               "The man <strong>whose</strong> car was stolen called the police.",
@@ -80,11 +80,11 @@ export const CLAUSE_FULL_LESSONS = {
               "The company <strong>whose</strong> CEO resigned is struggling.",
               "I know a woman <strong>whose</strong> brother is a famous singer."
             ],
-            note: "Whose expresa posesión y funciona tanto para personas como para cosas."
+            note: "Whose expresses possession and works for both people and things."
           },
           {
             title: "Where",
-            spanish: "Donde — Lugares",
+            spanish: "Where — Places",
             text: "Use <strong>where</strong> to refer to a place. It replaces 'in which', 'at which', or 'on which' for locations.",
             examples: [
               "The city <strong>where</strong> I was born is beautiful.",
@@ -93,11 +93,11 @@ export const CLAUSE_FULL_LESSONS = {
               "The hospital <strong>where</strong> she works is nearby.",
               "I remember the park <strong>where</strong> we first met."
             ],
-            note: "Where reemplaza 'in which' / 'at which' para lugares."
+            note: "Where replaces 'in which' / 'at which' for places."
           },
           {
             title: "When",
-            spanish: "Cuando — Tiempo",
+            spanish: "When — Time",
             text: "Use <strong>when</strong> to refer to a time. It replaces 'in which', 'on which', or 'at which' for time expressions.",
             examples: [
               "I remember the day <strong>when</strong> we first met.",
@@ -106,18 +106,18 @@ export const CLAUSE_FULL_LESSONS = {
               "Monday is the day <strong>when</strong> we have our meeting.",
               "The 90s were a time <strong>when</strong> technology changed rapidly."
             ],
-            note: "When reemplaza 'on which' / 'in which' para expresiones de tiempo."
+            note: "When replaces 'on which' / 'in which' for time expressions."
           }
         ]
       },
       {
         id: "defining-nondefining",
         title: "Defining vs. Non-defining Relative Clauses",
-        spanish: "Cláusulas Definitorias vs. No Definitorias",
+        spanish: "Defining vs. Non-defining Clauses",
         sections: [
           {
             title: "Defining (Restrictive) Relative Clauses",
-            spanish: "Cláusulas Definitorias (Esenciales)",
+            spanish: "Defining (Restrictive) Clauses",
             text: "These clauses provide ESSENTIAL information that identifies the noun. Without the clause, the sentence would be incomplete. <strong>No commas are used.</strong>",
             examples: [
               "The boy <strong>who won the race</strong> is my friend.",
@@ -126,11 +126,11 @@ export const CLAUSE_FULL_LESSONS = {
               "The women <strong>who live upstairs</strong> are very loud.",
               "The book <strong>that you recommended</strong> was excellent."
             ],
-            note: "Sin estas cláusulas, la oración pierde información esencial. No llevan comas."
+            note: "Without these clauses, the sentence loses essential information. They do NOT take commas."
           },
           {
             title: "Non-defining (Non-restrictive) Relative Clauses",
-            spanish: "Cláusulas No Definitorias (Información Adicional)",
+            spanish: "Non-defining (Non-restrictive) Clauses",
             text: "These clauses provide EXTRA information about a noun that is already identified. The clause is enclosed in <strong>commas</strong>. 'That' CANNOT be used.",
             examples: [
               "My mother, <strong>who is a doctor</strong>, works at the hospital.",
@@ -139,7 +139,7 @@ export const CLAUSE_FULL_LESSONS = {
               "My brother, <strong>who lives in New York</strong>, is a lawyer.",
               "The Eiffel Tower, <strong>which was built in 1889</strong>, is a famous landmark."
             ],
-            note: "Llevan comas, dan información adicional, NO se usa 'that', y NUNCA se omite el pronombre."
+            note: "They use commas, provide additional information, 'that' CANNOT be used, and the pronoun is NEVER omitted."
           }
         ],
         comparisonTable: {
@@ -156,7 +156,7 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "omission",
         title: "Omitting the Relative Pronoun",
-        spanish: "Omisión del Pronombre Relativo",
+        spanish: "Omitting the Relative Pronoun",
         text: "In DEFINING clauses only, the relative pronoun can be omitted when it is the OBJECT of the clause. This is very common in informal English.",
         examples: [
           { text: "The book <strong>(that/which)</strong> I bought is great.", rule: "Pronoun omitted (object of 'bought')" },
@@ -165,12 +165,12 @@ export const CLAUSE_FULL_LESSONS = {
           { text: "The man <strong>who</strong> called me is my boss.", rule: "CANNOT omit — it's the subject" },
           { text: "The car <strong>that</strong> broke down is old.", rule: "CANNOT omit — it's the subject" }
         ],
-        note: "Regla: Si el pronombre es el OBJETO del verbo en la cláusula relativa, se puede omitir. Si es el SUJETO, NO."
+        note: "Rule: If the pronoun is the OBJECT of the verb in the relative clause, it can be omitted. If it is the SUBJECT, it CANNOT be omitted."
       },
       {
         id: "reduction",
         title: "Relative Clause Reduction (Participial Phrases)",
-        spanish: "Reducción de Cláusulas Relativas",
+        spanish: "Relative Clause Reduction",
         text: "When the relative pronoun is the SUBJECT of the clause, it can be reduced to a participial phrase, making sentences shorter and more formal.",
         rules: [
           { name: "Active → Present Participle (-ing)", text: "Remove the pronoun + be and use -ing.", example: "The man <strong>who is standing</strong> → The man <strong>standing</strong>" },
@@ -187,7 +187,7 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "prepositions",
         title: "Prepositions in Relative Clauses",
-        spanish: "Preposiciones en Cláusulas Relativas",
+        spanish: "Prepositions in Relative Clauses",
         text: "In formal English, the preposition goes BEFORE the relative pronoun. In informal English, it stays at the END of the clause.",
         examples: [
           { formal: "The man <strong>to whom</strong> I spoke", informal: "The man <strong>I spoke to</strong>", note: "Pronoun omitted in informal" },
@@ -195,12 +195,12 @@ export const CLAUSE_FULL_LESSONS = {
           { formal: "The person <strong>with whom</strong> she arrived", informal: "The person <strong>she arrived with</strong>", note: "Natural spoken English" },
           { formal: "The topic <strong>about which</strong> we argued", informal: "The topic <strong>we argued about</strong>", note: "End preposition is standard" }
         ],
-        note: "Formal: preposición + whom/which. Informal: verbo + preposición al final."
+        note: "Formal: preposition + whom/which. Informal: verb + preposition at the end."
       },
       {
         id: "quantifier",
         title: "Quantifier + of + Relative Pronoun",
-        spanish: "Cuantificador + of + Pronombre Relativo",
+        spanish: "Quantifier + of + Relative Pronoun",
         text: "In formal English, use <strong>some/many/all/none/both/each/several + of + whom/which</strong>. Common in academic writing.",
         examples: [
           "The students, <strong>many of whom</strong> were tired, continued studying.",
@@ -209,7 +209,7 @@ export const CLAUSE_FULL_LESSONS = {
           "The proposals, <strong>several of which</strong> were rejected, needed revision.",
           "The applicants, <strong>three of whom</strong> were overqualified, were interviewed."
         ],
-        note: "Estructura formal usada en writing académico o profesional."
+        note: "Formal structure used in academic or professional writing."
       }
     ],
     commonMistakes20: [
@@ -334,7 +334,7 @@ export const CLAUSE_FULL_LESSONS = {
   "Noun Clauses": {
     intro: {
       text: "A noun clause is a dependent clause that functions as a noun in a sentence. It can act as a subject, object, complement, or object of a preposition.",
-      spanish: "Una cláusula sustantiva es una cláusula dependiente que funciona como un sustantivo en la oración.",
+      spanish: "A noun clause is a dependent clause that functions as a noun in a sentence.",
       examples: [
         { text: "<strong>What she said</strong> surprised everyone.", note: "The noun clause acts as the subject." },
         { text: "I know <strong>that he is coming</strong>.", note: "The noun clause acts as the object." },
@@ -345,18 +345,18 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "functions",
         title: "Functions of Noun Clauses",
-        spanish: "Funciones de las Cláusulas Sustantivas",
+        spanish: "Functions of Noun Clauses",
         sections: [
-          { title: "As Subject", spanish: "Como Sujeto", text: "The entire noun clause acts as the subject of the main verb.", examples: ["<strong>What she said</strong> surprised everyone.", "<strong>That he passed</strong> is great news.", "<strong>Whoever arrives first</strong> will win.", "<strong>Why he left</strong> remains a mystery.", "<strong>Where she lives</strong> is unknown."], note: "La cláusula completa funciona como sujeto del verbo principal." },
-          { title: "As Direct Object", spanish: "Como Objeto Directo", text: "The noun clause receives the action of the main verb.", examples: ["I know <strong>that he is coming</strong>.", "She doesn't understand <strong>what I mean</strong>.", "He asked <strong>whether I was ready</strong>.", "I wonder <strong>if she is feeling better</strong>.", "Can you tell me <strong>when the meeting starts</strong>?"], note: "La cláusula recibe la acción del verbo principal." },
-          { title: "As Subject Complement", spanish: "Como Complemento del Sujeto", text: "Follows a linking verb and describes the subject.", examples: ["The truth is <strong>that he lied</strong>.", "This is <strong>what I wanted to say</strong>.", "My biggest worry is <strong>whether I will pass</strong>.", "The problem is <strong>that we don't have time</strong>.", "That is <strong>what I meant</strong>."], note: "Sigue a un verbo copulativo (be, seem, look)." },
-          { title: "As Object of a Preposition", spanish: "Como Objeto de una Preposición", text: "The noun clause follows a preposition.", examples: ["She talked about <strong>what she had seen</strong>.", "I'm worried about <strong>whether he'll arrive</strong>.", "We argued about <strong>who should pay</strong>.", "He was upset by <strong>what she said</strong>.", "I'm not interested in <strong>what he thinks</strong>."], note: "La cláusula sustantiva sigue a una preposición." }
+          { title: "As Subject", spanish: "As Subject", text: "The entire noun clause acts as the subject of the main verb.", examples: ["<strong>What she said</strong> surprised everyone.", "<strong>That he passed</strong> is great news.", "<strong>Whoever arrives first</strong> will win.", "<strong>Why he left</strong> remains a mystery.", "<strong>Where she lives</strong> is unknown."], note: "The entire clause functions as the subject of the main verb." },
+          { title: "As Direct Object", spanish: "As Direct Object", text: "The noun clause receives the action of the main verb.", examples: ["I know <strong>that he is coming</strong>.", "She doesn't understand <strong>what I mean</strong>.", "He asked <strong>whether I was ready</strong>.", "I wonder <strong>if she is feeling better</strong>.", "Can you tell me <strong>when the meeting starts</strong>?"], note: "The clause receives the action of the main verb." },
+          { title: "As Subject Complement", spanish: "As Subject Complement", text: "Follows a linking verb and describes the subject.", examples: ["The truth is <strong>that he lied</strong>.", "This is <strong>what I wanted to say</strong>.", "My biggest worry is <strong>whether I will pass</strong>.", "The problem is <strong>that we don't have time</strong>.", "That is <strong>what I meant</strong>."], note: "Follows a linking verb (be, seem, look)." },
+          { title: "As Object of a Preposition", spanish: "As Object of a Preposition", text: "The noun clause follows a preposition.", examples: ["She talked about <strong>what she had seen</strong>.", "I'm worried about <strong>whether he'll arrive</strong>.", "We argued about <strong>who should pay</strong>.", "He was upset by <strong>what she said</strong>.", "I'm not interested in <strong>what he thinks</strong>."], note: "The noun clause follows a preposition." }
         ]
       },
       {
         id: "that-clauses",
         title: "Noun Clauses with THAT",
-        spanish: "Cláusulas con THAT",
+        spanish: "Noun Clauses with THAT",
         text: "The word <strong>that</strong> introduces noun clauses and can often be omitted in informal English.",
         examples: [
           { text: "I think <strong>(that)</strong> he is right.", note: "That can be omitted after 'think'." },
@@ -365,12 +365,12 @@ export const CLAUSE_FULL_LESSONS = {
           { text: "It's clear <strong>(that)</strong> he is lying.", note: "That can be omitted with dummy 'it'." },
           { text: "The fact <strong>that he came</strong> is important.", note: "That kept after nouns." }
         ],
-        note: "That se puede omitir cuando es OBJETO. NO se puede omitir cuando es SUJETO."
+        note: "That can be omitted when it is the OBJECT. It CANNOT be omitted when it is the SUBJECT."
       },
       {
         id: "if-whether",
         title: "Noun Clauses with IF and WHETHER",
-        spanish: "Cláusulas con IF y WHETHER",
+        spanish: "Noun Clauses with IF and WHETHER",
         text: "Use <strong>whether</strong> or <strong>if</strong> for yes/no questions in noun clauses. <strong>Whether</strong> is more formal.",
         examples: [
           "I don't know <strong>if</strong> he will come.",
@@ -379,37 +379,37 @@ export const CLAUSE_FULL_LESSONS = {
           "The question is <strong>whether</strong> we can afford it.",
           "I care about <strong>whether</strong> you're safe."
         ],
-        note: "Whether es más formal. 'Whether' se usa con 'or not' y después de preposiciones."
+        note: "Whether is more formal. 'Whether' is used with 'or not' and after prepositions."
       },
       {
         id: "question-words",
         title: "Question Words in Noun Clauses",
-        spanish: "Palabras Interrogativas",
+        spanish: "Question Words in Noun Clauses",
         text: "Question words (what, where, when, why, who, how) introduce noun clauses using STATEMENT word order.",
         sections: [
-          { title: "What", examples: ["<strong>What</strong> she said surprised me.", "I don't know <strong>what</strong> he wants."], note: "What = 'la cosa que'" },
-          { title: "Where", examples: ["<strong>Where</strong> she lives is unknown.", "I don't know <strong>where</strong> he went."], note: "Where = 'el lugar donde'" },
-          { title: "When", examples: ["I remember <strong>when</strong> we first met.", "Do you know <strong>when</strong> the movie starts?"], note: "When = 'el momento en que'" },
-          { title: "Why", examples: ["<strong>Why</strong> he left is a mystery.", "I understand <strong>why</strong> she was angry."], note: "Why = 'la razón por la que'" },
-          { title: "How", examples: ["I know <strong>how</strong> she did it.", "Show me <strong>how</strong> this works."], note: "How = 'la manera en que'" },
-          { title: "Who / Whom", examples: ["<strong>Who</strong> called is not important.", "I know <strong>whom</strong> you mean."], note: "Who para sujeto, whom para objeto." }
+          { title: "What", examples: ["<strong>What</strong> she said surprised me.", "I don't know <strong>what</strong> he wants."], note: "What = 'the thing that'" },
+          { title: "Where", examples: ["<strong>Where</strong> she lives is unknown.", "I don't know <strong>where</strong> he went."], note: "Where = 'the place where'" },
+          { title: "When", examples: ["I remember <strong>when</strong> we first met.", "Do you know <strong>when</strong> the movie starts?"], note: "When = 'the time when'" },
+          { title: "Why", examples: ["<strong>Why</strong> he left is a mystery.", "I understand <strong>why</strong> she was angry."], note: "Why = 'the reason why'" },
+          { title: "How", examples: ["I know <strong>how</strong> she did it.", "Show me <strong>how</strong> this works."], note: "How = 'the way in which'" },
+          { title: "Who / Whom", examples: ["<strong>Who</strong> called is not important.", "I know <strong>whom</strong> you mean."], note: "Who for subject, whom for object." }
         ]
       },
       {
         id: "embedded-questions",
         title: "Embedded Questions",
-        spanish: "Preguntas Incrustadas",
+        spanish: "Embedded Questions",
         text: "An embedded question uses STATEMENT word order, NOT question word order.",
         examples: [
           { correct: "Can you tell me <strong>where the bank is</strong>?", incorrect: "✗ Can you tell me <strong>where is the bank</strong>?", note: "Statement order" },
           { correct: "I don't know <strong>what he wants</strong>.", incorrect: "✗ I don't know <strong>what does he want</strong>.", note: "Statement order" }
         ],
-        note: "En noun clauses, NUNCA se usa inversión sujeto-verbo."
+        note: "In noun clauses, subject-verb inversion is NEVER used."
       },
       {
         id: "wh-ever",
         title: "Wh-ever Words",
-        spanish: "Palabras con -ever",
+        spanish: "Wh-ever Words",
         text: "<strong>Whoever, whatever, whenever, wherever, whichever</strong> introduce noun clauses with general meaning.",
         examples: [
           "<strong>Whoever</strong> arrives first will win.",
@@ -418,24 +418,24 @@ export const CLAUSE_FULL_LESSONS = {
           "She'll follow him <strong>wherever</strong> he goes.",
           "Take <strong>whichever</strong> you like best."
         ],
-        note: "Expresan 'cualquier persona/cosa/tiempo/lugar que'."
+        note: "They express 'any person/thing/time/place that'."
       },
       {
         id: "dummy-subject",
         title: "It as Dummy Subject",
-        spanish: "It como Sujeto Ficticio",
+        spanish: "It as Dummy Subject",
         text: "Move a long subject noun clause to the end and use <strong>it</strong> as a dummy subject.",
         examples: [
           { normal: "<strong>That she is happy</strong> is obvious.", extraposed: "<strong>It</strong> is obvious <strong>that she is happy</strong>.", note: "With adjective" },
           { normal: "<strong>That the earth is round</strong> is a fact.", extraposed: "<strong>It</strong> is a fact <strong>that the earth is round</strong>.", note: "With noun" },
           { normal: "<strong>That he is rich</strong> is said.", extraposed: "<strong>It</strong> is said <strong>that he is rich</strong>.", note: "With passive verb" }
         ],
-        note: "En inglés es más natural 'It is obvious that...' que 'That... is obvious'."
+        note: "In English, 'It is obvious that...' is more natural than 'That... is obvious'."
       },
       {
         id: "reported-speech",
         title: "Noun Clauses in Reported Speech",
-        spanish: "Estilo Indirecto",
+        spanish: "Reported Speech",
         text: "Reported statements become noun clauses with tense backshift.",
         examples: [
           { direct: 'He said: "I am tired."', reported: "He said <strong>that he was tired</strong>.", rule: "Present → Past" },
@@ -443,7 +443,7 @@ export const CLAUSE_FULL_LESSONS = {
           { direct: 'He asked: "Are you ready?"', reported: "He asked <strong>whether/if I was ready</strong>.", rule: "Yes/No → whether/if" },
           { direct: 'She asked: "Where is he?"', reported: "She asked <strong>where he was</strong>.", rule: "Wh-question → statement order" }
         ],
-        note: "Los tiempos retroceden (backshift). Las preguntas usan orden de afirmación."
+        note: "Tenses backshift. Questions use statement order."
       }
     ],
     commonMistakes20: [
@@ -568,7 +568,7 @@ export const CLAUSE_FULL_LESSONS = {
   "Adverb Clauses": {
     intro: {
       text: "An adverb clause is a dependent clause that functions as an adverb, modifying a verb, adjective, or another adverb. It tells when, why, under what condition, in contrast, or for what purpose something happens. Adverb clauses are introduced by subordinating conjunctions and contain both a subject and a verb.",
-      spanish: "Una cláusula adverbial es una cláusula dependiente que funciona como adverbio, modificando un verbo, adjetivo u otro adverbio.",
+      spanish: "An adverb clause is a dependent clause that functions as an adverb, modifying a verb, adjective, or another adverb.",
       examples: [
         { text: "<strong>When you arrive</strong>, call me.", note: "Time clause modifying 'call'." },
         { text: "He passed <strong>because he studied hard</strong>.", note: "Cause clause modifying 'passed'." },
@@ -579,12 +579,12 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "time-clauses",
         title: "Time Clauses",
-        spanish: "Cláusulas de Tiempo",
-        note: "Las cláusulas de tiempo indican CUÁNDO ocurre la acción principal. Usan el Present Simple para futuro, NO 'will'.",
+        spanish: "Time Clauses",
+        note: "Time clauses indicate WHEN the main action happens. Use Present Simple for future meaning, NOT 'will'.",
         sections: [
           {
             title: "When / Whenever",
-            spanish: "When — Cuando / Whenever — Siempre que",
+            spanish: "When / Whenever",
             text: "<strong>When</strong> means 'at that time'. <strong>Whenever</strong> means 'every time that'. Use Present Simple in the time clause for future meaning.",
             examples: [
               "<strong>When</strong> I arrive, I will call you.",
@@ -596,7 +596,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "While / As",
-            spanish: "While — Mientras / As — A medida que",
+            spanish: "While / As",
             text: "<strong>While</strong> indicates two actions happening at the same time. <strong>As</strong> indicates simultaneous progression or 'at the same time as'.",
             examples: [
               "She was reading <strong>while</strong> he was cooking.",
@@ -608,7 +608,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Before / After",
-            spanish: "Before — Antes de que / After — Después de que",
+            spanish: "Before / After",
             text: "<strong>Before</strong> indicates the main clause happens earlier. <strong>After</strong> indicates the main clause happens later.",
             examples: [
               "<strong>Before</strong> you leave, turn off the lights.",
@@ -620,7 +620,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Until / Till",
-            spanish: "Until — Hasta que",
+            spanish: "Until / Till",
             text: "<strong>Until</strong> (and informal <strong>till</strong>) indicate that the action continues up to a certain point in time. 'Till' is less formal than 'until'.",
             examples: [
               "Wait here <strong>until</strong> I come back.",
@@ -632,7 +632,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "As soon as / Once",
-            spanish: "As soon as — Tan pronto como / Once — Una vez que",
+            spanish: "As soon as / Once",
             text: "<strong>As soon as</strong> means 'immediately after'. <strong>Once</strong> means 'after one thing happens, then another follows'. Both emphasize that one action immediately follows another.",
             examples: [
               "Call me <strong>as soon as</strong> you arrive.",
@@ -644,7 +644,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Since",
-            spanish: "Since — Desde que",
+            spanish: "Since",
             text: "<strong>Since</strong> indicates a starting point in time. It often pairs with Present Perfect or Past Perfect in the main clause.",
             examples: [
               "I have lived here <strong>since</strong> I was a child.",
@@ -659,12 +659,12 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "cause-clauses",
         title: "Cause / Reason Clauses",
-        spanish: "Cláusulas de Causa o Razón",
-        note: "Las cláusulas de causa explican POR QUÉ ocurre algo.",
+        spanish: "Cause / Reason Clauses",
+        note: "Cause clauses explain WHY something happens.",
         sections: [
           {
             title: "Because / Since / As",
-            spanish: "Because — Porque / Since — Ya que / As — Puesto que",
+            spanish: "Because / Since / As",
             text: "<strong>Because</strong> gives a direct reason. <strong>Since</strong> and <strong>as</strong> give a known or obvious reason and are less emphatic.",
             examples: [
               "She stayed home <strong>because</strong> she was sick.",
@@ -676,7 +676,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Now that / Inasmuch as",
-            spanish: "Now that — Ahora que / Inasmuch as — Puesto que (formal)",
+            spanish: "Now that / Inasmuch as",
             text: "<strong>Now that</strong> indicates a new situation that causes something. <strong>Inasmuch as</strong> is formal and means 'to the extent that' or 'because'.",
             examples: [
               "<strong>Now that</strong> we have the funding, we can start.",
@@ -691,12 +691,12 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "contrast-clauses",
         title: "Contrast / Concession Clauses",
-        spanish: "Cláusulas de Contraste o Concesión",
-        note: "Las cláusulas de contraste muestran una idea OPUESTA a la cláusula principal.",
+        spanish: "Contrast / Concession Clauses",
+        note: "Contrast clauses show an idea OPPOSITE to the main clause.",
         sections: [
           {
             title: "Although / Even though / Though",
-            spanish: "Although — Aunque / Even though — A pesar de que / Though — Aunque (informal)",
+            spanish: "Although / Even though / Though",
             text: "<strong>Although</strong> is the most formal. <strong>Even though</strong> is the strongest (adds emphasis). <strong>Though</strong> is more common in spoken English and can also be used at the end of a sentence.",
             examples: [
               "<strong>Although</strong> it was cold, we went swimming.",
@@ -708,7 +708,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Whereas / While",
-            spanish: "Whereas — Mientras que / While — Mientras que (contraste)",
+            spanish: "Whereas / While",
             text: "<strong>Whereas</strong> and <strong>while</strong> show a direct contrast between two facts. They are often used to compare two different situations or people.",
             examples: [
               "She is tall, <strong>whereas</strong> her brother is short.",
@@ -723,12 +723,12 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "condition-clauses",
         title: "Condition Clauses",
-        spanish: "Cláusulas Condicionales",
-        note: "Las cláusulas condicionales expresan una CONDICIÓN necesaria para que ocurra la acción principal.",
+        spanish: "Condition Clauses",
+        note: "Condition clauses express a CONDITION necessary for the main action to occur.",
         sections: [
           {
             title: "If / Unless",
-            spanish: "If — Si / Unless — A menos que",
+            spanish: "If / Unless",
             text: "<strong>If</strong> presents a condition. <strong>Unless</strong> means 'if not' and is already negative — do NOT add 'not' after it.",
             examples: [
               "<strong>If</strong> it rains, we will stay home.",
@@ -740,7 +740,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Provided that / As long as",
-            spanish: "Provided that — Siempre que / As long as — Con tal de que",
+            spanish: "Provided that / As long as",
             text: "<strong>Provided that</strong> and <strong>as long as</strong> express a condition that must be satisfied. They are more emphatic than 'if'.",
             examples: [
               "You can borrow the car <strong>provided that</strong> you drive carefully.",
@@ -752,7 +752,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "Even if / Whether or not",
-            spanish: "Even if — Incluso si / Whether or not — Ya sea que... o no",
+            spanish: "Even if / Whether or not",
             text: "<strong>Even if</strong> presents an extreme condition that does not change the result. <strong>Whether or not</strong> presents two alternatives that give the same result.",
             examples: [
               "<strong>Even if</strong> you apologize, she will not forgive you.",
@@ -767,12 +767,12 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "purpose-clauses",
         title: "Purpose Clauses",
-        spanish: "Cláusulas de Propósito o Finalidad",
-        note: "Las cláusulas de propósito explican el OBJETIVO o la INTENCIÓN de la acción.",
+        spanish: "Purpose Clauses",
+        note: "Purpose clauses explain the GOAL or INTENTION of the action.",
         sections: [
           {
             title: "So that / In order that",
-            spanish: "So that — Para que / In order that — A fin de que",
+            spanish: "So that / In order that",
             text: "<strong>So that</strong> introduces a purpose or goal. It is often followed by modal verbs like can, could, will, would. <strong>In order that</strong> is more formal.",
             examples: [
               "She studies hard <strong>so that</strong> she can pass the exam.",
@@ -784,7 +784,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "In order to (Infinitive of Purpose)",
-            spanish: "In order to — Para / A fin de (infinitivo de propósito)",
+            spanish: "In order to (Infinitive of Purpose)",
             text: "Use <strong>in order to</strong> or simply <strong>to</strong> + infinitive to express purpose with the same subject. This is a reduced form of a purpose clause.",
             examples: [
               "She studied hard <strong>to pass</strong> the exam.",
@@ -799,8 +799,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "result-clauses",
         title: "Result Clauses",
-        spanish: "Cláusulas de Resultado",
-        note: "Las cláusulas de resultado expresan la CONSECUENCIA de una acción o situación.",
+        spanish: "Result Clauses",
+        note: "Result clauses express the CONSEQUENCE of an action or situation.",
         text: "Result clauses show the consequence or result of an action or state. They are introduced by <strong>so...that</strong> and <strong>such...that</strong>. The structure differs: <strong>so</strong> modifies adjectives or adverbs; <strong>such</strong> modifies nouns.",
         examples: [
           { text: "It was <strong>so</strong> cold <strong>that</strong> the lake froze.", rule: "so + adjective + that" },
@@ -809,13 +809,13 @@ export const CLAUSE_FULL_LESSONS = {
           { text: "There were <strong>such</strong> many people <strong>that</strong> we could not move.", rule: "such + adjective + plural noun + that" },
           { text: "He had <strong>such</strong> little time <strong>that</strong> he skipped lunch.", rule: "such + adjective + uncountable noun + that" }
         ],
-        note: "Nota: 'So' va con adjetivos/adverbios. 'Such' va con sustantivos (con o sin adjetivo)."
+        note: "Note: 'So' goes with adjectives/adverbs. 'Such' goes with nouns (with or without adjectives)."
       },
       {
         id: "manner-clauses",
         title: "Manner Clauses",
-        spanish: "Cláusulas de Modo",
-        note: "Las cláusulas de modo describen CÓMO se realiza la acción.",
+        spanish: "Manner Clauses",
+        note: "Manner clauses describe HOW an action is performed.",
         text: "Manner clauses describe how an action is performed or how something appears. They answer the question 'how?' or 'in what manner?'.",
         examples: [
           { text: "She looks <strong>as if</strong> she has seen a ghost.", rule: "Implied similarity — she appears that way." },
@@ -828,8 +828,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "place-clauses",
         title: "Place Clauses",
-        spanish: "Cláusulas de Lugar",
-        note: "Las cláusulas de lugar indican DÓNDE ocurre la acción.",
+        spanish: "Place Clauses",
+        note: "Place clauses indicate WHERE an action occurs.",
         text: "Place clauses describe the location of the main action. They are introduced by <strong>where</strong>, <strong>wherever</strong>, and <strong>everywhere</strong>.",
         examples: [
           { text: "Put the keys <strong>where</strong> you can find them.", rule: "Specific location." },
@@ -842,8 +842,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "comparison-clauses",
         title: "Comparison Clauses",
-        spanish: "Cláusulas de Comparación",
-        note: "Las cláusulas de comparación establecen una COMPARACIÓN entre dos elementos.",
+        spanish: "Comparison Clauses",
+        note: "Comparison clauses establish a COMPARISON between two elements.",
         text: "Comparison clauses compare one action or quality with another. They use <strong>than</strong>, <strong>as...as</strong>, and <strong>just as</strong>.",
         examples: [
           { text: "She is taller <strong>than</strong> I (am).", rule: "Comparative with than." },
@@ -856,8 +856,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "clause-reduction",
         title: "Clause Reduction (Participial Phrases)",
-        spanish: "Reducción de Cláusulas (Frases de Participio)",
-        note: "Se puede REDUCIR una cláusula adverbial cuando el sujeto es el mismo en ambas cláusulas, eliminando el sujeto y cambiando el verbo.",
+        spanish: "Clause Reduction (Participial Phrases)",
+        note: "An adverb clause can be REDUCED when the subject is the same in both clauses, by removing the subject and changing the verb.",
         text: "When the subject of the adverb clause is the same as the main clause subject, and the verb is active, you can reduce it to a participial phrase. This creates more concise, formal sentences.",
         rules: [
           { name: "Active Verb → Present Participle (-ing)", text: "Remove the conjunction and subject. Change the verb to -ing.", example: "<strong>While I was walking</strong> home → <strong>While walking</strong> home" },
@@ -876,8 +876,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "inversion",
         title: "Inversion in Adverb Clauses",
-        spanish: "Inversión en Cláusulas Adverbiales",
-        note: "En inglés formal, ciertas expresiones negativas o restrictivas causan INVERSIÓN del sujeto y verbo auxiliar.",
+        spanish: "Inversion in Adverb Clauses",
+        note: "In formal English, certain negative or restrictive expressions cause INVERSION of the subject and auxiliary verb.",
         text: "In formal and literary English, certain negative and restrictive expressions cause subject-auxiliary inversion in the main clause or in the adverb clause itself. This is a more sophisticated structure used in writing.",
         rules: [
           { name: "Hardly / Scarcely...when", text: "Use Past Perfect in the inverted clause. Invert had + subject.", example: "<strong>Hardly had I arrived</strong> when the phone rang." },
@@ -897,8 +897,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "ellipsis",
         title: "Ellipsis in Adverb Clauses",
-        spanish: "Elipsis en Cláusulas Adverbiales",
-        note: "Se puede OMITIR el sujeto y el verbo 'be' en cláusulas adverbiales cuando el significado es claro.",
+        spanish: "Ellipsis in Adverb Clauses",
+        note: "The subject and the verb 'be' can be OMITTED in adverb clauses when the meaning is clear.",
         text: "Ellipsis in adverb clauses means omitting the subject and the verb 'be' when they are the same as in the main clause. This creates very concise, natural-sounding sentences. Common with <strong>when, while, if, unless, though, as, as if, whenever</strong>.",
         examples: [
           { full: "When it is possible, arrive early.", ellipsis: "When possible, arrive early." },
@@ -911,13 +911,13 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "academic-english",
         title: "Academic English Usage",
-        spanish: "Uso Académico (TOEFL, IELTS, Ensayos, Informes)",
-        note: "Las cláusulas adverbiales son ESENCIALES en writing académico para mostrar relaciones lógicas complejas.",
+        spanish: "Academic English Usage (TOEFL, IELTS, Essays, Reports)",
+        note: "Adverb clauses are ESSENTIAL in academic writing to show complex logical relationships.",
         text: "In academic writing, adverb clauses are essential for showing complex logical relationships. They improve cohesion and demonstrate sophisticated command of English. Used extensively in TOEFL, IELTS, GRE, and university essays.",
         sections: [
           {
             title: "Common Academic Patterns",
-            spanish: "Patrones Académicos Comunes",
+            spanish: "Common Academic Patterns",
             examples: [
               { text: "<strong>Although</strong> the results were promising, further research is needed.", note: "Concession — common in discussion sections." },
               { text: "<strong>Because</strong> the sample size was small, the findings may not be generalizable.", note: "Cause — explaining limitations." },
@@ -928,7 +928,7 @@ export const CLAUSE_FULL_LESSONS = {
           },
           {
             title: "IELTS / TOEFL Writing Tips",
-            spanish: "Consejos para IELTS / TOEFL Writing",
+            spanish: "IELTS / TOEFL Writing Tips",
             examples: [
               "Use <strong>while</strong> and <strong>whereas</strong> to compare and contrast ideas in Task 1 and Task 2 essays.",
               "Start a body paragraph with <strong>Although</strong> or <strong>While</strong> to show you can acknowledge counterarguments.",
@@ -949,8 +949,8 @@ export const CLAUSE_FULL_LESSONS = {
       {
         id: "punctuation",
         title: "Punctuation Rules",
-        spanish: "Reglas de Puntuación",
-        note: "La PUNTUACIÓN cambia según la posición de la cláusula adverbial.",
+        spanish: "Punctuation Rules",
+        note: "PUNCTUATION changes depending on the position of the adverb clause.",
         text: "The punctuation of adverb clauses depends on their position in the sentence. When the adverb clause comes BEFORE the main clause, use a comma. When it comes AFTER the main clause, NO comma is needed (unless it is non-essential or parenthetical).",
         rules: [
           { name: "Adverb Clause First → Comma", text: "When the adverb clause begins the sentence, place a comma after it.", example: "<strong>When you arrive</strong>, call me." },

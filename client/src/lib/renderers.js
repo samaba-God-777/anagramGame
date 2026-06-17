@@ -242,7 +242,7 @@ function renderClauseFullLesson(clauseType) {
     return `
       <div class="theory-card" style="margin-bottom:28px;">
         <h2 class="theory-title" style="border-bottom:2px solid var(--color-error);padding-bottom:8px;">Common Mistakes</h2>
-        <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Errores Comunes — ${m.length} errores frecuentes explicados</p>
+        <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Common Mistakes — ${m.length} frequent errors explained</p>
         <div class="mistakes-grid">
           ${m.map(err => `
             <div class="mistake-card">
@@ -328,7 +328,7 @@ function renderClauseFullLesson(clauseType) {
     return `
       <div class="theory-card" style="margin-bottom:28px;">
         <h2 class="theory-title" style="border-bottom:2px solid var(--color-accent);padding-bottom:8px;">📊 Summary — Clause Comparison</h2>
-        <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Tabla comparativa de los tres tipos de cláusulas</p>
+        <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Comparative table of the three clause types</p>
         <div style="overflow-x:auto;">
           <table class="theory-table">
             <thead><tr><th>Type</th><th>Function</th><th>Example</th></tr></thead>
@@ -347,7 +347,7 @@ function renderClauseFullLesson(clauseType) {
   const renderConceptMap = () => `
     <div class="theory-card" style="margin-bottom:28px;">
       <h2 class="theory-title" style="border-bottom:2px solid var(--color-accent);padding-bottom:8px;">🧠 Concept Map</h2>
-      <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Mapa conceptual de las cláusulas en inglés</p>
+      <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">Conceptual map of clauses in English</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;text-align:center;">
         <div style="background:var(--color-bg-secondary);border-radius:8px;padding:16px;border-top:4px solid var(--color-primary);">
           <p style="font-size:13px;font-weight:700;color:var(--color-primary);margin:0 0 4px;">NOUN CLAUSE</p>
