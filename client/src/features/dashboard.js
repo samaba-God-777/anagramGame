@@ -1,19 +1,13 @@
 /* ═══════════════════════════════════════════
-   PROGRESS DASHBOARD MODULE
-   Uses hybrid storage (localStorage + Supabase)
+   ENGLISH LEARNING DASHBOARD
+   Comprehensive progress tracking & CEFR assessment
    ═══════════════════════════════════════════ */
 
-/**
- * Reads all localStorage progress data and renders a visual dashboard
- * with stats per tense and per game, including progress bars.
- * @module features/dashboard
- */
+import { loadAllTenseProgress, loadGameScores, loadSpacedRepetition, loadBookmarks, getUserStats } from '../lib/hybridStorage.js';
 
-import { loadAllTenseProgress, loadGameScores, loadSpacedRepetition } from '../lib/hybridStorage.js';
-
-const STORAGE_KEY = "anagramGame_progress";
-const GAME_STORAGE_KEY = "englishGames_progress";
-const SR_STORAGE_KEY = "spacedRepetition";
+// ═══════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════
 
 const TENSE_ORDER = [
   "Present Simple", "Present Continuous", "Present Perfect", "Present Perfect Continuous",
@@ -31,223 +25,386 @@ const GAME_NAMES = {
   wordOrder: "Word Order",
   preposition: "Preposition Challenge",
   unscramble: "Sentence Unscramble",
+  adjectiveOrder: "Adjective Order",
+  adverbPlacement: "Adverb Placement",
+  clauseIdentification: "Clause Identification",
 };
 
-/**
- * Reads all tense progress from hybrid storage.
- * @returns {Object} Map of tense.form keys to progress objects
- */
-function readTenseProgress() {
-  return loadAllTenseProgress();
-}
+// CEFR Level definitions
+const CEFR_LEVELS = [
+  { level: "A1", label: "Beginner", color: "#ef4444", min: 0, max: 15, description: "Can understand and use familiar everyday expressions and very basic phrases." },
+  { level: "A2", label: "Elementary", color: "#f97316", min: 16, max: 30, description: "Can understand sentences and frequently used expressions related to areas of most immediate relevance." },
+  { level: "B1", label: "Intermediate", color: "#eab308", min: 31, max: 50, description: "Can understand the main points of clear standard input on familiar matters regularly encountered." },
+  { level: "B2", label: "Upper Intermediate", color: "#22c55e", min: 51, max: 70, description: "Can understand the main ideas of complex text on both concrete and abstract topics." },
+  { level: "C1", label: "Advanced", color: "#3b82f6", min: 71, max: 85, description: "Can understand a wide range of demanding, longer texts, and recognize implicit meaning." },
+  { level: "C2", label: "Proficiency", color: "#8b5cf6", min: 86, max: 100, description: "Can understand with ease virtually everything heard or read." },
+];
 
-/**
- * Reads all game progress from hybrid storage.
- * @returns {Object} Map of game names to score/stats objects
- */
-function readGameProgress() {
-  return loadGameScores();
-}
+// Grammar topics
+const GRAMMAR_TOPICS = [
+  { id: "tenses", label: "English Tenses", icon: "⏰", weight: 30 },
+  { id: "clauses", label: "Clauses", icon: "🔗", weight: 20 },
+  { id: "prepositions", label: "Prepositions", icon: "📍", weight: 15 },
+  { id: "conjunctions", label: "Conjunctions", icon: "🔗", weight: 10 },
+  { id: "adjective-positions", label: "Adjective Positions", icon: "📏", weight: 10 },
+  { id: "adverb-positions", label: "Adverb Positions", icon: "📍", weight: 10 },
+  { id: "phrasal-verbs", label: "Phrasal Verbs", icon: "💬", weight: 20 },
+  { id: "idiomatic-expressions", label: "Idioms", icon: "🎭", weight: 15 },
+];
 
-/**
- * Reads spaced repetition data from hybrid storage.
- * @returns {Object} SR data with wrong answers, review counts, etc.
- */
-function readSpacedRepetition() {
-  return loadSpacedRepetition();
-}
+// ═══════════════════════════════════════════
+// DATA COLLECTION
+// ═══════════════════════════════════════════
 
-/**
- * Calculates aggregate stats across all tenses.
- * @param {Object} tenseProgress - All tense progress data
- * @returns {Object} Aggregated stats: totalScore, totalCompleted, totalAttempts, perTense
- */
-function calculateTenseStats(tenseProgress) {
-  const stats = {
-    totalScore: 0,
-    totalCompleted: 0,
-    totalAttempts: 0,
-    perTense: {},
-  };
-
+function collectAllData() {
+  const tenseProgress = loadAllTenseProgress();
+  const gameProgress = loadGameScores();
+  const srData = loadSpacedRepetition();
+  const bookmarks = loadBookmarks();
+  
+  // Calculate tense stats
+  const tenseStats = { totalScore: 0, totalCompleted: 0, totalAttempts: 0, perTense: {} };
   TENSE_ORDER.forEach(tense => {
-    stats.perTense[tense] = { score: 0, completed: 0, attempts: 0, forms: {} };
+    tenseStats.perTense[tense] = { score: 0, completed: 0, attempts: 0, forms: {} };
     FORMS.forEach(form => {
       const key = `${tense}.${form}`;
       const data = tenseProgress[key] || {};
       const s = data.score || 0;
-      const c = data.completed || 0;
+      const c = data.completed ? 1 : 0;
       const a = data.attempts || 0;
-      stats.perTense[tense].score += s;
-      stats.perTense[tense].completed += c;
-      stats.perTense[tense].attempts += a;
-      stats.perTense[tense].forms[form] = { score: s, completed: c, attempts: a };
-      stats.totalScore += s;
-      stats.totalCompleted += c;
-      stats.totalAttempts += a;
+      tenseStats.perTense[tense].score += s;
+      tenseStats.perTense[tense].completed += c;
+      tenseStats.perTense[tense].attempts += a;
+      tenseStats.perTense[tense].forms[form] = { score: s, completed: c, attempts: a };
+      tenseStats.totalScore += s;
+      tenseStats.totalCompleted += c;
+      tenseStats.totalAttempts += a;
     });
   });
 
-  return stats;
+  // Calculate game stats
+  const gameStats = { totalScore: 0, totalGames: 0, games: {} };
+  Object.entries(gameProgress).forEach(([game, data]) => {
+    gameStats.totalScore += data.totalScore || 0;
+    gameStats.totalGames += data.gamesPlayed || 0;
+    gameStats.games[game] = {
+      name: GAME_NAMES[game] || game,
+      bestScore: data.bestScore || 0,
+      totalScore: data.totalScore || 0,
+      gamesPlayed: data.gamesPlayed || 0,
+      avgScore: data.gamesPlayed > 0 ? Math.round((data.totalScore || 0) / data.gamesPlayed) : 0,
+    };
+  });
+
+  // Calculate vocabulary stats
+  const vocabStats = { totalWords: 0, mastered: 0, learning: 0, newWords: 0, reviewDue: 0 };
+  Object.values(srData).forEach(item => {
+    vocabStats.totalWords++;
+    if (item.correctCount >= 5) vocabStats.mastered++;
+    else if (item.correctCount > 0) vocabStats.learning++;
+    else vocabStats.newWords++;
+    if (item.nextReview && new Date(item.nextReview) <= new Date()) vocabStats.reviewDue++;
+  });
+
+  // Calculate CEFR score
+  const cefrScore = calculateCEFRScore(tenseStats, gameStats, vocabStats, bookmarks.length);
+
+  return { tenseStats, gameStats, vocabStats, bookmarks, srData, cefrScore };
 }
 
-/**
- * Creates a progress bar element.
- * @param {number} value - Current value (0-100)
- * @param {string} label - Label text
- * @param {string} [color] - Optional CSS color override
- * @returns {HTMLElement} The progress bar container element
- */
-function createProgressBar(value, label, color) {
+// ═══════════════════════════════════════════
+// CEFR LEVEL CALCULATION
+// ═══════════════════════════════════════════
+
+function calculateCEFRScore(tenseStats, gameStats, vocabStats, bookmarkCount) {
+  let score = 0;
+
+  // Tenses (40% weight)
+  const tenseCompletion = tenseStats.totalCompleted;
+  const maxTenses = TENSE_ORDER.length * 3 * 10; // 12 tenses * 3 forms * 10 points each
+  const tenseScore = Math.min((tenseCompletion / 10) * 40, 40);
+  score += tenseScore;
+
+  // Games (25% weight)
+  const gameScore = Math.min((gameStats.totalGames / 20) * 25, 25);
+  score += gameScore;
+
+  // Vocabulary (20% weight)
+  const vocabScore = Math.min((vocabStats.mastered / 30) * 20, 20);
+  score += vocabScore;
+
+  // Engagement (15% weight)
+  const engagementScore = Math.min(((bookmarkCount + tenseStats.totalAttempts) / 50) * 15, 15);
+  score += engagementScore;
+
+  // Determine CEFR level
+  let level = CEFR_LEVELS[0];
+  for (const l of CEFR_LEVELS) {
+    if (score >= l.min && score <= l.max) {
+      level = l;
+      break;
+    }
+  }
+
+  return { score: Math.round(score), level, allLevels: CEFR_LEVELS };
+}
+
+// ═══════════════════════════════════════════
+// UI COMPONENTS
+// ═══════════════════════════════════════════
+
+function createStatCard(value, label, color, icon) {
+  return `
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon" style="background:${color}20;color:${color}">${icon}</div>
+      <div class="dash-stat-value" style="color:${color}">${value}</div>
+      <div class="dash-stat-label">${label}</div>
+    </div>
+  `;
+}
+
+function createProgressBar(value, label, color, showPercent = true) {
   const pct = Math.min(Math.round(value), 100);
-  const container = document.createElement("div");
-  container.style.cssText = "margin-bottom:12px;";
-
-  const header = document.createElement("div");
-  header.style.cssText = "display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;";
-
-  const labelEl = document.createElement("span");
-  labelEl.style.cssText = "font-size:13px;font-weight:600;";
-  labelEl.textContent = label;
-
-  const valueEl = document.createElement("span");
-  valueEl.style.cssText = "font-size:12px;color:var(--color-text-muted);";
-  valueEl.textContent = `${pct}%`;
-
-  header.appendChild(labelEl);
-  header.appendChild(valueEl);
-
-  const barBg = document.createElement("div");
-  barBg.style.cssText = "background:var(--color-border);border-radius:99px;height:8px;overflow:hidden;";
-
-  const barFill = document.createElement("div");
-  barFill.style.cssText = `background:${color || "var(--color-primary)"};height:100%;width:${pct}%;border-radius:99px;transition:width 0.5s ease;`;
-  barFill.dataset.pct = String(pct);
-
-  barBg.appendChild(barFill);
-  container.appendChild(header);
-  container.appendChild(barBg);
-
-  return container;
+  return `
+    <div class="dash-progress">
+      <div class="dash-progress-header">
+        <span class="dash-progress-label">${label}</span>
+        ${showPercent ? `<span class="dash-progress-value">${pct}%</span>` : ''}
+      </div>
+      <div class="dash-progress-bar">
+        <div class="dash-progress-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+    </div>
+  `;
 }
 
-/**
- * Renders the full dashboard HTML into a container element.
- * @param {HTMLElement} [container] - Container to render into. If not provided, returns HTML string.
- * @returns {string|undefined} HTML string if no container provided, otherwise undefined
- */
+function createCEFRGauge(score, level) {
+  const circumference = 2 * Math.PI * 60;
+  const offset = circumference - (score / 100) * circumference;
+  
+  return `
+    <div class="dash-cefr-gauge">
+      <svg viewBox="0 0 140 140" class="dash-cefr-svg">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="var(--color-border)" stroke-width="12"/>
+        <circle cx="70" cy="70" r="60" fill="none" stroke="${level.color}" stroke-width="12"
+          stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
+          stroke-linecap="round" transform="rotate(-90 70 70)"/>
+      </svg>
+      <div class="dash-cefr-center">
+        <div class="dash-cefr-level">${level.level}</div>
+        <div class="dash-cefr-score">${score}%</div>
+      </div>
+    </div>
+  `;
+}
+
+function createTenseHeatmap(tenseStats) {
+  let html = '<div class="dash-heatmap">';
+  
+  TENSE_ORDER.forEach(tense => {
+    const ts = tenseStats.perTense[tense];
+    const totalPossible = 3 * 100; // 3 forms * 100 points
+    const pct = Math.min(Math.round((ts.score / totalPossible) * 100), 100);
+    const intensity = pct / 100;
+    const hue = 120; // Green
+    const saturation = 70;
+    const lightness = 95 - (intensity * 40); // 95 = very light, 55 = dark
+    
+    html += `
+      <div class="dash-heatmap-cell" style="background:hsl(${hue},${saturation}%,${lightness}%)" title="${tense}: ${pct}%">
+        <div class="dash-heatmap-label">${tense.replace(' ', '\n')}</div>
+        <div class="dash-heatmap-value">${pct}%</div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  return html;
+}
+
+function createRadarChart(tenseStats, gameStats, vocabStats) {
+  // Simplified radar as a bar chart
+  const categories = [
+    { label: "Tenses", value: Math.min((tenseStats.totalCompleted / 36) * 100, 100), icon: "⏰" },
+    { label: "Vocabulary", value: Math.min((vocabStats.mastered / 30) * 100, 100), icon: "📚" },
+    { label: "Games", value: Math.min((gameStats.totalGames / 50) * 100, 100), icon: "🎮" },
+    { label: "Phrasal Verbs", value: Math.min((vocabStats.totalWords / 20) * 100, 100), icon: "💬" },
+    { label: "Accuracy", value: vocabStats.totalWords > 0 ? Math.round((vocabStats.mastered / vocabStats.totalWords) * 100) : 0, icon: "🎯" },
+  ];
+
+  let html = '<div class="dash-radar">';
+  categories.forEach(cat => {
+    const color = cat.value >= 70 ? "var(--color-success)" : cat.value >= 40 ? "var(--color-primary)" : "var(--color-accent)";
+    html += `
+      <div class="dash-radar-item">
+        <div class="dash-radar-label">${cat.icon} ${cat.label}</div>
+        <div class="dash-radar-bar">
+          <div class="dash-radar-fill" style="width:${cat.value}%;background:${color}"></div>
+        </div>
+        <div class="dash-radar-value">${Math.round(cat.value)}%</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  return html;
+}
+
+// ═══════════════════════════════════════════
+// MAIN RENDER
+// ═══════════════════════════════════════════
+
 export function renderDashboard(container) {
-  const tenseProgress = readTenseProgress();
-  const gameProgress = readGameProgress();
-  const srData = readSpacedRepetition();
-  const tenseStats = calculateTenseStats(tenseProgress);
-
-  const maxPerTense = 50;
-  const totalPossibleTenses = TENSE_ORDER.length * 3 * maxPerTenses;
-
-  const cardStyle = "background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;";
-  const titleStyle = "font-size:16px;font-weight:700;color:var(--color-text);margin:0 0 16px;border-bottom:2px solid var(--color-primary);padding-bottom:8px;";
+  const data = collectAllData();
+  const { tenseStats, gameStats, vocabStats, bookmarks, cefrScore } = data;
 
   const html = `
-    <div class="dashboard" style="max-width:900px;margin:0 auto;">
-      <h2 style="font-size:22px;font-weight:800;color:var(--color-text);margin:0 0 24px;text-align:center;">📊 Learning Dashboard</h2>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;">
-        <div style="${cardStyle}text-align:center;">
-          <p style="font-size:28px;font-weight:800;color:var(--color-primary);margin:0;">${tenseStats.totalScore}</p>
-          <p style="font-size:12px;color:var(--color-text-muted);margin:4px 0 0;">Total Score</p>
-        </div>
-        <div style="${cardStyle}text-align:center;">
-          <p style="font-size:28px;font-weight:800;color:var(--color-success);margin:0;">${tenseStats.totalCompleted}</p>
-          <p style="font-size:12px;color:var(--color-text-muted);margin:4px 0 0;">Sentences Completed</p>
-        </div>
-        <div style="${cardStyle}text-align:center;">
-          <p style="font-size:28px;font-weight:800;color:var(--color-accent);margin:0;">${tenseStats.totalAttempts}</p>
-          <p style="font-size:12px;color:var(--color-text-muted);margin:4px 0 0;">Total Attempts</p>
-        </div>
-        <div style="${cardStyle}text-align:center;">
-          <p style="font-size:28px;font-weight:800;color:var(--color-warning);margin:0;">${Object.keys(gameProgress).length}</p>
-          <p style="font-size:12px;color:var(--color-text-muted);margin:4px 0 0;">Games Played</p>
-        </div>
+    <div class="dashboard">
+      <div class="dash-header">
+        <h1 class="dash-title">📊 English Learning Dashboard</h1>
+        <p class="dash-subtitle">Track your progress and discover your CEFR level</p>
       </div>
 
-      <div style="${cardStyle}">
-        <h3 style="${titleStyle}">📝 Sentence Builder Progress</h3>
-        <p style="font-size:13px;color:var(--color-text-muted);margin:0 0 16px;">Score per tense (across all three forms)</p>
-        ${TENSE_ORDER.map(tense => {
-          const ts = tenseStats.perTense[tense];
-          const pct = Math.min(Math.round((ts.completed / (3 * maxPerTenses)) * 100), 100);
-          const color = pct >= 80 ? "var(--color-success)" : pct >= 40 ? "var(--color-primary)" : "var(--color-accent)";
-          return createProgressBar(pct, tense, color).outerHTML;
-        }).join("")}
-      </div>
-
-      <div style="${cardStyle}">
-        <h3 style="${titleStyle}">🎮 Game Scores</h3>
-        ${Object.keys(gameProgress).length === 0 ? '<p style="font-size:13px;color:var(--color-text-muted);">No game data yet. Play some games to see your scores here!</p>' : `
-          <table class="theory-table" style="margin-bottom:0;">
-            <thead><tr><th>Game</th><th>Best Score</th><th>Total Score</th><th>Games Played</th><th>Avg per Game</th></tr></thead>
-            <tbody>
-              ${Object.entries(gameProgress).map(([game, data]) => {
-                const name = GAME_NAMES[game] || game;
-                const avg = data.gamesPlayed > 0 ? Math.round(data.totalScore / data.gamesPlayed) : 0;
-                return `<tr>
-                  <td><strong>${name}</strong></td>
-                  <td>${data.bestScore}</td>
-                  <td>${data.totalScore}</td>
-                  <td>${data.gamesPlayed}</td>
-                  <td>${avg}</td>
-                </tr>`;
-              }).join("")}
-            </tbody>
-          </table>
-        `}
-      </div>
-
-      <div style="${cardStyle}">
-        <h3 style="${titleStyle}">🔄 Spaced Repetition</h3>
-        ${Object.keys(srData).length === 0 ? '<p style="font-size:13px;color:var(--color-text-muted);">No review data yet. Keep practicing and wrong answers will be tracked here.</p>' : (() => {
-          const wrongCount = Object.values(srData).filter(d => d.wrongCount > 0).length;
-          const reviewDue = Object.values(srData).filter(d => {
-            if (!d.nextReview) return false;
-            return new Date(d.nextReview) <= new Date();
-          }).length;
-          return `
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
-              <div style="text-align:center;padding:12px;background:var(--color-bg-secondary);border-radius:8px;">
-                <p style="font-size:24px;font-weight:700;color:var(--color-error);margin:0;">${wrongCount}</p>
-                <p style="font-size:11px;color:var(--color-text-muted);margin:4px 0 0;">Items with errors</p>
-              </div>
-              <div style="text-align:center;padding:12px;background:var(--color-bg-secondary);border-radius:8px;">
-                <p style="font-size:24px;font-weight:700;color:var(--color-warning);margin:0;">${reviewDue}</p>
-                <p style="font-size:11px;color:var(--color-text-muted);margin:4px 0 0;">Due for review</p>
-              </div>
+      <!-- CEFR Level Card -->
+      <div class="dash-card dash-cefr-card">
+        <div class="dash-cefr-content">
+          ${createCEFRGauge(cefrScore.score, cefrScore.level)}
+          <div class="dash-cefr-info">
+            <h2 class="dash-cefr-title">Your English Level: <span style="color:${cefrScore.level.color}">${cefrScore.level.level} - ${cefrScore.level.label}</span></h2>
+            <p class="dash-cefr-desc">${cefrScore.level.description}</p>
+            <div class="dash-cefr-progress">
+              ${cefrScore.allLevels.map(l => `
+                <div class="dash-cefr-level ${l.level === cefrScore.level.level ? 'active' : ''}" style="--level-color:${l.color}">
+                  <span class="dash-cefr-level-label">${l.level}</span>
+                  <span class="dash-cefr-level-name">${l.label}</span>
+                </div>
+              `).join('')}
             </div>
-          `;
-        })()}
-      </div>
-
-      <div style="${cardStyle}">
-        <h3 style="${titleStyle}">📈 Tense Form Breakdown</h3>
-        <div style="overflow-x:auto;">
-          <table class="theory-table" style="margin-bottom:0;">
-            <thead><tr><th>Tense</th><th>Affirmative</th><th>Negative</th><th>Questions</th><th>Total</th></tr></thead>
-            <tbody>
-              ${TENSE_ORDER.map(tense => {
-                const ts = tenseStats.perTense[tense];
-                return `<tr>
-                  <td><strong>${tense}</strong></td>
-                  <td>${ts.forms.affirmative.completed}</td>
-                  <td>${ts.forms.negative.completed}</td>
-                  <td>${ts.forms.questions.completed}</td>
-                  <td><strong>${ts.completed}</strong></td>
-                </tr>`;
-              }).join("")}
-            </tbody>
-          </table>
+          </div>
         </div>
       </div>
-    </div>`;
+
+      <!-- Stats Overview -->
+      <div class="dash-stats-grid">
+        ${createStatCard(tenseStats.totalScore, "Total Score", "var(--color-primary)", "🏆")}
+        ${createStatCard(tenseStats.totalCompleted, "Sentences Built", "var(--color-success)", "✅")}
+        ${createStatCard(gameStats.totalGames, "Games Played", "var(--color-accent)", "🎮")}
+        ${createStatCard(vocabStats.mastered, "Words Mastered", "var(--color-info)", "📚")}
+        ${createStatCard(bookmarks.length, "Bookmarks", "var(--color-warning)", "⭐")}
+        ${createStatCard(vocabStats.reviewDue, "Due for Review", "var(--color-error)", "🔄")}
+      </div>
+
+      <!-- Skills Overview -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">🎯 Skills Overview</h3>
+        ${createRadarChart(tenseStats, gameStats, vocabStats)}
+      </div>
+
+      <!-- Tense Progress Heatmap -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">⏰ Tense Mastery Heatmap</h3>
+        <p class="dash-card-desc">Green intensity shows your mastery level for each tense</p>
+        ${createTenseHeatmap(tenseStats)}
+      </div>
+
+      <!-- Detailed Tense Progress -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">📝 Detailed Tense Progress</h3>
+        <div class="dash-tense-grid">
+          ${TENSE_ORDER.map(tense => {
+            const ts = tenseStats.perTense[tense];
+            const totalPossible = 3 * 100;
+            const pct = Math.min(Math.round((ts.score / totalPossible) * 100), 100);
+            const color = pct >= 70 ? "var(--color-success)" : pct >= 40 ? "var(--color-primary)" : "var(--color-accent)";
+            return `
+              <div class="dash-tense-item">
+                <div class="dash-tense-header">
+                  <span class="dash-tense-name">${tense}</span>
+                  <span class="dash-tense-score">${pct}%</span>
+                </div>
+                <div class="dash-tense-bar">
+                  <div class="dash-tense-fill" style="width:${pct}%;background:${color}"></div>
+                </div>
+                <div class="dash-tense-forms">
+                  ${FORMS.map(form => {
+                    const f = ts.forms[form];
+                    const formPct = Math.min(f.score, 100);
+                    return `<span class="dash-tense-form ${formPct > 0 ? 'completed' : ''}">${FORM_LABELS[form]}: ${formPct}%</span>`;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- Game Performance -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">🎮 Game Performance</h3>
+        ${Object.keys(gameStats.games).length === 0 ? 
+          '<p class="dash-empty">No game data yet. Play some games to see your stats!</p>' :
+          `<div class="dash-games-grid">
+            ${Object.entries(gameStats.games).map(([game, data]) => `
+              <div class="dash-game-card">
+                <div class="dash-game-name">${data.name}</div>
+                <div class="dash-game-stats">
+                  <div class="dash-game-stat">
+                    <span class="dash-game-stat-value">${data.bestScore}</span>
+                    <span class="dash-game-stat-label">Best</span>
+                  </div>
+                  <div class="dash-game-stat">
+                    <span class="dash-game-stat-value">${data.gamesPlayed}</span>
+                    <span class="dash-game-stat-label">Played</span>
+                  </div>
+                  <div class="dash-game-stat">
+                    <span class="dash-game-stat-value">${data.avgScore}</span>
+                    <span class="dash-game-stat-label">Avg</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>`
+        }
+      </div>
+
+      <!-- Vocabulary Progress -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">📚 Vocabulary Progress</h3>
+        <div class="dash-vocab-stats">
+          <div class="dash-vocab-stat">
+            <div class="dash-vocab-circle mastered">
+              <span>${vocabStats.mastered}</span>
+            </div>
+            <span class="dash-vocab-label">Mastered</span>
+          </div>
+          <div class="dash-vocab-stat">
+            <div class="dash-vocab-circle learning">
+              <span>${vocabStats.learning}</span>
+            </div>
+            <span class="dash-vocab-label">Learning</span>
+          </div>
+          <div class="dash-vocab-stat">
+            <div class="dash-vocab-circle new">
+              <span>${vocabStats.newWords}</span>
+            </div>
+            <span class="dash-vocab-label">New</span>
+          </div>
+        </div>
+        ${vocabStats.totalWords > 0 ? `
+          <div class="dash-vocab-progress">
+            ${createProgressBar((vocabStats.mastered / vocabStats.totalWords) * 100, "Mastery Rate", "var(--color-success)")}
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Learning Recommendations -->
+      <div class="dash-card">
+        <h3 class="dash-card-title">💡 Recommendations</h3>
+        <div class="dash-recommendations">
+          ${generateRecommendations(tenseStats, gameStats, vocabStats, cefrScore)}
+        </div>
+      </div>
+    </div>
+  `;
 
   if (container) {
     container.innerHTML = html;
@@ -256,10 +413,94 @@ export function renderDashboard(container) {
   return html;
 }
 
-/**
- * Initializes the dashboard by rendering it into the #dashboardContainer element.
- * If the element doesn't exist, does nothing.
- */
+// ═══════════════════════════════════════════
+// RECOMMENDATIONS
+// ═══════════════════════════════════════════
+
+function generateRecommendations(tenseStats, gameStats, vocabStats, cefrScore) {
+  const recs = [];
+  
+  // Check weak tenses
+  const weakTenses = TENSE_ORDER.filter(tense => {
+    const ts = tenseStats.perTense[tense];
+    const pct = (ts.score / 300) * 100;
+    return pct < 50;
+  });
+  
+  if (weakTenses.length > 0) {
+    recs.push({
+      icon: "⏰",
+      title: "Practice Weak Tenses",
+      desc: `Focus on: ${weakTenses.slice(0, 3).join(', ')}`,
+      link: "/grammar/present-simple.html"
+    });
+  }
+  
+  // Check vocabulary
+  if (vocabStats.reviewDue > 0) {
+    recs.push({
+      icon: "🔄",
+      title: "Review Vocabulary",
+      desc: `You have ${vocabStats.reviewDue} words due for review`,
+      link: "/dictionary/"
+    });
+  }
+  
+  // Check games
+  if (gameStats.totalGames < 10) {
+    recs.push({
+      icon: "🎮",
+      title: "Play More Games",
+      desc: "Games help reinforce what you've learned",
+      link: "/games/game-anagram.html"
+    });
+  }
+  
+  // Level up suggestions
+  if (cefrScore.score < 50) {
+    recs.push({
+      icon: "📖",
+      title: "Study Grammar Theory",
+      desc: "Read the theory sections to understand rules better",
+      link: "/grammar/present-simple.html"
+    });
+  }
+  
+  // Phrasal verbs
+  if (vocabStats.totalWords < 20) {
+    recs.push({
+      icon: "💬",
+      title: "Learn Phrasal Verbs",
+      desc: "Essential for natural English communication",
+      link: "/grammar/phrasal-verbs.html"
+    });
+  }
+  
+  if (recs.length === 0) {
+    recs.push({
+      icon: "🌟",
+      title: "Great Progress!",
+      desc: "Keep up the excellent work!",
+      link: null
+    });
+  }
+  
+  return recs.map(rec => `
+    <div class="dash-rec-item">
+      <div class="dash-rec-icon">${rec.icon}</div>
+      <div class="dash-rec-content">
+        <div class="dash-rec-title">${rec.title}</div>
+        <div class="dash-rec-desc">${rec.desc}</div>
+      </div>
+      ${rec.link ? `<a href="${rec.link}" class="dash-rec-link">Go →</a>` : ''}
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+
 export function initDashboard() {
   const container = document.getElementById("dashboardContainer");
   if (!container) return;
