@@ -293,7 +293,6 @@
         <div class="chat-header">
           <h1>💬 English Conversation</h1>
           <p>Practice writing and get instant corrections</p>
-          <button id="settingsBtn" style="margin-top:8px;padding:6px 14px;border-radius:999px;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text-muted);cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s;">🔑 API Settings</button>
         </div>
 
         <div class="chat-messages" id="chatMessages">
@@ -387,50 +386,14 @@ Topics you can discuss: daily life, hobbies, travel, work, food, culture, dreams
     }
   });
 
-    // OpenAI API key — stored in localStorage, set via settings button
-    let OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "";
-
-    function showApiKeyModal() {
-      const modal = document.createElement("div");
-      modal.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;";
-      modal.innerHTML = `
-        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:16px;padding:28px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-          <h3 style="margin:0 0 8px;font-size:18px;color:var(--color-text);">🔑 OpenAI API Key</h3>
-          <p style="margin:0 0 16px;font-size:13px;color:var(--color-text-muted);">Enter your OpenAI API key to enable the AI tutor. Get one at <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--color-primary);">platform.openai.com</a></p>
-          <input type="password" id="apiKeyInput" placeholder="sk-..." style="width:100%;padding:12px 14px;border:2px solid var(--color-border);border-radius:8px;font-size:14px;background:var(--color-bg);color:var(--color-text);box-sizing:border-box;" value="${OPENAI_API_KEY}" />
-          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end;">
-            <button id="apiKeyCancel" style="padding:8px 18px;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);cursor:pointer;font-size:13px;font-weight:600;">Cancel</button>
-            <button id="apiKeySave" style="padding:8px 18px;border-radius:8px;border:none;background:var(--color-primary);color:#fff;cursor:pointer;font-size:13px;font-weight:600;">Save</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-
-      const input = document.getElementById("apiKeyInput");
-      input.focus();
-      input.select();
-
-      document.getElementById("apiKeySave").onclick = () => {
-        OPENAI_API_KEY = input.value.trim();
-        localStorage.setItem("openai_api_key", OPENAI_API_KEY);
-        modal.remove();
-        if (OPENAI_API_KEY) {
-          addMessage("ai", "API key saved! Now let's practice English. Type anything and I'll help you improve.", false);
-        }
-      };
-      document.getElementById("apiKeyCancel").onclick = () => modal.remove();
-      modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
-    }
+    // API base URL — server proxy handles OpenAI calls
+    const API_BASE = window.location.hostname === "localhost" 
+      ? "http://localhost:3001" 
+      : "";
 
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text || isLoading) return;
-
-      // Check API key
-      if (!OPENAI_API_KEY) {
-        showApiKeyModal();
-        return;
-      }
 
       // Hide welcome
       if (chatWelcome) chatWelcome.hidden = true;
@@ -448,26 +411,20 @@ Topics you can discuss: daily life, hobbies, travel, work, food, culture, dreams
       const typingEl = addTyping();
 
       try {
-        const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+        const resp = await fetch(`${API_BASE}/api/chat`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENAI_API_KEY}`,
           },
           body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-              { role: "system", content: SYSTEM_PROMPT },
-              ...messages,
-            ],
-            temperature: 0.7,
-            max_tokens: 500,
+            messages: messages,
+            systemPrompt: SYSTEM_PROMPT,
           }),
         });
 
         if (!resp.ok) {
           const err = await resp.json();
-          throw new Error(err.error?.message || "API error");
+          throw new Error(err.error || "API error");
         }
 
         const data = await resp.json();
@@ -567,14 +524,6 @@ Topics you can discuss: daily life, hobbies, travel, work, food, culture, dreams
     const div = document.createElement("div");
     div.textContent = str;
     return div.innerHTML;
-  }
-
-  // Settings button
-  document.getElementById("settingsBtn").addEventListener("click", showApiKeyModal);
-
-  // Check if API key exists on load
-  if (!OPENAI_API_KEY) {
-    setTimeout(() => showApiKeyModal(), 500);
   }
   </script>
   <script type="module">
