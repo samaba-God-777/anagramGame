@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: '.',
+  publicDir: '../public',
   build: {
     outDir: '../dist',
     emptyOutDir: true,
@@ -21,6 +22,7 @@ export default defineConfig({
         'game-conversation': resolve(__dirname, 'games/game-conversation.html'),
         'daily-challenge': resolve(__dirname, 'games/daily-challenge.html'),
         'cefr': resolve(__dirname, 'cefr.html'),
+        'dictionary': resolve(__dirname, 'dictionary/index.html'),
         'present-simple': resolve(__dirname, 'grammar/present-simple.html'),
         'present-continuous': resolve(__dirname, 'grammar/present-continuous.html'),
         'present-perfect': resolve(__dirname, 'grammar/present-perfect.html'),
