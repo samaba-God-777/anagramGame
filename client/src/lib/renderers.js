@@ -2,6 +2,14 @@
    RENDERERS MODULE
    ═══════════════════════════════════════════ */
 
+import { THEORY } from '../data/tenses.js';
+import { CLAUSES_THEORY, CLAUSE_EXERCISES } from '../data/clauses.js';
+import { ADJECTIVE_POSITIONS, ADJECTIVE_POSITION_EXERCISES } from '../data/adjectivePositions.js';
+import { ADVERB_POSITIONS, ADVERB_POSITION_EXERCISES } from '../data/adverbPositions.js';
+import { CONJUNCTIONS_DATA, CONJUNCTION_EXERCISES } from '../data/conjunctions.js';
+import { PHRASAL_VERBS_DATA, PHRASAL_VERB_EXERCISES } from '../data/phrasalVerbs.js';
+import { IDIOMATIC_EXPRESSIONS_DATA, IDIOMATIC_EXPRESSION_EXERCISES } from '../data/idioms.js';
+
 function renderTheoryHTML(tense) {
   const t = THEORY[tense]; if(!t) return "";
   const esc = s => {const d=document.createElement("div"); d.textContent=s; return d.innerHTML;};
@@ -60,7 +68,13 @@ function renderTheoryHTML(tense) {
         </div>
       </section>
 
-      </section>
+      ${t.signalWords ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">🏷️ Signal Words</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${t.signalWords.map(w => `<span class="theory-badge badge-time" style="font-size:13px;">${esc(w)}</span>`).join("")}
+        </div>
+      </section>` : ""}
 
       <section class="theory-section">
         <h3 class="theory-section-title">⚠️ Common Mistakes</h3>
@@ -102,7 +116,7 @@ function renderTheoryHTML(tense) {
 }
 
 function renderClauseFullLesson(clauseType) {
-  const L = CLAUSE_FULL_LESSONS[clauseType];
+  const L = (typeof CLAUSE_FULL_LESSONS !== 'undefined' ? CLAUSE_FULL_LESSONS : window.CLAUSE_FULL_LESSONS || {})[clauseType];
   if (!L) return renderClauseTheory(clauseType);
   const esc = s => { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; };
 
