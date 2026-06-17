@@ -12,6 +12,8 @@ const DICT_HISTORY_MAX = 50;
 const RESULTS_PER_PAGE = 20;
 const DEBOUNCE_MS = 200;
 const FREE_DICT_API = "https://freedictionaryapi.com/api/v1/entries";
+// MyMemory Translation API (free, no key needed)
+const MYMEMORY_API = "https://api.mymemory.translated.net/get";
 
 let dictionary = null;
 let dictState = {
@@ -24,6 +26,7 @@ let dictState = {
 };
 
 let definitionCache = {};
+let translationCache = {};
 
 /* ── DOM refs ── */
 const $dict = (id) => document.getElementById(id);
@@ -101,8 +104,27 @@ async function loadDictionary() {
   }
 }
 
+/* ── MyMemory Translation API ── */
+async function translateWord(word, from = "en", to = "es") {
+  const cacheKey = `${word}_${from}_${to}`;
+  if (translationCache[cacheKey]) return translationCache[cacheKey];
+
+  try {
+    const langPair = `${from}|${to}`;
+    const resp = await fetch(`${MYMEMORY_API}?q=${encodeURIComponent(word)}&langpair=${langPair}`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (data.responseStatus === 200 && data.responseData) {
+      const translation = data.responseData.translatedText;
+      translationCache[cacheKey] = translation;
+      return translation;
+    }
+  } catch {}
+  return null;
+}
+
 /* ── Search ── */
-function performSearch(query) {
+async function performSearch(query) {
   if (!dictionary) return;
   dictState.currentQuery = query.trim();
   dictState.page = 1;
@@ -124,6 +146,7 @@ function performSearch(query) {
   let results = [];
   const isEnSearch = src === "en";
 
+  // Search local dictionary first
   for (const [word, trans] of Object.entries(dictionary)) {
     if (isEnSearch) {
       if (word.toLowerCase().includes(q)) {
@@ -133,6 +156,20 @@ function performSearch(query) {
       if (trans.toLowerCase().includes(q)) {
         results.push({ word, translation: trans, source: "es", target: "en", searchMatched: trans });
       }
+    }
+  }
+
+  // If no local results, try API translation
+  if (results.length === 0) {
+    const apiTranslation = await translateWord(q, src, tgt);
+    if (apiTranslation && apiTranslation.toLowerCase() !== q.toLowerCase()) {
+      results.push({
+        word: isEnSearch ? q : apiTranslation,
+        translation: isEnSearch ? apiTranslation : q,
+        source: src,
+        target: tgt,
+        fromApi: true
+      });
     }
   }
 

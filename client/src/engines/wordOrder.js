@@ -58,7 +58,9 @@ function initWordOrderGame() {
     if (!currentEx) return;
     const words = Array.from(dropArea.children).filter(c => !c.classList.contains("drop-placeholder")).map(c => c.textContent);
     const userAnswer = words.join(" ");
-    if (userAnswer.toLowerCase() === currentEx.answer.toLowerCase()) {
+    // Normalize: remove trailing period from both, then compare
+    const normalize = s => s.replace(/[.,!?;:]+$/, "").trim().toLowerCase();
+    if (normalize(userAnswer) === normalize(currentEx.answer)) {
       score++;
       if (scoreEl) scoreEl.textContent = score;
       if (resultEl) { resultEl.textContent = `✓ Correct! "${currentEx.answer}"`; resultEl.className = "result-message success"; }
