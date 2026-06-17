@@ -17,6 +17,7 @@ export default defineConfig({
         'game-adjective-order': resolve(__dirname, 'games/game-adjective-order.html'),
         'game-adverb-placement': resolve(__dirname, 'games/game-adverb-placement.html'),
         'game-clause-identification': resolve(__dirname, 'games/game-clause-identification.html'),
+        'game-conversation': resolve(__dirname, 'games/game-conversation.html'),
         'daily-challenge': resolve(__dirname, 'games/daily-challenge.html'),
         'cefr': resolve(__dirname, 'cefr.html'),
         'present-simple': resolve(__dirname, 'grammar/present-simple.html'),
@@ -50,6 +51,7 @@ export default defineConfig({
     port: 5000,
     proxy: {
       '/dictionary': 'http://localhost:5000',
+      '/api': 'http://localhost:3001',
     },
   },
 });

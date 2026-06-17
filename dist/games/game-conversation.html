@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI English Conversation - Practice speaking and writing with AI correction." />
+  <meta name="theme-color" content="#8b5cf6" />
+  <title>English Conversation — AI Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .chat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      height: calc(100vh - 140px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .chat-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    .chat-header p {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      margin: 4px 0 0;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chat-message {
+      display: flex;
+      gap: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .chat-message.user {
+      flex-direction: row-reverse;
+    }
+
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .chat-message.ai .chat-avatar {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    }
+
+    .chat-message.user .chat-avatar {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .chat-bubble {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .chat-message.ai .chat-bubble {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      border-top-left-radius: 4px;
+    }
+
+    .chat-message.user .chat-bubble {
+      background: var(--color-primary);
+      color: #fff;
+      border-top-right-radius: 4px;
+    }
+
+    .correction-box {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(251, 146, 60, 0.1);
+      border: 1px solid rgba(251, 146, 60, 0.3);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+    }
+
+    .correction-label {
+      font-weight: 700;
+      color: #fb923c;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .correction-original {
+      color: var(--color-error);
+      text-decoration: line-through;
+      margin-bottom: 4px;
+    }
+
+    .correction-fixed {
+      color: var(--color-success);
+      font-weight: 600;
+    }
+
+    .correction-explanation {
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-family: var(--font);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      color: var(--color-text);
+      resize: none;
+      min-height: 50px;
+      max-height: 120px;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .chat-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .chat-send {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .chat-send:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .chat-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .chat-typing {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+    }
+
+    .chat-typing span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-text-muted);
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .chat-welcome {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-text-muted);
+    }
+
+    .chat-welcome-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .chat-welcome h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin: 0 0 8px;
+    }
+
+    .chat-welcome p {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .chat-topics {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .chat-topic {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chat-topic:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-bg);
+      color: var(--color-primary);
+    }
+
+    @media (max-width: 640px) {
+      .chat-container { padding: 12px; }
+      .chat-bubble { max-width: 85%; }
+    }
+  </style>
+  <link rel="stylesheet" crossorigin href="/assets/style-BObCwZKL.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="chat-container">
+        <div class="chat-header">
+          <h1>💬 English Conversation</h1>
+          <p>Practice writing and get instant corrections</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-welcome" id="chatWelcome">
+            <div class="chat-welcome-icon">🤖</div>
+            <h3>Hi! I'm your English tutor.</h3>
+            <p>Type anything in English and I'll help you improve. I'll correct your mistakes and explain why.</p>
+            <div class="chat-topics">
+              <button class="chat-topic" data-topic="greeting">👋 Say hello</button>
+              <button class="chat-topic" data-topic="daily">📅 Daily routine</button>
+              <button class="chat-topic" data-topic="travel">✈️ Travel</button>
+              <button class="chat-topic" data-topic="work">💼 Work & career</button>
+              <button class="chat-topic" data-topic="opinions">💭 Give opinions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" placeholder="Write a message in English..." rows="1"></textarea>
+          <button class="chat-send" id="chatSend" title="Send">➤</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+  /* ═══════════════════════════════════════════
+     AI ENGLISH CONVERSATION
+     ═══════════════════════════════════════════ */
+
+  const SYSTEM_PROMPT = `You are a friendly and helpful English conversation tutor for intermediate learners.
+
+Your job:
+1. Have natural conversations in English
+2. ALWAYS correct the user's writing mistakes
+3. Be encouraging and supportive
+
+When the user makes a mistake:
+- Show their original sentence with the error
+- Show the corrected version
+- Briefly explain the correction (1-2 sentences max)
+
+Format your corrections like this:
+[correction]Original: "their sentence with mistake"
+Fixed: "corrected sentence"
+Explanation: brief explanation[/correction]
+
+Then continue the conversation naturally.
+
+Keep responses concise (2-4 sentences). Use simple, clear English. Match the user's level - if they write simply, respond simply. If they use complex sentences, you can too.
+
+Topics you can discuss: daily life, hobbies, travel, work, food, culture, dreams, opinions, news, anything the user wants to practice.`;
+
+  const TOPICS = {
+    greeting: "Hello! How are you today? Tell me about yourself.",
+    daily: "Let's talk about your daily routine! What does a typical day look like for you?",
+    travel: "I love talking about travel! Have you been anywhere interesting recently? Or where would you like to go?",
+    work: "Tell me about your work or studies. What do you do? Do you enjoy it?",
+    opinions: "I'd love to hear your opinions! What do you think about... social media? Learning languages? The weather lately?",
+  };
+
+  const chatMessages = document.getElementById("chatMessages");
+  const chatInput = document.getElementById("chatInput");
+  const chatSend = document.getElementById("chatSend");
+  const chatWelcome = document.getElementById("chatWelcome");
+
+  let messages = [];
+  let isLoading = false;
+
+  /* ── Auto-resize textarea ── */
+  chatInput.addEventListener("input", () => {
+    chatInput.style.height = "auto";
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
+  });
+
+  /* ── Topic buttons ── */
+  document.querySelectorAll(".chat-topic").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const topic = btn.dataset.topic;
+      chatInput.value = TOPICS[topic];
+      sendMessage();
+    });
+  });
+
+  /* ── Send ── */
+  chatSend.addEventListener("click", sendMessage);
+  chatInput.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || isLoading) return;
+
+    // Hide welcome
+    if (chatWelcome) chatWelcome.hidden = true;
+
+    // Add user message
+    addMessage("user", text);
+    messages.push({ role: "user", content: text });
+
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+    isLoading = true;
+    chatSend.disabled = true;
+
+    // Show typing
+    const typingEl = addTyping();
+
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages, systemPrompt: SYSTEM_PROMPT }),
+      });
+
+      if (!resp.ok) throw new Error("API error");
+
+      const data = await resp.json();
+      const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't understand that.";
+
+      typingEl.remove();
+      addMessage("ai", reply, true);
+      messages.push({ role: "assistant", content: reply });
+    } catch (err) {
+      typingEl.remove();
+      addMessage("ai", "Sorry, something went wrong. Please try again.", false);
+    }
+
+    isLoading = false;
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+
+  /* ── Render messages ── */
+  function addMessage(role, text, parseCorrection = false) {
+    const div = document.createElement("div");
+    div.className = `chat-message ${role}`;
+
+    const avatar = document.createElement("div");
+    avatar.className = "chat-avatar";
+    avatar.textContent = role === "ai" ? "🤖" : "👤";
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+
+    if (parseCorrection && role === "ai") {
+      bubble.innerHTML = parseCorrectionText(text);
+    } else {
+      bubble.textContent = text;
+    }
+
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return div;
+  }
+
+  function parseCorrectionText(text) {
+    // Extract corrections
+    const correctionRegex = /\[correction\]([\s\S]*?)\[\/correction\]/g;
+    let html = text.replace(correctionRegex, (match, content) => {
+      const lines = content.trim().split("\n").map(l => l.trim()).filter(Boolean);
+      let original = "", fixed = "", explanation = "";
+
+      lines.forEach(line => {
+        if (line.toLowerCase().startsWith("original:")) {
+          original = line.replace(/^original:\s*/i, "").replace(/^["']|["']$/g, "");
+        } else if (line.toLowerCase().startsWith("fixed:")) {
+          fixed = line.replace(/^fixed:\s*/i, "").replace(/^["']|["']$/g, "");
+        } else if (line.toLowerCase().startsWith("explanation:")) {
+          explanation = line.replace(/^explanation:\s*/i, "");
+        }
+      });
+
+      if (original || fixed) {
+        return `<div class="correction-box">
+          <div class="correction-label">✏️ Correction</div>
+          ${original ? `<div class="correction-original">${escapeHtml(original)}</div>` : ""}
+          ${fixed ? `<div class="correction-fixed">${escapeHtml(fixed)}</div>` : ""}
+          ${explanation ? `<div class="correction-explanation">${escapeHtml(explanation)}</div>` : ""}
+        </div>`;
+      }
+      return "";
+    });
+
+    // Clean up remaining text (remove [correction] tags if any left)
+    html = html.replace(/\[\/?correction\]/g, "");
+
+    // Convert newlines to <br>
+    html = html.replace(/\n/g, "<br>");
+
+    return html;
+  }
+
+  function addTyping() {
+    const div = document.createElement("div");
+    div.className = "chat-message ai";
+    div.innerHTML = `
+      <div class="chat-avatar">🤖</div>
+      <div class="chat-bubble">
+        <div class="chat-typing"><span></span><span></span><span></span></div>
+      </div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  </script>
+</body>
+</html>
