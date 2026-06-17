@@ -35,6 +35,9 @@ const SIDEBAR_STRUCTURE = [
     { type: "stats" },
   ]},
   { type: "section", icon: "🎮", label: "Games", children: [
+    { type: "link", icon: "💬", label: "Phrasal Verbs Game", href: "/games/game-phrasal-verbs.html" },
+    { type: "link", icon: "🎭", label: "Idioms Game", href: "/games/game-idioms.html" },
+    { type: "link", icon: "🔗", label: "Conjunctions Game", href: "/games/game-conjunctions.html" },
     { type: "link", icon: "💬", label: "AI Conversation", href: "/games/game-conversation.html" },
     { type: "link", icon: "🔤", label: "Anagram Game", href: "/games/game-anagram.html" },
     { type: "link", icon: "📝", label: "Sentence Unscramble", href: "/games/game-unscramble.html" },

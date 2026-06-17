@@ -2794,3 +2794,397 @@ body::before {
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════
+   GRAMMAR GAMES STYLES
+   ═══════════════════════════════════════════ */
+
+.game-intro {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.game-intro-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.game-intro-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 12px;
+}
+
+.game-intro-desc {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 24px;
+  line-height: 1.6;
+}
+
+.game-intro-features {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.game-intro-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+}
+
+.game-intro-feature-icon {
+  font-size: 16px;
+}
+
+.game-intro-feature-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.btn-start-game {
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+}
+
+.btn-start-game:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+}
+
+/* Game Progress */
+.game-progress {
+  margin-bottom: 20px;
+}
+
+.game-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.game-progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.game-progress-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.game-progress-bar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.game-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-success) 100%);
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+/* Game Question Card */
+.game-question-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.game-question-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.game-question-number {
+  padding: 4px 12px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.game-question-topic {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.game-question-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 20px;
+  line-height: 1.4;
+}
+
+.game-options {
+  display: grid;
+  gap: 10px;
+}
+
+.game-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.game-option:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+  transform: translateX(4px);
+}
+
+.game-option:disabled {
+  cursor: not-allowed;
+}
+
+.game-option.correct {
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.game-option.incorrect {
+  border-color: var(--color-error);
+  background: var(--color-error-bg);
+}
+
+.game-option.selected {
+  transform: translateX(4px);
+}
+
+.game-option-letter {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.game-option-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Game Meaning */
+.game-meaning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--color-success-bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-success);
+}
+
+.game-meaning-icon {
+  font-size: 16px;
+}
+
+.game-meaning-text {
+  font-size: 13px;
+  color: var(--color-success-dark);
+}
+
+/* Game Wiki Fact */
+.game-wiki-fact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.game-wiki-fact-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.game-wiki-fact-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* Game Results */
+.game-results-card {
+  text-align: center;
+  padding: 32px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.game-results-card.passed {
+  border-color: var(--color-success);
+}
+
+.game-results-card.failed {
+  border-color: var(--color-accent);
+}
+
+.game-results-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.game-results-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 16px;
+}
+
+.game-results-score {
+  margin-bottom: 24px;
+}
+
+.game-score-big {
+  display: block;
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.game-score-detail {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-top: 8px;
+}
+
+.game-results-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.game-result-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-result-stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.game-result-stat-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.game-results-message {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+.game-results-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.game-retry-btn, .game-close-btn {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.game-retry-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.game-retry-btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.game-close-btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.game-close-btn:hover {
+  background: var(--color-bg);
+  transform: translateY(-2px);
+}
+
+.game-wiki-suggestion {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.game-wiki-suggestion h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
