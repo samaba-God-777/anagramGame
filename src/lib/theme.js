@@ -15,4 +15,18 @@ function toggleTheme() {
   localStorage.setItem("sb-theme",next);
 }
 
-export { initTheme, toggleTheme };
+function setAccentColor(color, bg, glow) {
+  const r = document.documentElement.style;
+  r.setProperty('--lv', color);
+  r.setProperty('--lvb', bg);
+  r.setProperty('--lvg', glow);
+}
+
+function resetAccentColor() {
+  const r = document.documentElement.style;
+  r.removeProperty('--lv');
+  r.removeProperty('--lvb');
+  r.removeProperty('--lvg');
+}
+
+export { initTheme, toggleTheme, setAccentColor, resetAccentColor };

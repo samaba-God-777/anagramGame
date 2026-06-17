@@ -10,17 +10,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    .game-layout { padding: 24px 28px; max-width: 700px; margin: 0 auto; text-align: center; }
     .pc-question { font-size: 24px; font-weight: 700; color: var(--color-text); margin: 30px 0; padding: 24px; background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--radius-lg); }
     .pc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 400px; margin: 0 auto; }
     .pc-option { padding: 14px !important; font-size: 16px !important; justify-content: center; }
     .pc-option.correct-answer { background: var(--color-success) !important; color: #fff !important; border-color: var(--color-success) !important; }
     .pc-option.wrong-answer { background: var(--color-error) !important; color: #fff !important; border-color: var(--color-error) !important; }
     .pc-option.show-correct { background: var(--color-success) !important; color: #fff !important; border-color: var(--color-success) !important; }
-    @media (max-width: 640px) { .game-layout { padding: 16px; } .pc-question { font-size: 18px; } .pc-options { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .pc-question { font-size: 18px; } .pc-options { grid-template-columns: 1fr; } }
   </style>
-  <script type="module" crossorigin src="/assets/main-Ba8yPvwy.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/style-mL3Nmd8n.css">
+  <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="/assets/main-CPFFK3fA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-BObCwZKL.css">
 </head>
 <body>
   <div class="app-layout">
@@ -38,7 +38,7 @@
     </aside>
 
     <main class="main-content">
-      <header class="game-header" style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);">
+      <header class="game-header">
         <div class="header-left">
           <span class="game-icon" aria-hidden="true">📍</span>
           <div>

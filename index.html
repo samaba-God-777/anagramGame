@@ -14,17 +14,26 @@
   <style>
     .hub-container { max-width: 1100px; margin: 0 auto; padding: 40px 28px; }
     .hub-header { text-align: center; margin-bottom: 50px; }
-    .hub-title { font-size: 38px; font-weight: 800; color: var(--color-primary); letter-spacing: -0.8px; }
+    .hub-title { font-size: 38px; font-weight: 800; letter-spacing: -1.2px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-text) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hub-subtitle { font-size: 16px; color: var(--color-text-secondary); margin-top: 8px; }
     .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
     .hub-card {
-      background: var(--color-surface); border: 1px solid var(--color-border);
+      background: var(--color-surface); border: 1.5px solid var(--color-border);
       border-radius: var(--radius-lg); padding: 28px 24px;
       transition: all var(--transition-bounce); cursor: pointer;
       text-decoration: none; display: block;
       box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     }
-    .hub-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .hub-card::before {
+      content: ""; position: absolute; inset: 0; opacity: 0;
+      background: var(--color-primary-bg); transition: opacity .3s; border-radius: inherit;
+    }
+    .hub-card:hover { transform: translateY(-6px) scale(1.02); border-color: var(--color-primary);
+      box-shadow: 0 20px 50px rgba(0,0,0,.15), 0 0 0 1px var(--color-primary); }
+    .hub-card:hover::before { opacity: 1; }
     .hub-card:active { transform: scale(0.98); }
     .hub-card-icon { font-size: 36px; margin-bottom: 14px; display: block; }
     .hub-card-title { font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
@@ -63,7 +72,7 @@
     </aside>
 
     <main class="main-content">
-      <header class="game-header" style="background: linear-gradient(135deg, var(--color-primary) 0%, #4338ca 50%, var(--color-primary-dark) 100%);">
+      <header class="game-header">
         <div class="header-left">
           <span class="game-icon" aria-hidden="true">🏠</span>
           <div>
@@ -184,6 +193,13 @@
             <h3 class="hub-card-title">Adverb Placement</h3>
             <p class="hub-card-desc">Choose the correct position for adverbs: front, mid, or end. Covers frequency, manner, time, and place adverbs.</p>
             <span class="hub-card-badge badge-games">Play</span>
+          </a>
+
+          <a href="cefr.html" class="hub-card">
+            <span class="hub-card-icon">🇪🇺</span>
+            <h3 class="hub-card-title">CEFR Anagram</h3>
+            <p class="hub-card-desc">Unscramble letters and sentences graded by CEFR levels A1 to C1. Word anagrams and sentence unscramble exercises.</p>
+            <span class="hub-card-badge badge-games">A1–C1</span>
           </a>
         </div>
 

@@ -10,17 +10,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    .game-layout { padding: 24px 28px; max-width: 700px; margin: 0 auto; text-align: center; }
     .ap-question { font-size: 20px; font-weight: 600; color: var(--color-text); margin: 24px 0; padding: 20px; background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--radius-lg); line-height: 1.7; }
     .ap-options { display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 450px; margin: 0 auto; }
     .ap-option { padding: 14px !important; font-size: 15px !important; justify-content: center; }
     .ap-option.correct-answer { background: var(--color-success) !important; color: #fff !important; border-color: var(--color-success) !important; }
     .ap-option.wrong-answer { background: var(--color-error) !important; color: #fff !important; border-color: var(--color-error) !important; }
     .ap-option.show-correct { background: var(--color-success) !important; color: #fff !important; border-color: var(--color-success) !important; opacity: 0.7; }
-    @media (max-width: 640px) { .game-layout { padding: 16px; } .ap-question { font-size: 17px; } }
+    @media (max-width: 640px) { .ap-question { font-size: 17px; } }
   </style>
-  <script type="module" crossorigin src="/assets/main-Ba8yPvwy.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/style-mL3Nmd8n.css">
+  <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="/assets/main-CPFFK3fA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-BObCwZKL.css">
 </head>
 <body>
   <div class="app-layout">
@@ -38,7 +38,7 @@
     </aside>
 
     <main class="main-content">
-      <header class="game-header" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);">
+      <header class="game-header">
         <div class="header-left">
           <span class="game-icon" aria-hidden="true">📍</span>
           <div>
@@ -75,6 +75,5 @@
     </main>
   </div>
   <script>window.PAGE_TENSE = "Hub";</script>
-  <script>document.addEventListener("DOMContentLoaded", initAdverbPlacementGame);</script>
 </body>
 </html>

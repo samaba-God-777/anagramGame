@@ -29,6 +29,7 @@ const SIDEBAR_STRUCTURE = [
     { type: "link", icon: "📏", label: "Adjective Order", href: "/games/game-adjective-order.html" },
     { type: "link", icon: "📍", label: "Adverb Placement", href: "/games/game-adverb-placement.html" },
     { type: "link", icon: "🔗", label: "Clause Identification", href: "/games/game-clause-identification.html" },
+    { type: "link", icon: "🇪🇺", label: "CEFR Anagram", href: "/cefr.html" },
   ]},
   { type: "link", icon: "🎯", label: "Daily Challenge", href: "/games/daily-challenge.html", divider: true },
 ];

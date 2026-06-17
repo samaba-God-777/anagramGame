@@ -18,6 +18,7 @@ export default defineConfig({
         'game-adverb-placement': resolve(__dirname, 'games/game-adverb-placement.html'),
         'game-clause-identification': resolve(__dirname, 'games/game-clause-identification.html'),
         'daily-challenge': resolve(__dirname, 'games/daily-challenge.html'),
+        'cefr': resolve(__dirname, 'cefr.html'),
         'present-simple': resolve(__dirname, 'grammar/present-simple.html'),
         'present-continuous': resolve(__dirname, 'grammar/present-continuous.html'),
         'present-perfect': resolve(__dirname, 'grammar/present-perfect.html'),

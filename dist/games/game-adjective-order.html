@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    .game-layout { padding: 24px 28px; max-width: 780px; margin: 0 auto; text-align: center; }
+    .game-layout { max-width: 780px; }
     .ao-question { font-size: 20px; font-weight: 700; color: var(--color-text); margin: 20px 0; line-height: 1.5; }
     .ao-slots { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
     .ao-slot { min-width: 100px; max-width: 160px; height: 44px; border: 2px dashed var(--color-primary); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; background: var(--color-surface); transition: all var(--transition); color: var(--color-text); cursor: pointer; padding: 0 10px; }
@@ -21,10 +21,11 @@
     .ao-word.placed { opacity: 0.3; text-decoration: line-through; }
     .order-key { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 11px; font-weight: 600; color: var(--color-text-muted); }
     .order-key span { background: var(--color-bg-secondary); padding: 4px 8px; border-radius: 4px; }
-    @media (max-width: 640px) { .game-layout { padding: 16px; } .ao-slot { min-width: 75px; max-width: 120px; height: 38px; font-size: 12px; } .ao-word { font-size: 12px !important; padding: 6px 10px !important; } }
+    @media (max-width: 640px) { .ao-slot { min-width: 75px; max-width: 120px; height: 38px; font-size: 12px; } .ao-word { font-size: 12px !important; padding: 6px 10px !important; } }
   </style>
-  <script type="module" crossorigin src="/assets/main-Ba8yPvwy.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/style-mL3Nmd8n.css">
+  <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="/assets/main-CPFFK3fA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-BObCwZKL.css">
 </head>
 <body>
   <div class="app-layout">
@@ -42,7 +43,7 @@
     </aside>
 
     <main class="main-content">
-      <header class="game-header" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);">
+      <header class="game-header">
         <div class="header-left">
           <span class="game-icon" aria-hidden="true">📏</span>
           <div>
