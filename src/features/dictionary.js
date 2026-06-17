@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    DICTIONARY MODULE
    English ↔ Spanish Dictionary with search,
-   autocomplete, and history
+   autocomplete, history, and Free Dictionary API
    ═══════════════════════════════════════════ */
 
 import { initTheme } from '../lib/theme.js';
@@ -11,6 +11,7 @@ const DICT_STORAGE_KEY = "dict_history";
 const DICT_HISTORY_MAX = 50;
 const RESULTS_PER_PAGE = 20;
 const DEBOUNCE_MS = 200;
+const FREE_DICT_API = "https://freedictionaryapi.com/api/v1/entries";
 
 let dictionary = null;
 let dictState = {
@@ -21,6 +22,8 @@ let dictState = {
   results: [],
   history: [],
 };
+
+let definitionCache = {};
 
 /* ── DOM refs ── */
 const $dict = (id) => document.getElementById(id);
@@ -109,6 +112,8 @@ function performSearch(query) {
     dictNoResults.hidden = true;
     dictEmpty.hidden = false;
     dictSuggestions.hidden = true;
+    const defPanel = document.getElementById("definitionPanel");
+    if (defPanel) defPanel.hidden = true;
     return;
   }
 
@@ -139,8 +144,17 @@ function performSearch(query) {
   if (results.length > 0) {
     renderResults();
     addToHistory(q, src);
+    // Look up definition for first English result
+    if (isEnSearch && results[0]) {
+      lookupDefinition(results[0].word);
+    } else {
+      const defPanel = document.getElementById("definitionPanel");
+      if (defPanel) defPanel.hidden = true;
+    }
   } else {
     dictResults.hidden = true;
+    const defPanel = document.getElementById("definitionPanel");
+    if (defPanel) defPanel.hidden = true;
   }
 }
 
@@ -338,6 +352,133 @@ function renderHistory() {
       dictInput.focus();
     });
   });
+}
+
+/* ═══════════════════════════════════════════
+   FREE DICTIONARY API
+   ═══════════════════════════════════════════ */
+async function fetchFreeDictionary(word) {
+  if (definitionCache[word]) return definitionCache[word];
+  try {
+    const resp = await fetch(`${FREE_DICT_API}/en/${encodeURIComponent(word)}`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    definitionCache[word] = data;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function renderDefinitionPanel(data) {
+  const panel = document.getElementById("definitionPanel");
+  if (!panel) return;
+
+  if (!data || !data.entries || !data.entries.length) {
+    panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  const entry = data.entries[0];
+  const word = data.word;
+
+  let html = `<div class="def-card">`;
+
+  // Word header
+  html += `<div class="def-header">
+    <h3 class="def-word">${escapeHtml(word)}</h3>`;
+
+  // Pronunciation
+  const pron = entry.pronunciations?.find(p => p.type === "ipa" && p.tags?.includes("Received Pronunciation"))
+    || entry.pronunciations?.find(p => p.type === "ipa")
+    || entry.pronunciations?.[0];
+  if (pron) {
+    html += `<span class="def-pronunciation">${escapeHtml(pron.text)}</span>`;
+  }
+  html += `</div>`;
+
+  // Group by part of speech
+  const byPos = {};
+  entry.entries?.forEach(e => {
+    const pos = e.partOfSpeech;
+    if (!byPos[pos]) byPos[pos] = [];
+    byPos[pos].push(e);
+  });
+
+  for (const [pos, items] of Object.entries(byPos)) {
+    html += `<div class="def-pos-section">
+      <span class="def-pos-badge">${escapeHtml(pos)}</span>`;
+
+    items.forEach(item => {
+      item.senses?.forEach((sense, si) => {
+        if (si >= 3) return; // limit to 3 definitions per POS
+        html += `<div class="def-sense">
+          <div class="def-number">${si + 1}.</div>
+          <div class="def-content">
+            <p class="def-text">${escapeHtml(sense.definition)}</p>`;
+
+        // Examples
+        if (sense.examples?.length) {
+          html += `<div class="def-examples">`;
+          sense.examples.slice(0, 2).forEach(ex => {
+            html += `<p class="def-example">"${escapeHtml(ex)}"</p>`;
+          });
+          html += `</div>`;
+        }
+
+        // Synonyms
+        if (sense.synonyms?.length) {
+          html += `<div class="def-synonyms">
+            <span class="def-label">Synonyms:</span>
+            ${sense.synonyms.slice(0, 5).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
+          </div>`;
+        }
+
+        // Antonyms
+        if (sense.antonyms?.length) {
+          html += `<div class="def-antonyms">
+            <span class="def-label">Antonyms:</span>
+            ${sense.antonyms.slice(0, 5).map(a => `<span class="def-tag def-tag-ant">${escapeHtml(a)}</span>`).join("")}
+          </div>`;
+        }
+
+        html += `</div></div>`;
+      });
+    });
+
+    html += `</div>`;
+  }
+
+  // Synonyms from entry level
+  if (entry.synonyms?.length) {
+    html += `<div class="def-entry-synonyms">
+      <span class="def-label">Top synonyms:</span>
+      <div class="def-tag-list">
+        ${entry.synonyms.slice(0, 8).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+async function lookupDefinition(word) {
+  const panel = document.getElementById("definitionPanel");
+  if (!panel) return;
+
+  // Only look up English words
+  if (dictState.sourceLang !== "en") {
+    panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  panel.innerHTML = `<div class="def-loading">Loading definition...</div>`;
+
+  const data = await fetchFreeDictionary(word);
+  renderDefinitionPanel(data);
 }
 
 /* ── Utilities ── */

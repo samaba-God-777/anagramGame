@@ -532,3 +532,162 @@
   border-radius: var(--radius-full);
   background: var(--color-surface-hover);
 }
+
+/* ── Definition Panel (Free Dictionary API) ── */
+.def-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  animation: fadeSlideUp 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.def-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.def-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.def-word {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.def-pronunciation {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.def-pos-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.def-pos-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: italic;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  align-self: flex-start;
+}
+
+.def-sense {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+.def-number {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  min-width: 20px;
+}
+
+.def-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.def-text {
+  font-size: 14px;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.def-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.def-example {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--color-primary-light);
+}
+
+.def-synonyms,
+.def-antonyms {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.def-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.def-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.def-tag-ant {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.def-tag-list {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.def-entry-synonyms {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.def-loading {
+  text-align: center;
+  padding: 24px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .def-panel { padding: 16px; }
+  .def-word { font-size: 22px; }
+  .def-sense { padding: 8px 10px; }
+}
