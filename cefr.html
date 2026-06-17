@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CEFR English Platform — Structured learning from A1 to C1 based on the Common European Framework of Reference." />
+  <title>CEFR English — A1 to C1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <style>
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────── */
+:root {
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Level palette */
+  --a1: #4ade80;   --a1-bg: rgba(74, 222, 128, 0.12);  --a1-glow: rgba(74,222,128,0.35);
+  --a2: #22d3ee;   --a2-bg: rgba(34, 211, 238, 0.12);  --a2-glow: rgba(34,211,238,0.35);
+  --b1: #818cf8;   --b1-bg: rgba(129, 140, 248, 0.12); --b1-glow: rgba(129,140,248,0.35);
+  --b2: #fb923c;   --b2-bg: rgba(251, 146, 60, 0.12);  --b2-glow: rgba(251,146,60,0.35);
+  --c1: #f472b6;   --c1-bg: rgba(244, 114, 182, 0.12); --c1-glow: rgba(244,114,182,0.35);
+
+  /* Active level (overridden by JS) */
+  --lvl: var(--a1);
+  --lvl-bg: var(--a1-bg);
+  --lvl-glow: var(--a1-glow);
+}
+
+[data-theme="dark"] {
+  --bg:          #060b14;
+  --bg2:         #0d1626;
+  --surface:     rgba(255,255,255,0.04);
+  --surface2:    rgba(255,255,255,0.08);
+  --border:      rgba(255,255,255,0.09);
+  --border2:     rgba(255,255,255,0.18);
+  --text:        #eef2ff;
+  --text2:       rgba(238,242,255,0.58);
+  --text3:       rgba(238,242,255,0.32);
+  --success:     #4ade80;
+  --success-bg:  rgba(74,222,128,0.14);
+  --error:       #f87171;
+  --error-bg:    rgba(248,113,113,0.14);
+  --glass:       rgba(255,255,255,0.05);
+  --glass-border:rgba(255,255,255,0.12);
+}
+
+[data-theme="light"] {
+  --bg:          #f0f4ff;
+  --bg2:         #e4eaf8;
+  --surface:     rgba(255,255,255,0.85);
+  --surface2:    rgba(255,255,255,0.95);
+  --border:      rgba(0,0,0,0.08);
+  --border2:     rgba(0,0,0,0.16);
+  --text:        #0d1b2a;
+  --text2:       #4b5a72;
+  --text3:       #8a99b3;
+  --success:     #16a34a;
+  --success-bg:  #dcfce7;
+  --error:       #dc2626;
+  --error-bg:    #fee2e2;
+  --glass:       rgba(255,255,255,0.6);
+  --glass-border:rgba(0,0,0,0.1);
+}
+
+/* ─────────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
+  overflow-x: hidden;
+}
+
+/* Animated background gradient */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% -10%, var(--lvl-glow) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 90% 110%, rgba(129,140,248,0.15) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.8s var(--ease-out);
+}
+
+/* ─────────────────────────────────────────────
+   LAYOUT
+───────────────────────────────────────────── */
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────── */
+.cefr-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(6, 11, 20, 0.7);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+[data-theme="light"] .cefr-header {
+  background: rgba(240, 244, 255, 0.8);
+}
+
+.header-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--lvl) 0%, rgba(255,255,255,0.2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px var(--lvl-glow);
+  transition: all 0.4s var(--ease-bounce);
+}
+
+.logo-text {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.logo-text span { color: var(--lvl); transition: color 0.4s; }
+
+/* Level pills */
+.level-nav {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.level-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  background: var(--surface);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.level-pill:hover {
+  border-color: var(--border2);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.level-pill[data-lv="A1"] { --pill-c: var(--a1); --pill-bg: var(--a1-bg); }
+.level-pill[data-lv="A2"] { --pill-c: var(--a2); --pill-bg: var(--a2-bg); }
+.level-pill[data-lv="B1"] { --pill-c: var(--b1); --pill-bg: var(--b1-bg); }
+.level-pill[data-lv="B2"] { --pill-c: var(--b2); --pill-bg: var(--b2-bg); }
+.level-pill[data-lv="C1"] { --pill-c: var(--c1); --pill-bg: var(--c1-bg); }
+
+.level-pill.active {
+  background: var(--pill-bg);
+  border-color: var(--pill-c);
+  color: var(--pill-c);
+  box-shadow: 0 0 16px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s var(--ease-out);
+  font-family: var(--font);
+}
+
+.icon-btn:hover { border-color: var(--border2); color: var(--text); transform: scale(1.08); }
+
+/* XP progress bar */
+.xp-bar-wrap {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--lvl), rgba(255,255,255,0.6));
+  border-radius: var(--radius-full);
+  transition: width 0.6s var(--ease-bounce), background 0.4s;
+  width: 0%;
+}
+
+/* ─────────────────────────────────────────────
+   SCREENS
+───────────────────────────────────────────── */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; animation: screenIn 0.45s var(--ease-bounce); }
+
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─────────────────────────────────────────────
+   LANDING SCREEN
+───────────────────────────────────────────── */
+#screen-landing {
+  padding: 48px 24px 60px;
+}
+
+.landing-inner { max-width: 1040px; margin: 0 auto; }
+
+.landing-hero {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  background: var(--lvl-bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lvl);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  transition: all 0.4s;
+}
+
+.hero-title {
+  font-size: clamp(36px, 6vw, 58px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--lvl) 0%, rgba(255,255,255,0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.4s;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--text2);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Level cards grid */
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.level-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  padding: 28px 22px;
+  cursor: pointer;
+  transition: all 0.35s var(--ease-bounce);
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--card-color-bg);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: inherit;
+}
+
+.level-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--card-color);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px var(--card-color);
+}
+
+.level-card:hover::before { opacity: 1; }
+
+.level-card[data-lv="A1"] { --card-color: var(--a1); --card-color-bg: var(--a1-bg); }
+.level-card[data-lv="A2"] { --card-color: var(--a2); --card-color-bg: var(--a2-bg); }
+.level-card[data-lv="B1"] { --card-color: var(--b1); --card-color-bg: var(--b1-bg); }
+.level-card[data-lv="B2"] { --card-color: var(--b2); --card-color-bg: var(--b2-bg); }
+.level-card[data-lv="C1"] { --card-color: var(--c1); --card-color-bg: var(--c1-bg); }
+
+.card-badge {
+  position: relative;
+  z-index: 1;
+  font-size: 32px;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  background: var(--card-color-bg);
+  border: 1.5px solid var(--card-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s var(--ease-bounce);
+}
+
+.level-card:hover .card-badge {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 8px 24px var(--card-color);
+}
+
+.card-level-tag {
+  position: relative;
+  z-index: 1;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--card-color);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.card-level-name {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.card-desc {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.card-can-do {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+.card-can-do strong { color: var(--card-color); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+
+.start-btn {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  background: var(--card-color);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.25s var(--ease-bounce);
+  width: 100%;
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.level-card:hover .start-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.start-btn:hover { filter: brightness(1.15); transform: translateY(-2px); }
+
+/* Completed indicator */
+.card-progress-ring {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  font-size: 18px;
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────────────────
+   GAME SCREEN
+───────────────────────────────────────────── */
+#screen-game {
+  padding: 32px 24px 48px;
+  align-items: center;
+}
+
+.game-inner {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Top meta row */
+.game-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.meta-level-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: var(--lvl-bg);
+  border: 1px solid var(--lvl);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lvl);
+}
+
+.meta-progress {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.meta-score {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.score-star { color: #fbbf24; font-size: 15px; }
+
+/* Question card */
+.question-card {
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: cardIn 0.4s var(--ease-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .question-card {
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(0.96) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.question-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lvl), transparent);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.q-type-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--lvl);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--lvl-bg);
+  align-self: flex-start;
+}
+
+.question-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+}
+
+.question-text .blank {
+  display: inline-block;
+  min-width: 80px;
+  height: 2px;
+  background: var(--lvl);
+  vertical-align: middle;
+  margin: 0 4px;
+  border-radius: 2px;
+  position: relative;
+}
+
+.question-text .blank::after {
+  content: "?";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: var(--lvl);
+}
+
+/* MC Options */
+.mc-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mc-option {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-bounce);
+  text-align: left;
+  font-family: var(--font);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mc-option .opt-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text2);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.mc-option:hover {
+  border-color: var(--lvl);
+  background: var(--lvl-bg);
+  transform: translateX(4px);
+}
+
+.mc-option:hover .opt-letter {
+  background: var(--lvl);
+  color: #fff;
+}
+
+.mc-option.correct {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+  animation: optBounce 0.4s var(--ease-bounce);
+}
+
+.mc-option.correct .opt-letter { background: var(--success); color: #fff; }
+
+.mc-option.wrong {
+  border-color: var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+  animation: optShake 0.4s ease;
+}
+
+.mc-option.wrong .opt-letter { background: var(--error); color: #fff; }
+
+.mc-option.show-answer {
+  border-color: var(--success);
+  background: var(--success-bg);
+  opacity: 0.6;
+}
+
+.mc-option:disabled { cursor: default; }
+
+@keyframes optBounce { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+@keyframes optShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* Word Order exercise */
+.order-target {
+  min-height: 60px;
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--lvl);
+  background: var(--lvl-bg);
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.order-target:empty::after {
+  content: "Click words below to build the sentence…";
+  color: var(--text3);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.order-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.word-chip {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: var(--surface2);
+  border: 1.5px solid var(--border2);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-bounce);
+  font-family: var(--font);
+  user-select: none;
+}
+
+.word-chip:hover {
+  background: var(--lvl-bg);
+  border-color: var(--lvl);
+  color: var(--lvl);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.word-chip.placed {
+  background: var(--lvl-bg);
+  border-color: var(--lvl);
+  color: var(--lvl);
+}
+
+.word-chip.placed:hover {
+  background: var(--error-bg);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.word-chip.correct-chip { background: var(--success-bg) !important; border-color: var(--success) !important; color: var(--success) !important; cursor: default; }
+.word-chip.wrong-chip   { background: var(--error-bg) !important;   border-color: var(--error) !important;   color: var(--error) !important;   cursor: default; }
+
+/* Feedback row */
+.feedback-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  animation: feedIn 0.35s var(--ease-bounce);
+  display: none;
+}
+
+@keyframes feedIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.feedback-row.success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(74,222,128,0.25); }
+.feedback-row.error   { background: var(--error-bg);   color: var(--error);   border: 1px solid rgba(248,113,113,0.25); }
+
+.feedback-icon { font-size: 20px; flex-shrink: 0; }
+.feedback-text { flex: 1; line-height: 1.6; }
+.feedback-text .explanation { font-weight: 400; opacity: 0.85; margin-top: 2px; display: block; }
+
+/* Action row */
+.action-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-check, .btn-next, .btn-quit {
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.25s var(--ease-bounce);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-check {
+  background: var(--lvl);
+  color: #070b14;
+  box-shadow: 0 4px 16px var(--lvl-glow);
+}
+
+.btn-check:hover { filter: brightness(1.12); transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 24px var(--lvl-glow); }
+.btn-check:active { transform: scale(0.96); }
+.btn-check:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.btn-next {
+  background: var(--lvl);
+  color: #070b14;
+  box-shadow: 0 4px 16px var(--lvl-glow);
+  display: none;
+}
+
+.btn-next:hover { filter: brightness(1.12); transform: translateY(-2px) scale(1.03); }
+.btn-next:active { transform: scale(0.96); }
+
+.btn-quit {
+  background: var(--surface);
+  color: var(--text2);
+  border: 1.5px solid var(--border);
+}
+
+.btn-quit:hover { border-color: var(--border2); color: var(--text); }
+
+/* Dot progress bar */
+.dot-progress {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--border2);
+  transition: all 0.3s var(--ease-bounce);
+}
+
+.dot.done { background: var(--lvl); transform: scale(1.1); }
+.dot.current { background: var(--lvl); width: 24px; box-shadow: 0 0 8px var(--lvl-glow); }
+.dot.correct-dot { background: var(--success); }
+.dot.wrong-dot { background: var(--error); }
+
+/* ─────────────────────────────────────────────
+   RESULTS SCREEN
+───────────────────────────────────────────── */
+#screen-results {
+  padding: 48px 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-inner {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.results-trophy {
+  font-size: 72px;
+  animation: trophyIn 0.6s var(--ease-bounce);
+  filter: drop-shadow(0 8px 24px var(--lvl-glow));
+}
+
+@keyframes trophyIn {
+  from { transform: scale(0) rotate(-20deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.results-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.8px;
+}
+
+.results-level-badge {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  background: var(--lvl-bg);
+  border: 1.5px solid var(--lvl);
+  color: var(--lvl);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.results-score-ring {
+  width: 140px;
+  height: 140px;
+  position: relative;
+}
+
+.results-score-ring svg { transform: rotate(-90deg); }
+
+.ring-bg { fill: none; stroke: var(--border2); stroke-width: 10; }
+.ring-fill { fill: none; stroke: var(--lvl); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s var(--ease-out); }
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.ring-label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.results-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.res-stat {
+  padding: 20px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--glass);
+}
+
+.res-stat-value { font-size: 28px; font-weight: 800; color: var(--lvl); }
+.res-stat-label { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+.results-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-primary-lg {
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  background: var(--lvl);
+  color: #070b14;
+  font-size: 15px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.25s var(--ease-bounce);
+  box-shadow: 0 6px 20px var(--lvl-glow);
+}
+
+.btn-primary-lg:hover { filter: brightness(1.1); transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 32px var(--lvl-glow); }
+
+.btn-secondary-lg {
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  border: 1.5px solid var(--border2);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.25s var(--ease-out);
+}
+
+.btn-secondary-lg:hover { border-color: var(--lvl); color: var(--lvl); }
+
+.results-can-do {
+  width: 100%;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  background: var(--lvl-bg);
+  border: 1.5px solid var(--lvl);
+  text-align: left;
+}
+
+.results-can-do h4 { font-size: 13px; font-weight: 800; color: var(--lvl); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.results-can-do ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.results-can-do li { font-size: 14px; color: var(--text); padding-left: 20px; position: relative; }
+.results-can-do li::before { content: "✓"; position: absolute; left: 0; color: var(--lvl); font-weight: 700; }
+
+/* ─────────────────────────────────────────────
+   CONFETTI
+───────────────────────────────────────────── */
+.confetti-piece {
+  position: fixed;
+  top: -20px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: fall linear forwards;
+  font-size: 16px;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .level-grid { grid-template-columns: repeat(3, 1fr); }
+  .level-nav { display: none; }
+}
+
+@media (max-width: 640px) {
+  .level-grid { grid-template-columns: 1fr 1fr; }
+  .mc-options { grid-template-columns: 1fr; }
+  .question-card { padding: 28px 22px; }
+  .hero-sub { font-size: 15px; }
+  .results-stats { grid-template-columns: repeat(3, 1fr); }
+  .results-cta { flex-direction: column; }
+  .btn-primary-lg, .btn-secondary-lg { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .level-grid { grid-template-columns: 1fr; }
+  #screen-landing { padding: 32px 16px 48px; }
+  .question-card { padding: 24px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 6px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="cefr-header">
+    <div class="header-inner">
+      <a class="logo" href="#" id="logoHome">
+        <div class="logo-mark" id="logoMark">🎓</div>
+        <span class="logo-text">CEFR <span id="logoSpan">English</span></span>
+      </a>
+      <nav class="level-nav" id="levelNav">
+        <button class="level-pill active" data-lv="A1">A1 · Beginner</button>
+        <button class="level-pill" data-lv="A2">A2 · Elementary</button>
+        <button class="level-pill" data-lv="B1">B1 · Intermediate</button>
+        <button class="level-pill" data-lv="B2">B2 · Upper-Int.</button>
+        <button class="level-pill" data-lv="C1">C1 · Advanced</button>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="themeBtn" title="Toggle theme">☀️</button>
+        <button class="icon-btn" id="homeBtn" title="Home">🏠</button>
+      </div>
+    </div>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBar"></div></div>
+  </header>
+
+  <!-- ═══ LANDING SCREEN ═══ -->
+  <section class="screen active" id="screen-landing">
+    <div class="landing-inner">
+      <div class="landing-hero">
+        <div class="hero-eyebrow" id="heroEyebrow">🇪🇺 Common European Framework of Reference</div>
+        <h1 class="hero-title">Learn English the <span id="heroSpan">CEFR</span> Way</h1>
+        <p class="hero-sub">Structured exercises for every level — from your first words to advanced fluency. Pick your level and start practising.</p>
+      </div>
+      <div class="level-grid" id="levelGrid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GAME SCREEN ═══ -->
+  <section class="screen" id="screen-game">
+    <div class="game-inner">
+      <div class="game-meta">
+        <div class="meta-level-badge" id="metaLevelBadge">🟢 A1 — Beginner</div>
+        <div class="meta-progress" id="metaProgress">Question 1 of 8</div>
+        <div class="meta-score"><span class="score-star">⭐</span> <span id="metaScore">0</span> pts</div>
+      </div>
+      <div class="dot-progress" id="dotProgress"></div>
+      <div class="question-card" id="questionCard">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="action-row">
+        <button class="btn-quit" id="btnQuit">← Exit</button>
+        <button class="btn-check" id="btnCheck" disabled>Check Answer</button>
+        <button class="btn-next" id="btnNext">Next →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RESULTS SCREEN ═══ -->
+  <section class="screen" id="screen-results">
+    <div class="results-inner">
+      <div class="results-trophy" id="resultsTrophy">🏆</div>
+      <div>
+        <div class="results-level-badge" id="resultsLevelBadge">A1 Complete</div>
+        <h2 class="results-title" id="resultsTitle">Well done!</h2>
+      </div>
+      <div class="results-score-ring" id="scoreRingWrap">
+        <svg viewBox="0 0 140 140" width="140" height="140">
+          <circle class="ring-bg" cx="70" cy="70" r="60"/>
+          <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="377"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-number" id="ringNumber">0/8</div>
+          <div class="ring-label">Correct</div>
+        </div>
+      </div>
+      <div class="results-stats">
+        <div class="res-stat">
+          <div class="res-stat-value" id="resAccuracy">0%</div>
+          <div class="res-stat-label">Accuracy</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-value" id="resXP">0</div>
+          <div class="res-stat-label">XP Earned</div>
+        </div>
+        <div class="res-stat">
+          <div class="res-stat-value" id="resStreak">0</div>
+          <div class="res-stat-label">Best Streak</div>
+        </div>
+      </div>
+      <div class="results-can-do" id="resultsCanDo">
+        <h4>✅ You can now…</h4>
+        <ul id="resultsCanDoList"></ul>
+      </div>
+      <div class="results-cta">
+        <button class="btn-primary-lg" id="btnRetry">Try Again</button>
+        <button class="btn-secondary-lg" id="btnNextLevel">Next Level →</button>
+        <button class="btn-secondary-lg" id="btnBackHome">Choose Level</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CEFR QUESTION BANK
+   Format: { type: 'mc'|'order', prompt, options?, answer, explanation, points }
+═══════════════════════════════════════════════════════════ */
+const CEFR_DATA = {
+
+  A1: {
+    emoji: '🌱', label: 'Beginner', name: 'A1',
+    color: 'a1',
+    desc: 'First words & basic communication',
+    canDo: [
+      'Introduce yourself and greet people',
+      'Ask and answer simple questions about daily life',
+      'Understand very slow, clear speech on familiar topics',
+      'Fill in a simple form with personal details',
+    ],
+    questions: [
+      {
+        type: 'mc',
+        label: 'Vocabulary',
+        prompt: 'Which word means the opposite of "big"?',
+        options: ['tall', 'small', 'fast', 'old'],
+        answer: 1,
+        explanation: '"Small" is the antonym of "big". Common A1 adjective pair.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Grammar',
+        prompt: 'Complete the sentence: "My name ___ Maria."',
+        options: ['am', 'are', 'is', 'be'],
+        answer: 2,
+        explanation: 'We use "is" with he/she/it and names: "My name is…"',
+        points: 10,
+      },
+      {
+        type: 'order',
+        label: 'Sentence Building',
+        prompt: 'Put the words in the correct order:',
+        words: ['from', 'I', 'Spain', 'am'],
+        answer: 'I am from Spain',
+        explanation: 'Subject + verb + complement: "I am from Spain."',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Grammar',
+        prompt: '"___ you like coffee?" — "Yes, I do."',
+        options: ['Are', 'Is', 'Do', 'Does'],
+        answer: 2,
+        explanation: 'Use "Do" for questions with I/you/we/they in Present Simple.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Vocabulary',
+        prompt: 'What do you say when you meet someone for the first time?',
+        options: ['Goodbye', 'Nice to meet you', 'See you later', 'Thank you'],
+        answer: 1,
+        explanation: '"Nice to meet you" is the standard greeting when meeting someone new.',
+        points: 10,
+      },
+      {
+        type: 'order',
+        label: 'Sentence Building',
+        prompt: 'Build a correct sentence:',
+        words: ['have', 'I', 'two', 'brothers'],
+        answer: 'I have two brothers',
+        explanation: 'Affirmative sentence: Subject + have + number + noun.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Numbers',
+        prompt: 'How do you write 15 in English?',
+        options: ['fifty', 'fifteen', 'fifth', 'fifty-one'],
+        answer: 1,
+        explanation: '15 = fifteen. Numbers 13–19 end in "-teen".',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Grammar',
+        prompt: 'She ___ to school every day.',
+        options: ['go', 'goes', 'going', 'gone'],
+        answer: 1,
+        explanation: 'Third person singular (he/she/it) adds -s/-es in Present Simple: "she goes".',
+        points: 10,
+      },
+    ],
+  },
+
+  A2: {
+    emoji: '🌿', label: 'Elementary', name: 'A2',
+    color: 'a2',
+    desc: 'Simple phrases & everyday situations',
+    canDo: [
+      'Describe your family, job and daily routine',
+      'Shop, order food and use transport in English',
+      'Write simple messages, emails and notes',
+      'Talk about past events using basic past tense',
+    ],
+    questions: [
+      {
+        type: 'mc',
+        label: 'Past Simple',
+        prompt: 'Yesterday I ___ to the supermarket.',
+        options: ['go', 'goes', 'went', 'gone'],
+        answer: 2,
+        explanation: '"Went" is the irregular past simple of "go". Yesterday = past time marker.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Comparatives',
+        prompt: 'My bag is ___ than yours.',
+        options: ['heavy', 'heavier', 'more heavier', 'heaviest'],
+        answer: 1,
+        explanation: 'For short adjectives (1–2 syllables), add -er to form comparatives: heavy → heavier.',
+        points: 10,
+      },
+      {
+        type: 'order',
+        label: 'Past Simple',
+        prompt: 'Rearrange to make a past simple question:',
+        words: ['you', 'Did', 'the', 'film', 'enjoy'],
+        answer: 'Did you enjoy the film',
+        explanation: 'Past simple questions: Did + subject + base verb.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Present Perfect',
+        prompt: 'I ___ never been to Japan.',
+        options: ['am', 'have', 'has', 'had'],
+        answer: 1,
+        explanation: 'Present Perfect for life experiences: have/has + past participle. "I have never been…"',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Articles',
+        prompt: 'Can I have ___ glass of water, please?',
+        options: ['a', 'an', 'the', 'some'],
+        answer: 0,
+        explanation: '"A" is used before singular countable nouns starting with a consonant sound.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Modal Verbs',
+        prompt: 'She ___ speak three languages. It\'s impressive!',
+        options: ['can', 'must', 'should', 'might'],
+        answer: 0,
+        explanation: '"Can" expresses ability. "She can speak three languages."',
+        points: 10,
+      },
+      {
+        type: 'order',
+        label: 'Sentence Building',
+        prompt: 'Build a sentence about a plan:',
+        words: ['going', 'I\'m', 'visit', 'to', 'tomorrow', 'my', 'grandmother'],
+        answer: "I'm going to visit my grandmother tomorrow",
+        explanation: '"Going to" + base verb expresses a plan or intention.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Prepositions',
+        prompt: 'The meeting is ___ Monday morning.',
+        options: ['in', 'at', 'on', 'by'],
+        answer: 2,
+        explanation: 'Use "on" with days of the week: on Monday, on Friday, etc.',
+        points: 10,
+      },
+    ],
+  },
+
+  B1: {
+    emoji: '🌲', label: 'Intermediate', name: 'B1',
+    color: 'b1',
+    desc: 'Main ideas & personal opinions',
+    canDo: [
+      'Understand the main points of standard speech on familiar topics',
+      'Produce simple connected text on topics you know well',
+      'Express and briefly justify opinions and plans',
+      'Narrate a story or describe an experience in the past',
+    ],
+    questions: [
+      {
+        type: 'mc',
+        label: 'First Conditional',
+        prompt: 'If it rains tomorrow, we ___ stay at home.',
+        options: ['will', 'would', 'should', 'might be going to'],
+        answer: 0,
+        explanation: 'First conditional for real future possibilities: If + Present Simple, will + base verb.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Reported Speech',
+        prompt: 'He said that he ___ tired after the meeting.',
+        options: ['is', 'was', 'were', 'has been'],
+        answer: 1,
+        explanation: 'In reported speech, Present Simple shifts to Past Simple: "I am" → "he was".',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Gerunds & Infinitives',
+        prompt: 'My teacher suggested ___ a grammar book.',
+        options: ['buy', 'to buy', 'buying', 'bought'],
+        answer: 2,
+        explanation: '"Suggest" is followed by a gerund (-ing): suggest + doing.',
+        points: 10,
+      },
+      {
+        type: 'order',
+        label: 'Past Perfect',
+        prompt: 'Build a sentence using the past perfect:',
+        words: ['arrived', 'had', 'When', 'already', 'she', 'the', 'he', 'left'],
+        answer: 'When she arrived he had already left',
+        explanation: 'Past Perfect (had + pp) shows an action completed before another past action.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Error Correction',
+        prompt: 'Find the grammatical error: "I am living in this city since 2019."',
+        options: ['"I am living"', '"in this city"', '"since 2019"', 'No error'],
+        answer: 0,
+        explanation: 'With "since", use Present Perfect Continuous: "I have been living in this city since 2019."',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Passive Voice',
+        prompt: 'The new bridge ___ by the end of next year.',
+        options: ['will build', 'will be built', 'is building', 'builds'],
+        answer: 1,
+        explanation: 'Future passive: will be + past participle. The subject receives the action.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Connectors',
+        prompt: '___ she was tired, she stayed up to finish the report.',
+        options: ['Despite', 'Although', 'However', 'Because'],
+        answer: 1,
+        explanation: '"Although" + clause contrasts two ideas. "Despite" is followed by a noun/gerund.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Vocabulary',
+        prompt: 'The word "reluctant" means:',
+        options: ['very happy', 'unwilling or hesitant', 'extremely tired', 'slightly confused'],
+        answer: 1,
+        explanation: '"Reluctant" means unwilling to do something. E.g. "She was reluctant to speak in public."',
+        points: 10,
+      },
+    ],
+  },
+
+  B2: {
+    emoji: '🌳', label: 'Upper-Intermediate', name: 'B2',
+    color: 'b2',
+    desc: 'Complex topics & abstract ideas',
+    canDo: [
+      'Understand the main ideas of complex text on concrete and abstract topics',
+      'Interact fluently with native speakers without strain',
+      'Produce clear, detailed text on a wide range of subjects',
+      'Explain viewpoints and discuss advantages and disadvantages',
+    ],
+    questions: [
+      {
+        type: 'mc',
+        label: 'Second Conditional',
+        prompt: 'If I ___ the lottery, I would travel the world.',
+        options: ['win', 'won', 'had won', 'would win'],
+        answer: 1,
+        explanation: 'Second conditional for hypothetical/unreal present: If + Past Simple, would + base verb.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Error Correction',
+        prompt: 'Identify the error: "Despite of the bad weather, the concert was excellent."',
+        options: ['"Despite of"', '"the bad weather"', '"the concert was"', 'No error'],
+        answer: 0,
+        explanation: '"Despite" is never followed by "of". Use "Despite the…" or "In spite of the…"',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Inversion',
+        prompt: 'Not only ___ she speak English, but she also speaks Mandarin.',
+        options: ['does', 'is', 'did', 'has'],
+        answer: 0,
+        explanation: 'Inversion after "Not only": auxiliary verb + subject. Present tense → Not only does she…',
+        points: 15,
+      },
+      {
+        type: 'order',
+        label: 'Cleft Sentence',
+        prompt: 'Build a cleft sentence for emphasis:',
+        words: ['was', 'It', 'that', 'won', 'Maria', 'the', 'prize'],
+        answer: 'It was Maria that won the prize',
+        explanation: 'Cleft sentences (It was… that…) emphasise a particular part of a statement.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Subjunctive',
+        prompt: 'The committee recommended that he ___ the project immediately.',
+        options: ['cancels', 'cancel', 'would cancel', 'cancelled'],
+        answer: 1,
+        explanation: 'After verbs like recommend, suggest, insist + that, use the base form (subjunctive).',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Vocabulary in Context',
+        prompt: 'The government\'s new policy will ___ small businesses most.',
+        options: ['effect', 'affect', 'infect', 'defect'],
+        answer: 1,
+        explanation: '"Affect" (verb) = to have an impact on. "Effect" (noun) = a result or outcome.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Discourse Markers',
+        prompt: 'The project was over budget. ___, it was completed on time.',
+        options: ['Therefore', 'Moreover', 'Nevertheless', 'Consequently'],
+        answer: 2,
+        explanation: '"Nevertheless" introduces a contrasting idea despite what was previously said.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Phrasal Verbs',
+        prompt: 'The meeting has been ___ until next Thursday due to the strike.',
+        options: ['put off', 'put up', 'put away', 'put down'],
+        answer: 0,
+        explanation: '"Put off" means to postpone/delay. "Put up" = tolerate; "put away" = store; "put down" = criticise.',
+        points: 10,
+      },
+    ],
+  },
+
+  C1: {
+    emoji: '🏔️', label: 'Advanced', name: 'C1',
+    color: 'c1',
+    desc: 'Nuanced expression & academic language',
+    canDo: [
+      'Understand a wide range of demanding, longer texts',
+      'Express ideas fluently and spontaneously without searching for expressions',
+      'Use language flexibly and effectively for social, academic and professional purposes',
+      'Produce clear, well-structured, detailed text on complex subjects',
+    ],
+    questions: [
+      {
+        type: 'mc',
+        label: 'Collocation',
+        prompt: 'Which verb collocates correctly? "___ a decision"',
+        options: ['do', 'make', 'take', 'have'],
+        answer: 1,
+        explanation: '"Make a decision" is the correct collocation. We also say "come to a decision" formally.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Word Formation',
+        prompt: 'The prime minister\'s speech was truly ___ (inspire).',
+        options: ['inspiring', 'inspired', 'inspirational', 'inspiration'],
+        answer: 2,
+        explanation: '"Inspirational" (adj) describes something that has the quality of inspiring others. "Inspiring" also works but "inspirational" fits best as a lasting quality.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Register',
+        prompt: 'Which sentence is appropriate for a formal academic essay?',
+        options: [
+          'Lots of studies have looked into this.',
+          'A considerable body of research has examined this phenomenon.',
+          'Researchers are all over this topic.',
+          'This has been studied heaps of times.',
+        ],
+        answer: 1,
+        explanation: 'Formal academic writing requires precise, impersonal language. "A considerable body of research has examined…" is the correct register.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Third Conditional',
+        prompt: 'Had they invested earlier, they ___ the losses.',
+        options: ['would avoid', 'would have avoided', 'had avoided', 'avoided'],
+        answer: 1,
+        explanation: 'Inverted third conditional: Had + subject + pp = If they had invested. Result: would have + pp.',
+        points: 15,
+      },
+      {
+        type: 'order',
+        label: 'Mixed Conditional',
+        prompt: 'Build a mixed conditional:',
+        words: ['I', 'If', 'have', 'be', 'wouldn\'t', 'hadn\'t', 'I', 'here', 'studied', 'hard'],
+        answer: "If I hadn't studied hard I wouldn't be here",
+        explanation: 'Mixed conditional: If + past perfect (past cause) → would + infinitive (present result).',
+        points: 20,
+      },
+      {
+        type: 'mc',
+        label: 'Idiomatic Expressions',
+        prompt: '"She really bit off more than she could chew." This means she…',
+        options: [
+          'ate too much at dinner',
+          'agreed to do something too difficult',
+          'spoke harshly to a colleague',
+          'lost her appetite suddenly',
+        ],
+        answer: 1,
+        explanation: '"Bite off more than you can chew" = to take on a task that is too large or difficult to handle.',
+        points: 10,
+      },
+      {
+        type: 'mc',
+        label: 'Nuanced Vocabulary',
+        prompt: 'Choose the most precise word: "The research findings were ___; no firm conclusion could be drawn."',
+        options: ['wrong', 'inconclusive', 'mistaken', 'difficult'],
+        answer: 1,
+        explanation: '"Inconclusive" specifically means the evidence did not lead to a definite result or conclusion.',
+        points: 15,
+      },
+      {
+        type: 'mc',
+        label: 'Hedging Language',
+        prompt: 'Which phrase is an example of academic hedging?',
+        options: [
+          'This proves that climate change is caused by humans.',
+          'The evidence strongly suggests a correlation between the two variables.',
+          'Obviously, the results confirm our hypothesis.',
+          'Everyone agrees this is the correct interpretation.',
+        ],
+        answer: 1,
+        explanation: 'Hedging in academic writing uses cautious language ("suggests", "may", "appears") to avoid overstating claims.',
+        points: 15,
+      },
+    ],
+  },
+};
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+const state = {
+  level: 'A1',
+  qIndex: 0,
+  score: 0,
+  correct: 0,
+  streak: 0,
+  bestStreak: 0,
+  answered: false,
+  dotStates: [],       // 'pending'|'correct'|'wrong'
+  orderPlaced: [],     // for order questions
+  xp: JSON.parse(localStorage.getItem('cefr_xp') || '{}'),
+  completed: JSON.parse(localStorage.getItem('cefr_done') || '{}'),
+};
+
+/* ═══════════════════════════════════════════════════════════
+   LEVEL COLORS
+═══════════════════════════════════════════════════════════ */
+const LEVEL_META = {
+  A1: { color: '#4ade80', glow: 'rgba(74,222,128,0.35)', bg: 'rgba(74,222,128,0.12)', emoji: '🟢' },
+  A2: { color: '#22d3ee', glow: 'rgba(34,211,238,0.35)', bg: 'rgba(34,211,238,0.12)', emoji: '🔵' },
+  B1: { color: '#818cf8', glow: 'rgba(129,140,248,0.35)', bg: 'rgba(129,140,248,0.12)', emoji: '🟣' },
+  B2: { color: '#fb923c', glow: 'rgba(251,146,60,0.35)',  bg: 'rgba(251,146,60,0.12)',  emoji: '🟠' },
+  C1: { color: '#f472b6', glow: 'rgba(244,114,182,0.35)', bg: 'rgba(244,114,182,0.12)', emoji: '🌸' },
+};
+
+const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1'];
+
+function applyLevelTheme(lv) {
+  const m = LEVEL_META[lv];
+  const root = document.documentElement;
+  root.style.setProperty('--lvl',      m.color);
+  root.style.setProperty('--lvl-glow', m.glow);
+  root.style.setProperty('--lvl-bg',   m.bg);
+
+  // Update header logo
+  document.getElementById('logoSpan').style.color = m.color;
+  document.getElementById('logoMark').style.background = `linear-gradient(135deg, ${m.color} 0%, rgba(255,255,255,0.2) 100%)`;
+  document.getElementById('logoMark').style.boxShadow = `0 4px 12px ${m.glow}`;
+
+  // Update pill
+  document.querySelectorAll('.level-pill').forEach(p => p.classList.toggle('active', p.dataset.lv === lv));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCREENS
+═══════════════════════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LANDING
+═══════════════════════════════════════════════════════════ */
+function buildLanding() {
+  const grid = document.getElementById('levelGrid');
+  grid.innerHTML = '';
+
+  LEVEL_ORDER.forEach(lv => {
+    const data = CEFR_DATA[lv];
+    const meta = LEVEL_META[lv];
+    const done = !!state.completed[lv];
+    const xpEarned = state.xp[lv] || 0;
+
+    const card = document.createElement('div');
+    card.className = 'level-card';
+    card.dataset.lv = lv;
+
+    card.innerHTML = `
+      ${done ? '<div class="card-progress-ring" title="Completed">✅</div>' : ''}
+      <div class="card-badge">${data.emoji}</div>
+      <div class="card-level-tag">${lv}</div>
+      <div class="card-level-name">${data.label}</div>
+      <div class="card-desc">${data.desc}</div>
+      <div class="card-can-do">
+        <strong>Can Do</strong>
+        ${data.canDo[0]}
+      </div>
+      ${xpEarned ? `<div style="font-size:11px;color:${meta.color};font-weight:700;position:relative;z-index:1">⭐ ${xpEarned} XP earned</div>` : ''}
+      <button class="start-btn">Start Practice →</button>
+    `;
+
+    card.addEventListener('click', () => startLevel(lv));
+    grid.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GAME — START LEVEL
+═══════════════════════════════════════════════════════════ */
+function startLevel(lv) {
+  state.level = lv;
+  state.qIndex = 0;
+  state.score = 0;
+  state.correct = 0;
+  state.streak = 0;
+  state.bestStreak = 0;
+
+  const qs = CEFR_DATA[lv].questions;
+  state.dotStates = qs.map(() => 'pending');
+
+  applyLevelTheme(lv);
+  buildDots();
+  renderQuestion();
+  showScreen('screen-game');
+  updateXPBar(0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DOTS
+═══════════════════════════════════════════════════════════ */
+function buildDots() {
+  const container = document.getElementById('dotProgress');
+  container.innerHTML = '';
+  CEFR_DATA[state.level].questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' current' : '');
+    d.id = `dot-${i}`;
+    container.appendChild(d);
+  });
+}
+
+function updateDots() {
+  state.dotStates.forEach((st, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    if (!d) return;
+    d.className = 'dot';
+    if (i < state.qIndex) {
+      d.classList.add(st === 'correct' ? 'correct-dot' : 'wrong-dot');
+      d.classList.add('done');
+    } else if (i === state.qIndex) {
+      d.classList.add('current');
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER QUESTION
+═══════════════════════════════════════════════════════════ */
+function renderQuestion() {
+  const lv = state.level;
+  const qs = CEFR_DATA[lv].questions;
+  const q = qs[state.qIndex];
+  const meta = LEVEL_META[lv];
+  const data = CEFR_DATA[lv];
+
+  state.answered = false;
+  state.orderPlaced = [];
+
+  // Meta row
+  document.getElementById('metaLevelBadge').textContent = `${meta.emoji} ${lv} — ${data.label}`;
+  document.getElementById('metaProgress').textContent = `Question ${state.qIndex + 1} of ${qs.length}`;
+  document.getElementById('metaScore').textContent = state.score;
+
+  updateDots();
+  updateXPBar((state.qIndex / qs.length) * 100);
+
+  // Render card
+  const card = document.getElementById('questionCard');
+  card.innerHTML = '';
+  card.style.animation = 'none';
+  void card.offsetWidth; // reflow
+  card.style.animation = '';
+
+  // Type label
+  const typeLabel = document.createElement('div');
+  typeLabel.className = 'q-type-label';
+  typeLabel.textContent = (q.type === 'mc' ? '📝 ' : '🔤 ') + q.label;
+  card.appendChild(typeLabel);
+
+  // Question text
+  const qText = document.createElement('div');
+  qText.className = 'question-text';
+  qText.textContent = q.prompt;
+  card.appendChild(qText);
+
+  // Options / word order
+  if (q.type === 'mc') {
+    renderMC(q, card);
+  } else {
+    renderOrder(q, card);
+  }
+
+  // Feedback area
+  const fb = document.createElement('div');
+  fb.className = 'feedback-row';
+  fb.id = 'feedbackRow';
+  card.appendChild(fb);
+
+  // Buttons
+  const btnCheck = document.getElementById('btnCheck');
+  const btnNext = document.getElementById('btnNext');
+  btnCheck.style.display = '';
+  btnCheck.disabled = q.type === 'mc';  // MC enables on selection; order enables on words placed
+  btnNext.style.display = 'none';
+}
+
+function renderMC(q, card) {
+  const grid = document.createElement('div');
+  grid.className = 'mc-options';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-option';
+    btn.dataset.idx = i;
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.addEventListener('click', () => selectMC(i, q, grid));
+    grid.appendChild(btn);
+  });
+
+  card.appendChild(grid);
+}
+
+function selectMC(idx, q, grid) {
+  if (state.answered) return;
+  // Enable check
+  document.getElementById('btnCheck').disabled = false;
+  // Highlight selected
+  grid.querySelectorAll('.mc-option').forEach(b => b.classList.remove('selected'));
+  grid.querySelectorAll('.mc-option')[idx].classList.add('selected');
+  grid.dataset.selected = idx;
+
+  // Auto-check
+  checkAnswer();
+}
+
+function renderOrder(q, card) {
+  const targetLabel = document.createElement('div');
+  targetLabel.style.cssText = 'font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;';
+  targetLabel.textContent = 'Your sentence:';
+  card.appendChild(targetLabel);
+
+  const target = document.createElement('div');
+  target.className = 'order-target';
+  target.id = 'orderTarget';
+  card.appendChild(target);
+
+  const poolLabel = document.createElement('div');
+  poolLabel.style.cssText = 'font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;';
+  poolLabel.textContent = 'Available words:';
+  card.appendChild(poolLabel);
+
+  const pool = document.createElement('div');
+  pool.className = 'order-pool';
+  pool.id = 'orderPool';
+
+  // Shuffle words
+  const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach(word => {
+    const chip = document.createElement('button');
+    chip.className = 'word-chip';
+    chip.textContent = word;
+    chip.addEventListener('click', () => toggleOrderWord(word, chip, q));
+    pool.appendChild(chip);
+  });
+
+  card.appendChild(pool);
+}
+
+function toggleOrderWord(word, chip, q) {
+  if (state.answered) return;
+  const target = document.getElementById('orderTarget');
+
+  if (chip.classList.contains('placed')) {
+    // Return to pool
+    chip.classList.remove('placed');
+    const idx = state.orderPlaced.indexOf(word);
+    // remove first occurrence
+    const placedIdx = state.orderPlaced.indexOf(word);
+    if (placedIdx !== -1) state.orderPlaced.splice(placedIdx, 1);
+    // remove corresponding chip in target
+    const targetChips = target.querySelectorAll('.word-chip');
+    targetChips.forEach(tc => {
+      if (tc.textContent === word && !tc.dataset.removed) {
+        tc.dataset.removed = '1';
+        tc.remove();
+        return;
+      }
+    });
+  } else {
+    chip.classList.add('placed');
+    state.orderPlaced.push(word);
+
+    const placed = document.createElement('button');
+    placed.className = 'word-chip placed';
+    placed.textContent = word;
+    placed.addEventListener('click', () => {
+      // Return
+      chip.classList.remove('placed');
+      const pi = state.orderPlaced.indexOf(word);
+      if (pi !== -1) state.orderPlaced.splice(pi, 1);
+      placed.remove();
+      document.getElementById('btnCheck').disabled = state.orderPlaced.length === 0;
+    });
+    target.appendChild(placed);
+  }
+
+  document.getElementById('btnCheck').disabled = state.orderPlaced.length === 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHECK ANSWER
+═══════════════════════════════════════════════════════════ */
+function checkAnswer() {
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = CEFR_DATA[state.level].questions[state.qIndex];
+  const fb = document.getElementById('feedbackRow');
+  const btnCheck = document.getElementById('btnCheck');
+  const btnNext = document.getElementById('btnNext');
+
+  let isCorrect = false;
+
+  if (q.type === 'mc') {
+    const grid = document.querySelector('.mc-options');
+    const selected = parseInt(grid.dataset.selected);
+    isCorrect = selected === q.answer;
+    // Disable all options
+    grid.querySelectorAll('.mc-option').forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.answer) b.classList.add('correct');
+      else if (i === selected && !isCorrect) b.classList.add('wrong');
+    });
+  } else {
+    const userAnswer = state.orderPlaced.join(' ');
+    isCorrect = userAnswer.toLowerCase().replace(/[?!.]/g,'').trim() === q.answer.toLowerCase().replace(/[?!.]/g,'').trim();
+    // Colour target chips
+    const target = document.getElementById('orderTarget');
+    target.querySelectorAll('.word-chip').forEach(chip => {
+      chip.classList.add(isCorrect ? 'correct-chip' : 'wrong-chip');
+      chip.disabled = true;
+    });
+    // Colour pool chips
+    document.getElementById('orderPool').querySelectorAll('.word-chip').forEach(c => c.disabled = true);
+
+    if (!isCorrect) {
+      // Show correct answer
+      const correct = document.createElement('div');
+      correct.style.cssText = 'margin-top:8px;font-size:13px;color:var(--success);font-weight:600;padding:8px 12px;background:var(--success-bg);border-radius:8px;';
+      correct.textContent = '✓ Correct: ' + q.answer;
+      target.parentNode.insertBefore(correct, target.nextSibling);
+    }
+  }
+
+  // Update score
+  if (isCorrect) {
+    state.correct++;
+    state.score += q.points;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+    state.dotStates[state.qIndex] = 'correct';
+  } else {
+    state.streak = 0;
+    state.dotStates[state.qIndex] = 'wrong';
+  }
+
+  updateDots();
+
+  // Show feedback
+  fb.style.display = 'flex';
+  fb.className = 'feedback-row ' + (isCorrect ? 'success' : 'error');
+  fb.innerHTML = `
+    <span class="feedback-icon">${isCorrect ? '🎉' : '❌'}</span>
+    <div class="feedback-text">
+      ${isCorrect ? 'Correct! Well done.' : 'Not quite.'}
+      <span class="explanation">${q.explanation}</span>
+    </div>
+  `;
+
+  btnCheck.style.display = 'none';
+  btnNext.style.display = 'flex';
+  btnNext.textContent = state.qIndex + 1 < CEFR_DATA[state.level].questions.length ? 'Next →' : 'See Results →';
+
+  // XP bar progress
+  updateXPBar(((state.qIndex + 1) / CEFR_DATA[state.level].questions.length) * 100);
+
+  if (isCorrect && state.streak >= 3) spawnConfetti(3);
+  else if (isCorrect) spawnConfetti(1);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NEXT QUESTION / SHOW RESULTS
+═══════════════════════════════════════════════════════════ */
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= CEFR_DATA[state.level].questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESULTS
+═══════════════════════════════════════════════════════════ */
+function showResults() {
+  const lv = state.level;
+  const qs = CEFR_DATA[lv].questions;
+  const total = qs.length;
+  const correct = state.correct;
+  const accuracy = Math.round((correct / total) * 100);
+  const xpEarned = state.score;
+  const meta = LEVEL_META[lv];
+  const data = CEFR_DATA[lv];
+
+  // Save
+  state.xp[lv] = (state.xp[lv] || 0) + xpEarned;
+  if (accuracy >= 60) state.completed[lv] = true;
+  localStorage.setItem('cefr_xp', JSON.stringify(state.xp));
+  localStorage.setItem('cefr_done', JSON.stringify(state.completed));
+
+  // Trophy
+  const trophies = { 100: '🏆', 80: '🥇', 60: '🥈', 0: '🥉' };
+  const trophy = Object.entries(trophies).reverse().find(([t]) => accuracy >= parseInt(t))?.[1] || '🎖️';
+  document.getElementById('resultsTrophy').textContent = trophy;
+
+  // Title
+  const titles = { 100: 'Perfect Score!', 80: 'Excellent!', 60: 'Good Job!', 0: 'Keep Practising!' };
+  document.getElementById('resultsTitle').textContent = Object.entries(titles).reverse().find(([t]) => accuracy >= parseInt(t))?.[1] || 'Keep Practising!';
+
+  // Badge
+  document.getElementById('resultsLevelBadge').textContent = `${lv} · ${data.label}`;
+  document.getElementById('resultsLevelBadge').style.cssText = `
+    padding: 8px 20px; border-radius: 9999px;
+    background: ${meta.bg}; border: 1.5px solid ${meta.color}; color: ${meta.color};
+    font-size: 14px; font-weight: 800; display:inline-block;
+  `;
+
+  // Ring
+  document.getElementById('ringNumber').textContent = `${correct}/${total}`;
+  const circ = 2 * Math.PI * 60; // 377
+  const offset = circ * (1 - correct / total);
+  setTimeout(() => {
+    const fill = document.getElementById('ringFill');
+    fill.style.strokeDashoffset = offset;
+    fill.style.stroke = meta.color;
+  }, 200);
+
+  // Stats
+  document.getElementById('resAccuracy').textContent = accuracy + '%';
+  document.getElementById('resAccuracy').style.color = meta.color;
+  document.getElementById('resXP').textContent = '+' + xpEarned;
+  document.getElementById('resXP').style.color = meta.color;
+  document.getElementById('resStreak').textContent = state.bestStreak;
+  document.getElementById('resStreak').style.color = meta.color;
+
+  // Can-do list
+  const ul = document.getElementById('resultsCanDoList');
+  ul.innerHTML = '';
+  data.canDo.forEach(cd => {
+    const li = document.createElement('li');
+    li.textContent = cd;
+    ul.appendChild(li);
+  });
+  document.getElementById('resultsCanDo').style.borderColor = meta.color;
+  document.getElementById('resultsCanDo').style.background = meta.bg;
+  document.querySelector('.results-can-do h4').style.color = meta.color;
+
+  // Next level button
+  const nextLvIdx = LEVEL_ORDER.indexOf(lv) + 1;
+  const btnNextLv = document.getElementById('btnNextLevel');
+  if (nextLvIdx < LEVEL_ORDER.length) {
+    btnNextLv.textContent = `Next: ${LEVEL_ORDER[nextLvIdx]} →`;
+    btnNextLv.onclick = () => startLevel(LEVEL_ORDER[nextLvIdx]);
+    btnNextLv.style.display = '';
+  } else {
+    btnNextLv.style.display = 'none';
+  }
+
+  updateXPBar(100);
+  showScreen('screen-results');
+  if (accuracy >= 80) spawnConfetti(8);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   XP BAR
+═══════════════════════════════════════════════════════════ */
+function updateXPBar(pct) {
+  document.getElementById('xpBar').style.width = Math.min(pct, 100) + '%';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════════════════════════ */
+function spawnConfetti(count = 5) {
+  const pieces = ['🎉','⭐','✨','🎊','💫','🌟','🏅'];
+  for (let i = 0; i < count * 4; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    const dur = 1.5 + Math.random() * 2;
+    el.style.animationDuration = dur + 's';
+    el.style.animationDelay = Math.random() * 0.5 + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 0.6) * 1000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+function init() {
+  // Theme
+  const saved = localStorage.getItem('cefr_theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  else if (window.matchMedia('(prefers-color-scheme:light)').matches) document.documentElement.setAttribute('data-theme', 'light');
+
+  updateThemeBtn();
+
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('cefr_theme', next);
+    updateThemeBtn();
+  });
+
+  function updateThemeBtn() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  }
+
+  // Level pills (header)
+  document.getElementById('levelNav').addEventListener('click', e => {
+    const pill = e.target.closest('.level-pill');
+    if (!pill) return;
+    const lv = pill.dataset.lv;
+    applyLevelTheme(lv);
+    // If on landing, filter highlight; if on game screen show landing
+    const active = document.querySelector('.screen.active');
+    if (active.id !== 'screen-game') {
+      buildLanding();
+      showScreen('screen-landing');
+    }
+  });
+
+  // Home button
+  document.getElementById('homeBtn').addEventListener('click', goHome);
+  document.getElementById('logoHome').addEventListener('click', e => { e.preventDefault(); goHome(); });
+
+  function goHome() {
+    applyLevelTheme(state.level);
+    buildLanding();
+    showScreen('screen-landing');
+  }
+
+  // Game buttons
+  document.getElementById('btnCheck').addEventListener('click', checkAnswer);
+  document.getElementById('btnNext').addEventListener('click', nextQuestion);
+  document.getElementById('btnQuit').addEventListener('click', goHome);
+  document.getElementById('btnRetry').addEventListener('click', () => startLevel(state.level));
+  document.getElementById('btnBackHome').addEventListener('click', goHome);
+
+  // Build landing
+  applyLevelTheme('A1');
+  buildLanding();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
