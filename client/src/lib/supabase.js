@@ -9,8 +9,8 @@ import { createClient } from '@supabase/supabase-js';
 // CONFIGURATION
 // Replace these with your Supabase project credentials
 // ═══════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xxxxxx.supabase.co
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Public anon key
+const SUPABASE_URL = 'https://yranrsiympeterfowwco.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyYW5yc2l5bXBldGVyZm93d2NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2NjIxOTksImV4cCI6MjA5NzIzODE5OX0.If0al4kcqhxzT8EsEd3BBsdK__-2Gb0V6neomvSh5z8';
 
 // ═══════════════════════════════════════════════════════════════
 // CREATE CLIENT
