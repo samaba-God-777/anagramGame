@@ -370,6 +370,21 @@ async function fetchFreeDictionary(word) {
   }
 }
 
+function getAudioUrl(data) {
+  for (const entry of data.entries || []) {
+    for (const pron of entry.pronunciations || []) {
+      if (pron.audio?.url) return pron.audio.url;
+    }
+  }
+  return null;
+}
+
+function playAudio(audioUrl) {
+  if (!audioUrl) return;
+  const audio = new Audio(audioUrl);
+  audio.play().catch(() => {});
+}
+
 function renderDefinitionPanel(data) {
   const panel = document.getElementById("definitionPanel");
   if (!panel) return;
@@ -382,21 +397,42 @@ function renderDefinitionPanel(data) {
   panel.hidden = false;
   const entry = data.entries[0];
   const word = data.word;
+  const audioUrl = getAudioUrl(data);
 
   let html = `<div class="def-card">`;
 
-  // Word header
+  // Word header with audio
   html += `<div class="def-header">
-    <h3 class="def-word">${escapeHtml(word)}</h3>`;
+    <div class="def-word-row">
+      <h3 class="def-word">${escapeHtml(word)}</h3>
+      ${audioUrl ? `<button class="def-audio-btn" data-audio="${escapeHtml(audioUrl)}" title="Listen">🔊</button>` : ''}
+    </div>`;
 
-  // Pronunciation
-  const pron = entry.pronunciations?.find(p => p.type === "ipa" && p.tags?.includes("Received Pronunciation"))
-    || entry.pronunciations?.find(p => p.type === "ipa")
-    || entry.pronunciations?.[0];
-  if (pron) {
-    html += `<span class="def-pronunciation">${escapeHtml(pron.text)}</span>`;
+  // Pronunciations (show multiple)
+  const prons = (entry.pronunciations || []).filter(p => p.type === "ipa" && p.text);
+  if (prons.length) {
+    html += `<div class="def-pronunciations">`;
+    prons.slice(0, 4).forEach(p => {
+      const label = p.tags?.length ? p.tags[0] : "IPA";
+      html += `<span class="def-pron-item"><span class="def-pron-label">${escapeHtml(label)}</span> ${escapeHtml(p.text)}</span>`;
+    });
+    html += `</div>`;
   }
   html += `</div>`;
+
+  // Word forms (plural, past, etc.)
+  const forms = entry.entries?.flatMap(e => e.forms || []).filter(f => f.tags?.length) || [];
+  const uniqueForms = [...new Map(forms.map(f => [f.word, f])).values()].slice(0, 6);
+  if (uniqueForms.length) {
+    html += `<div class="def-forms">
+      <span class="def-label">Forms:</span>
+      <div class="def-tag-list">`;
+    uniqueForms.forEach(f => {
+      const tag = f.tags.find(t => !["alternative","obsolete"].includes(t)) || f.tags[0];
+      html += `<span class="def-tag def-tag-form">${escapeHtml(f.word)} <small>(${escapeHtml(tag)})</small></span>`;
+    });
+    html += `</div></div>`;
+  }
 
   // Group by part of speech
   const byPos = {};
@@ -412,11 +448,20 @@ function renderDefinitionPanel(data) {
 
     items.forEach(item => {
       item.senses?.forEach((sense, si) => {
-        if (si >= 3) return; // limit to 3 definitions per POS
+        if (si >= 4) return;
         html += `<div class="def-sense">
           <div class="def-number">${si + 1}.</div>
           <div class="def-content">
             <p class="def-text">${escapeHtml(sense.definition)}</p>`;
+
+        // Tags (colloquial, formal, etc.)
+        if (sense.tags?.length) {
+          html += `<div class="def-tags-inline">`;
+          sense.tags.forEach(t => {
+            html += `<span class="def-tag-badge">${escapeHtml(t)}</span>`;
+          });
+          html += `</div>`;
+        }
 
         // Examples
         if (sense.examples?.length) {
@@ -431,7 +476,7 @@ function renderDefinitionPanel(data) {
         if (sense.synonyms?.length) {
           html += `<div class="def-synonyms">
             <span class="def-label">Synonyms:</span>
-            ${sense.synonyms.slice(0, 5).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
+            ${sense.synonyms.slice(0, 6).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
           </div>`;
         }
 
@@ -439,7 +484,7 @@ function renderDefinitionPanel(data) {
         if (sense.antonyms?.length) {
           html += `<div class="def-antonyms">
             <span class="def-label">Antonyms:</span>
-            ${sense.antonyms.slice(0, 5).map(a => `<span class="def-tag def-tag-ant">${escapeHtml(a)}</span>`).join("")}
+            ${sense.antonyms.slice(0, 6).map(a => `<span class="def-tag def-tag-ant">${escapeHtml(a)}</span>`).join("")}
           </div>`;
         }
 
@@ -455,13 +500,23 @@ function renderDefinitionPanel(data) {
     html += `<div class="def-entry-synonyms">
       <span class="def-label">Top synonyms:</span>
       <div class="def-tag-list">
-        ${entry.synonyms.slice(0, 8).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
+        ${entry.synonyms.slice(0, 10).map(s => `<span class="def-tag">${escapeHtml(s)}</span>`).join("")}
       </div>
     </div>`;
   }
 
+  // Source
+  if (data.source?.url) {
+    html += `<div class="def-source">Source: <a href="${escapeHtml(data.source.url)}" target="_blank" rel="noopener">${escapeHtml(data.source.url)}</a></div>`;
+  }
+
   html += `</div>`;
   panel.innerHTML = html;
+
+  // Audio button handlers
+  panel.querySelectorAll(".def-audio-btn").forEach(btn => {
+    btn.addEventListener("click", () => playAudio(btn.dataset.audio));
+  });
 }
 
 async function lookupDefinition(word) {
