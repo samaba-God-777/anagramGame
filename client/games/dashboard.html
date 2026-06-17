@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-page="dashboard">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track your English learning progress, CEFR level, and game performance." />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Dashboard — English Learning Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">📊</span>
+          <div>
+            <h1 class="game-title">Dashboard</h1>
+            <p class="game-subtitle">Your English Learning Progress & CEFR Level</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="../index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+          </button>
+        </div>
+      </header>
+      <div id="dashboardContainer"></div>
+    </main>
+  </div>
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    import { initDashboard } from '/src/features/dashboard.js';
+    initTheme();
+    buildGlobalSidebar({}, false);
+    initDashboard();
+  </script>
+</body>
+</html>

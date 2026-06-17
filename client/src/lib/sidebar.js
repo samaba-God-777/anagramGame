@@ -31,6 +31,7 @@ const SIDEBAR_STRUCTURE = [
     { type: "link", icon: "🎭", label: "Idiomatic Expressions", href: "/grammar/idiomatic-expressions.html" },
   ]},
   { type: "section", icon: "🎯", label: "My Progress", children: [
+    { type: "link", icon: "📊", label: "Dashboard", href: "/games/dashboard.html" },
     { type: "stats" },
   ]},
   { type: "section", icon: "🎮", label: "Games", children: [
