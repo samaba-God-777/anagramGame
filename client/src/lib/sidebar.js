@@ -2,6 +2,20 @@
    SIDEBAR MODULE
    ═══════════════════════════════════════════ */
 
+const STORAGE_PREFIX = "grammar_";
+
+function getLocal(key) {
+  try { return JSON.parse(localStorage.getItem(STORAGE_PREFIX + key)); } catch { return null; }
+}
+
+function getProgress() {
+  return getLocal("progress") || {};
+}
+
+function getBookmarks() {
+  return getLocal("bookmarks") || [];
+}
+
 const SIDEBAR_STRUCTURE = [
   { type: "link", icon: "🏠", label: "Home", href: "/" },
   { type: "link", icon: "📖", label: "Dictionary", href: "/dictionary/index.html" },
@@ -18,6 +32,9 @@ const SIDEBAR_STRUCTURE = [
     { type: "link", icon: "📍", label: "Adverb Positions", href: "/grammar/adverb-positions.html" },
     { type: "link", icon: "💬", label: "Phrasal Verbs", href: "/grammar/phrasal-verbs.html" },
     { type: "link", icon: "🎭", label: "Idiomatic Expressions", href: "/grammar/idiomatic-expressions.html" },
+  ]},
+  { type: "section", icon: "🎯", label: "My Progress", children: [
+    { type: "stats" },
   ]},
   { type: "section", icon: "🎮", label: "Games", children: [
     { type: "link", icon: "💬", label: "AI Conversation", href: "/games/game-conversation.html" },
@@ -45,6 +62,23 @@ function expandTenseGroup(sidebarNav, isTensePage) {
   if (tg) tg.classList.add("open");
 }
 
+function getProgressBadge(href) {
+  const progress = getProgress();
+  const lessonId = href.split("/").pop()?.replace(".html", "");
+  if (!lessonId) return "";
+  const p = progress[lessonId];
+  if (!p) return "";
+  if (p.completed) return '<span class="sidebar-badge done">✅</span>';
+  if (p.lastAccess) return '<span class="sidebar-badge progress">📖</span>';
+  return "";
+}
+
+function getBookmarkIcon(href) {
+  const bookmarks = getBookmarks();
+  const lessonId = href.split("/").pop()?.replace(".html", "");
+  return bookmarks.includes(lessonId) ? "⭐" : "";
+}
+
 function buildGlobalSidebar(state, isTensePage) {
   const sidebarNav = document.getElementById("sidebarNav");
   if (!sidebarNav) return;
@@ -56,7 +90,9 @@ function buildGlobalSidebar(state, isTensePage) {
       const a = document.createElement("a");
       a.className = "sidebar-link" + (item.divider ? " sidebar-link-divider" : "");
       a.href = item.href;
-      a.innerHTML = `<span class="sidebar-link-icon">${item.icon}</span><span class="sidebar-link-text">${item.label}</span>`;
+      const badge = getProgressBadge(item.href);
+      const bookmark = getBookmarkIcon(item.href);
+      a.innerHTML = `<span class="sidebar-link-icon">${item.icon}</span><span class="sidebar-link-text">${item.label}</span>${badge}${bookmark ? `<span class="sidebar-bookmark">${bookmark}</span>` : ""}`;
       if (a.href.endsWith(pagePath)) a.classList.add("active");
       sidebarNav.appendChild(a);
     } else if (item.type === "section") {
@@ -66,12 +102,39 @@ function buildGlobalSidebar(state, isTensePage) {
       header.addEventListener("click", () => { section.classList.toggle("open"); });
       section.appendChild(header);
       const children = document.createElement("div"); children.className = "sidebar-children";
+
       item.children.forEach(child => {
-        if (child.type === "group") {
+        if (child.type === "stats") {
+          // Progress stats panel
+          const statsDiv = document.createElement("div"); statsDiv.className = "sidebar-stats";
+          const progress = getProgress();
+          const bookmarks = getBookmarks();
+          const total = 22; // Total grammar lessons
+          const completed = Object.values(progress).filter(p => p.completed).length;
+          const percent = Math.round((completed / total) * 100);
+          statsDiv.innerHTML = `
+            <div class="sidebar-stats-content">
+              <div class="sidebar-stat-row">
+                <span class="sidebar-stat-label">Completed</span>
+                <span class="sidebar-stat-value">${completed}/${total}</span>
+              </div>
+              <div class="sidebar-stat-bar">
+                <div class="sidebar-stat-fill" style="width: ${percent}%"></div>
+              </div>
+              <div class="sidebar-stat-row">
+                <span class="sidebar-stat-label">Bookmarks</span>
+                <span class="sidebar-stat-value">⭐ ${bookmarks.length}</span>
+              </div>
+            </div>
+          `;
+          children.appendChild(statsDiv);
+        } else if (child.type === "group") {
           const group = document.createElement("div"); group.className = "tense-group"; group.dataset.tenseGroup = child.isTense ? "tenses" : "";
           const gh = document.createElement("div"); gh.className = "tense-header";
           const gt = document.createElement("button"); gt.className = "tense-title"; gt.dataset.tense = child.isTense ? child.label : "";
-          const gts = document.createElement("span"); gts.className = "tense-title-text"; gts.innerHTML = `<span class="sidebar-link-icon" style="font-size:12px;margin-right:4px;">${child.icon}</span>${child.label}`;
+          const gts = document.createElement("span"); gts.className = "tense-title-text";
+          const badge = getProgressBadge(child.href);
+          gts.innerHTML = `<span class="sidebar-link-icon" style="font-size:12px;margin-right:4px;">${child.icon}</span>${child.label}${badge}`;
           const gta = document.createElement("span"); gta.className = "tense-title-arrow"; gta.textContent = "▾";
           gt.appendChild(gts); gt.appendChild(gta);
           const gl = document.createElement("a"); gl.className = "tense-page-link"; gl.href = child.href; gl.textContent = "↗"; gl.title = `Open page`; gl.rel = "noopener";
@@ -98,7 +161,8 @@ function buildGlobalSidebar(state, isTensePage) {
             const subChildren = document.createElement("div"); subChildren.className = "sidebar-children sidebar-sub";
             child.children.forEach(sub => {
               const sa = document.createElement("a"); sa.className = "sidebar-link sidebar-sub-link"; sa.href = sub.href;
-              sa.innerHTML = `<span class="sidebar-link-text" style="font-size:12px;">${sub.label}</span>`;
+              const subBadge = getProgressBadge(sub.href);
+              sa.innerHTML = `<span class="sidebar-link-text" style="font-size:12px;">${sub.label}</span>${subBadge}`;
               if (sa.href.endsWith(pagePath)) sa.classList.add("active");
               subChildren.appendChild(sa);
             });
@@ -108,7 +172,9 @@ function buildGlobalSidebar(state, isTensePage) {
           children.appendChild(group);
         } else if (child.type === "link") {
           const ca = document.createElement("a"); ca.className = "sidebar-link"; ca.href = child.href;
-          ca.innerHTML = `<span class="sidebar-link-icon">${child.icon}</span><span class="sidebar-link-text">${child.label}</span>`;
+          const badge = getProgressBadge(child.href);
+          const bookmark = getBookmarkIcon(child.href);
+          ca.innerHTML = `<span class="sidebar-link-icon">${child.icon}</span><span class="sidebar-link-text">${child.label}</span>${badge}${bookmark ? `<span class="sidebar-bookmark">${bookmark}</span>` : ""}`;
           if (ca.href.endsWith(pagePath)) ca.classList.add("active");
           children.appendChild(ca);
         }

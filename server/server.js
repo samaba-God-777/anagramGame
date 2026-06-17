@@ -163,6 +163,137 @@ app.get('/api/progress/:userId', async (req, res) => {
   }
 });
 
+// ── Save grammar progress ──
+app.post('/api/grammar/progress', async (req, res) => {
+  const { userId, lessonId, completed, score } = req.body;
+  if (!lessonId) {
+    return res.status(400).json({ error: 'lessonId is required' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO grammar_progress (user_id, lesson_id, completed, score)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (user_id, lesson_id)
+       DO UPDATE SET 
+         completed = EXCLUDED.completed OR grammar_progress.completed,
+         score = GREATEST(grammar_progress.score, EXCLUDED.score),
+         updated_at = NOW()
+       RETURNING *`,
+      [userId || 'anonymous', lessonId, completed || false, score || 0]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    // If table doesn't exist, just return ok (local storage fallback)
+    console.log('Grammar progress save (local only):', err.message);
+    res.json({ lessonId, completed, score, fallback: true });
+  }
+});
+
+// ── Get grammar progress ──
+app.get('/api/grammar/progress/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM grammar_progress WHERE user_id = $1',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.log('Grammar progress fetch (local only):', err.message);
+    res.json([]);
+  }
+});
+
+// ── Save grammar note ──
+app.post('/api/grammar/notes', async (req, res) => {
+  const { userId, lessonId, note } = req.body;
+  if (!lessonId) {
+    return res.status(400).json({ error: 'lessonId is required' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO grammar_notes (user_id, lesson_id, note)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (user_id, lesson_id)
+       DO UPDATE SET note = EXCLUDED.note, updated_at = NOW()
+       RETURNING *`,
+      [userId || 'anonymous', lessonId, note || '']
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.log('Grammar note save (local only):', err.message);
+    res.json({ lessonId, note, fallback: true });
+  }
+});
+
+// ── Get grammar notes ──
+app.get('/api/grammar/notes/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM grammar_notes WHERE user_id = $1',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.log('Grammar notes fetch (local only):', err.message);
+    res.json([]);
+  }
+});
+
+// ── Save grammar bookmark ──
+app.post('/api/grammar/bookmarks', async (req, res) => {
+  const { userId, lessonId } = req.body;
+  if (!lessonId) {
+    return res.status(400).json({ error: 'lessonId is required' });
+  }
+
+  try {
+    // Toggle bookmark
+    const existing = await pool.query(
+      'SELECT id FROM grammar_bookmarks WHERE user_id = $1 AND lesson_id = $2',
+      [userId || 'anonymous', lessonId]
+    );
+
+    if (existing.rows.length > 0) {
+      await pool.query(
+        'DELETE FROM grammar_bookmarks WHERE user_id = $1 AND lesson_id = $2',
+        [userId || 'anonymous', lessonId]
+      );
+      res.json({ bookmarked: false });
+    } else {
+      await pool.query(
+        'INSERT INTO grammar_bookmarks (user_id, lesson_id) VALUES ($1, $2)',
+        [userId || 'anonymous', lessonId]
+      );
+      res.json({ bookmarked: true });
+    }
+  } catch (err) {
+    console.log('Grammar bookmark toggle (local only):', err.message);
+    res.json({ bookmarked: true, fallback: true });
+  }
+});
+
+// ── Get grammar bookmarks ──
+app.get('/api/grammar/bookmarks/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM grammar_bookmarks WHERE user_id = $1',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.log('Grammar bookmarks fetch (local only):', err.message);
+    res.json([]);
+  }
+});
+
 // ── SPA fallback — serve index.html for unknown routes ──
 app.get('*', (req, res) => {
   const indexPath = join(distPath, 'index.html');

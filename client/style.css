@@ -316,6 +316,129 @@ body::before {
   box-shadow: 0 0 6px rgba(79,70,229,0.4);
 }
 
+/* ── Sidebar Progress Stats ── */
+.sidebar-stats { padding: 12px 16px; }
+.sidebar-stats-content { display: flex; flex-direction: column; gap: 8px; }
+.sidebar-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.sidebar-stat-label { color: var(--color-text-muted); font-weight: 500; }
+.sidebar-stat-value { color: var(--color-text); font-weight: 700; }
+.sidebar-stat-bar {
+  height: 6px; background: var(--color-border); border-radius: 3px; overflow: hidden;
+}
+.sidebar-stat-fill {
+  height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-success));
+  border-radius: 3px; transition: width 0.3s ease;
+}
+
+/* ── Sidebar Badges ── */
+.sidebar-badge {
+  font-size: 10px; margin-left: 4px; vertical-align: middle;
+}
+.sidebar-badge.done { opacity: 0.9; }
+.sidebar-badge.progress { opacity: 0.7; }
+.sidebar-bookmark {
+  font-size: 10px; margin-left: 4px; opacity: 0.8;
+}
+
+/* ── Quiz UI ── */
+.quiz-results {
+  text-align: center; padding: 32px 20px;
+}
+.quiz-score-circle {
+  width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px;
+  background: conic-gradient(var(--color-success) calc(var(--score) * 1%), var(--color-border) 0);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.quiz-score-circle::before {
+  content: ""; position: absolute; width: 80px; height: 80px; border-radius: 50%;
+  background: var(--color-bg);
+}
+.quiz-score-num {
+  position: relative; z-index: 1; font-size: 20px; font-weight: 800; color: var(--color-text);
+}
+.quiz-results-title {
+  font-size: 20px; font-weight: 700; color: var(--color-text); margin-bottom: 8px;
+}
+.quiz-results-text {
+  font-size: 14px; color: var(--color-text-muted); margin-bottom: 8px;
+}
+.quiz-results-best {
+  font-size: 13px; color: var(--color-primary); font-weight: 600; margin-bottom: 16px;
+}
+.quiz-results-actions {
+  display: flex; gap: 12px; justify-content: center; margin-top: 20px;
+}
+.quiz-btn {
+  padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: all var(--transition);
+}
+.quiz-btn-retry {
+  background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);
+}
+.quiz-btn-retry:hover { background: var(--color-surface-hover); }
+.quiz-btn-next {
+  background: var(--color-primary); color: #fff;
+}
+.quiz-btn-next:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.3); }
+
+.quiz-progress {
+  height: 4px; background: var(--color-border); border-radius: 2px; margin-bottom: 16px;
+}
+.quiz-progress-bar {
+  height: 100%; background: var(--color-primary); border-radius: 2px; transition: width 0.3s ease;
+}
+.quiz-question-num {
+  font-size: 12px; color: var(--color-text-muted); font-weight: 600; margin-bottom: 8px;
+}
+.quiz-question {
+  font-size: 16px; font-weight: 600; color: var(--color-text); margin-bottom: 20px; line-height: 1.5;
+}
+.quiz-options {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.quiz-option {
+  padding: 14px 18px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500;
+  background: var(--color-surface); border: 2px solid var(--color-border);
+  color: var(--color-text); cursor: pointer; transition: all var(--transition); text-align: left;
+}
+.quiz-option:hover {
+  border-color: var(--color-primary); background: var(--color-primary-bg);
+}
+.quiz-option.correct {
+  border-color: var(--color-success); background: var(--color-success-bg); color: var(--color-success);
+}
+.quiz-option.wrong {
+  border-color: var(--color-error); background: var(--color-error-bg); color: var(--color-error);
+}
+
+/* ── Grammar Lesson UI ── */
+.grammar-actions {
+  display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap;
+}
+.grammar-action-btn {
+  padding: 8px 16px; border-radius: var(--radius-full); font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--color-border); background: var(--color-surface);
+  color: var(--color-text); transition: all var(--transition);
+}
+.grammar-action-btn:hover {
+  border-color: var(--color-primary); color: var(--color-primary);
+}
+.grammar-action-btn.active {
+  background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+}
+.grammar-note-area {
+  width: 100%; min-height: 80px; padding: 12px; border-radius: var(--radius-md);
+  border: 1px solid var(--color-border); background: var(--color-surface);
+  color: var(--color-text); font-family: var(--font); font-size: 14px; resize: vertical;
+}
+.grammar-note-area:focus {
+  outline: none; border-color: var(--color-primary);
+}
+.grammar-quiz-section {
+  margin-top: 24px; padding: 20px; border-radius: var(--radius-lg);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+}
+
 /* ── Top Navbar ── */
 .top-navbar {
   background: var(--color-surface);
