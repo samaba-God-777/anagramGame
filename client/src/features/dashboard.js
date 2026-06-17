@@ -273,7 +273,7 @@ export function renderDashboard(container) {
             <p class="dash-cefr-desc">${cefrScore.level.description}</p>
             <div class="dash-cefr-progress">
               ${cefrScore.allLevels.map(l => `
-                <div class="dash-cefr-level ${l.level === cefrScore.level.level ? 'active' : ''}" style="--level-color:${l.color}">
+                <div class="dash-cefr-level ${l.level === cefrScore.level.level ? 'active' : ''}" style="--level-color:${l.color}" onclick="window.__showCEFRDetail('${l.level}')" data-level="${l.level}">
                   <span class="dash-cefr-level-label">${l.level}</span>
                   <span class="dash-cefr-level-name">${l.label}</span>
                 </div>
@@ -498,11 +498,163 @@ function generateRecommendations(tenseStats, gameStats, vocabStats, cefrScore) {
 }
 
 // ═══════════════════════════════════════════
+// CEFR DETAIL MODAL
+// ═══════════════════════════════════════════
+
+function showCEFRDetail(level) {
+  const cefrData = {
+    A1: {
+      label: "Beginner", color: "#ef4444",
+      description: "Can understand and use familiar everyday expressions and very basic phrases aimed at the satisfaction of needs of a concrete type.",
+      skills: ["Introduce yourself", "Ask and answer basic questions", "Understand simple instructions", "Fill in forms with personal details"],
+      grammar: ["Simple present tense", "Basic word order", "Articles (a, an, the)", "Simple negation"],
+      vocab: ["1,000-2,000 words", "Common everyday vocabulary", "Basic greetings and numbers"],
+      canDo: ["Describe yourself and others", "Order food and drinks", "Make simple purchases", "Understand simple signs"]
+    },
+    A2: {
+      label: "Elementary", color: "#f97316",
+      description: "Can understand sentences and frequently used expressions related to areas of most immediate relevance.",
+      skills: ["Communicate in simple tasks", "Describe your background", "Handle simple transactions", "Understand short texts"],
+      grammar: ["Past simple tense", "Comparatives and superlatives", "Modal verbs (can, must)", "Present continuous"],
+      vocab: ["2,000-3,000 words", "Work and school vocabulary", "Shopping and travel phrases"],
+      canDo: ["Write short, simple notes", "Describe experiences and events", "Talk about daily routines", "Understand short emails"]
+    },
+    B1: {
+      label: "Intermediate", color: "#eab308",
+      description: "Can understand the main points of clear standard input on familiar matters regularly encountered in work, school, leisure.",
+      skills: ["Deal with most travel situations", "Produce simple connected text", "Describe experiences and events", "Give reasons and explanations"],
+      grammar: ["Present perfect", "Conditionals (first, second)", "Passive voice basics", "Reported speech"],
+      vocab: ["3,000-4,000 words", "Abstract topics", "Idiomatic expressions"],
+      canDo: ["Write personal letters", "Understand TV shows (simple)", "Participate in discussions", "Understand news headlines"]
+    },
+    B2: {
+      label: "Upper Intermediate", color: "#22c55e",
+      description: "Can understand the main ideas of complex text on both concrete and abstract topics, including technical discussions in their field.",
+      skills: ["Interact with fluency", "Produce clear text on various subjects", "Examine viewpoints", "Understand extended speech"],
+      grammar: ["All tense forms", "Complex conditionals", "Advanced passive", "Phrasal verbs mastery"],
+      vocab: ["4,000-6,000 words", "Technical vocabulary", "Nuanced meanings"],
+      canDo: ["Understand most TV programs", "Read articles and reports", "Write detailed texts", "Debate on familiar topics"]
+    },
+    C1: {
+      label: "Advanced", color: "#3b82f6",
+      description: "Can understand a wide range of demanding, longer texts, and recognize implicit meaning. Expresses ideas fluently and spontaneously.",
+      skills: ["Express yourself fluently", "Use language flexibly", "Understand implicit meaning", "Produce clear, well-structured text"],
+      grammar: ["Complex sentence structures", "Advanced reported speech", "Nuanced tense usage", "Formal vs informal registers"],
+      vocab: ["6,000-8,000 words", "Specialized vocabulary", "Figurative language"],
+      canDo: ["Understand complex written texts", "Express yourself fluently", "Use language for professional purposes", "Write detailed, well-structured texts"]
+    },
+    C2: {
+      label: "Proficiency", color: "#8b5cf6",
+      description: "Can understand with ease virtually everything heard or read. Summarize information from different sources, reconstructing arguments in a coherent presentation.",
+      skills: ["Near-native fluency", "Understand any spoken/written text", "Express yourself precisely", "Recognize cultural nuances"],
+      grammar: ["Mastery of all structures", "Subtle grammatical distinctions", "Stylistic variations", "Literary language"],
+      vocab: ["8,000+ words", "Full range of vocabulary", "Idiomatic and colloquial expressions"],
+      canDo: ["Understand any type of spoken language", "Read any written text easily", "Express yourself fluently and precisely", "Distinguish subtle meanings"]
+    }
+  };
+
+  const data = cefrData[level];
+  if (!data) return;
+
+  // Get user's current level from dashboard data
+  const tenseStats = { totalScore: 0, totalCompleted: 0 };
+  const gameStats = { totalGames: 0 };
+  const vocabStats = { mastered: 0 };
+  
+  try {
+    const stored = localStorage.getItem('anagramGame_progress');
+    if (stored) {
+      const all = JSON.parse(stored);
+      Object.values(all).forEach(p => {
+        tenseStats.totalScore += p.score || 0;
+        tenseStats.totalCompleted += p.completed ? 1 : 0;
+      });
+    }
+  } catch (e) {}
+
+  // Create modal
+  const modal = document.createElement('div');
+  modal.className = 'cefr-modal-overlay';
+  modal.innerHTML = `
+    <div class="cefr-modal">
+      <div class="cefr-modal-header" style="background:${data.color}">
+        <div class="cefr-modal-level">${level}</div>
+        <div class="cefr-modal-info">
+          <h2 class="cefr-modal-title">${data.label}</h2>
+          <p class="cefr-modal-desc">${data.description}</p>
+        </div>
+        <button class="cefr-modal-close" onclick="this.closest('.cefr-modal-overlay').remove()">✕</button>
+      </div>
+      
+      <div class="cefr-modal-body">
+        <div class="cefr-modal-section">
+          <h3 class="cefr-section-title">🎯 Can-Do Statements</h3>
+          <ul class="cefr-list">
+            ${data.canDo.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="cefr-modal-section">
+          <h3 class="cefr-section-title">📝 Key Grammar</h3>
+          <div class="cefr-tags">
+            ${data.grammar.map(item => `<span class="cefr-tag grammar">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="cefr-modal-section">
+          <h3 class="cefr-section-title">📚 Vocabulary</h3>
+          <div class="cefr-tags">
+            ${data.vocab.map(item => `<span class="cefr-tag vocab">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="cefr-modal-section">
+          <h3 class="cefr-section-title">💬 Key Skills</h3>
+          <ul class="cefr-list">
+            ${data.skills.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="cefr-modal-section">
+          <h3 class="cefr-section-title">📖 Study Resources</h3>
+          <div class="cefr-resources">
+            <a href="/grammar/present-simple.html" class="cefr-resource-link">Grammar Lessons</a>
+            <a href="/games/game-anagram.html" class="cefr-resource-link">Practice Games</a>
+            <a href="/dictionary/" class="cefr-resource-link">Dictionary</a>
+            <a href="/grammar/phrasal-verbs.html" class="cefr-resource-link">Phrasal Verbs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  
+  // Close on overlay click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+
+  // Close on escape
+  const handleEsc = (e) => {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', handleEsc);
+    }
+  };
+  document.addEventListener('keydown', handleEsc);
+}
+
+// ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 
 export function initDashboard() {
   const container = document.getElementById("dashboardContainer");
   if (!container) return;
+  
+  // Global function for CEFR level click
+  window.__showCEFRDetail = showCEFRDetail;
+  
   renderDashboard(container);
 }
