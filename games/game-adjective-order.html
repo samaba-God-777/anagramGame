@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Adjective Order Game - Put adjectives in the correct English order (OSASCOMP)." />
+  <meta name="description" content="Adjective Order Game - Put adjectives in the correct English order (OSASCOMP) by CEFR level." />
   <meta name="theme-color" content="#8b5cf6" />
   <title>Adjective Order Game — English Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,23 +15,49 @@
     .ao-question { font-size: 20px; font-weight: 700; color: var(--color-text); margin: 20px 0; line-height: 1.5; }
     .ao-slots { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
     .ao-slot { min-width: 100px; max-width: 160px; height: 44px; border: 2px dashed var(--color-primary); border-radius: var(--radius-md); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; background: var(--color-surface); transition: all var(--transition); color: var(--color-text); cursor: pointer; padding: 0 10px; }
-    .ao-slot.filled { border-style: solid; border-color: var(--color-success); background: var(--color-success-bg); cursor: pointer; }
+    .ao-slot.filled { border-style: solid; border-color: var(--color-primary); background: var(--color-primary-bg); cursor: pointer; }
+    .ao-slot.correct { border-color: var(--color-success) !important; background: var(--color-success-bg) !important; color: var(--color-success) !important; }
+    .ao-slot.wrong { border-color: var(--color-error) !important; background: var(--color-error-bg) !important; color: var(--color-error) !important; }
     .ao-noun { font-size: 28px; font-weight: 800; color: var(--color-primary); display: block; margin: 12px 0; }
     .ao-word-bank { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px 0; max-width: 600px; margin-left: auto; margin-right: auto; }
     .ao-word { padding: 8px 16px !important; font-size: 14px !important; cursor: pointer !important; }
-    .ao-word.placed { opacity: 0.3; text-decoration: line-through; }
+    .ao-word.placed { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
     .order-key { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; font-size: 11px; font-weight: 600; color: var(--color-text-muted); }
     .order-key span { background: var(--color-bg-secondary); padding: 4px 8px; border-radius: 4px; }
-    @media (max-width: 640px) { .ao-slot { min-width: 75px; max-width: 120px; height: 38px; font-size: 12px; } .ao-word { font-size: 12px !important; padding: 6px 10px !important; } }
+    .level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 24px 0; }
+    .level-card { border-radius: var(--radius-lg); border: 1.5px solid var(--color-border); background: var(--color-surface); padding: 20px 14px; cursor: pointer; text-align: center; transition: all 0.3s var(--transition); }
+    .level-card:hover { transform: translateY(-4px); border-color: var(--color-primary); box-shadow: 0 12px 30px rgba(139,92,246,0.15); }
+    .level-card .lv-emoji { font-size: 28px; margin-bottom: 6px; }
+    .level-card .lv-code { font-size: 18px; font-weight: 800; color: var(--color-primary); }
+    .level-card .lv-name { font-size: 11px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .level-card .lv-desc { font-size: 11px; color: var(--color-text-muted); margin-top: 4px; }
+    .level-card .lv-count { font-size: 10px; color: var(--color-text-muted); margin-top: 6px; }
+    .level-card.done { border-color: var(--color-success); }
+    .level-card.done::after { content: "✅"; position: absolute; top: 8px; right: 8px; font-size: 14px; }
+    .level-card { position: relative; }
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-muted); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+    .back-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .progress-ring { width: 130px; height: 130px; position: relative; margin: 0 auto; }
+    .progress-ring svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: var(--color-border); stroke-width: 10; }
+    .ring-fill { fill: none; stroke: var(--color-primary); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s var(--transition); }
+    .ring-mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring-num { font-size: 32px; font-weight: 800; color: var(--color-text); line-height: 1; }
+    .ring-lbl { font-size: 11px; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .res-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+    .rs { padding: 18px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--color-border); background: var(--color-surface); text-align: center; }
+    .rs-val { font-size: 26px; font-weight: 800; color: var(--color-primary); }
+    .rs-lbl { font-size: 11px; color: var(--color-text-muted); margin-top: 2px; }
+    .res-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    @media (max-width: 640px) { .ao-slot { min-width: 75px; max-width: 120px; height: 38px; font-size: 12px; } .ao-word { font-size: 12px !important; padding: 6px 10px !important; } .level-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 400px) { .level-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
   <div class="app-layout">
-
-    <!-- Sidebar overlay (mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar" aria-label="Navigation">
       <div class="sidebar-header">
         <h2 class="sidebar-title">Menu</h2>
@@ -46,7 +72,7 @@
           <span class="game-icon" aria-hidden="true">📏</span>
           <div>
             <h1 class="game-title">Adjective Order Game</h1>
-            <p class="game-subtitle">Put adjectives in the correct OSASCOMP order</p>
+            <p class="game-subtitle" id="gameSubtitle">Put adjectives in the correct OSASCOMP order</p>
           </div>
         </div>
         <div class="header-controls">
@@ -55,36 +81,674 @@
         </div>
       </header>
 
-      <div class="game-layout">
-        <div class="ao-question" id="aoQuestion">Put in correct order: <strong>___ house</strong></div>
-
-        <div class="order-key">
-          <span>Opinion</span> <span>Size</span> <span>Age</span> <span>Shape</span>
-          <span>Color</span> <span>Origin</span> <span>Material</span> <span>Purpose</span>
-        </div>
-
-        <div id="aoOptions"></div>
-
-        <div class="button-group" style="padding-top:16px;">
-          <button class="btn btn-primary" id="aoCheck">✓ Check</button>
-          <button class="btn btn-secondary" id="aoNext">→ Next</button>
-        </div>
-
-        <div id="aoResult" class="result-message" style="margin:14px 0;"></div>
-
-        <div class="game-stat" style="display:inline-block;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 24px;">
-          <div class="game-stat-label" style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--color-text-muted);">Score</div>
-          <div class="game-stat-value" style="font-size:28px;font-weight:800;color:var(--color-primary);" id="aoScore">0</div>
+      <!-- LEVEL SELECT SCREEN -->
+      <div class="screen active" id="screenLevels">
+        <div class="game-layout" style="margin:0 auto;">
+          <h2 style="font-size:22px;font-weight:800;color:var(--color-text);margin-bottom:4px;">Choose Your Level</h2>
+          <p style="font-size:14px;color:var(--color-text-muted);margin-bottom:8px;">8 questions per level · CEFR A1–C1</p>
+          <div class="order-key" style="margin-bottom:20px;">
+            <span>Opinion</span> <span>Size</span> <span>Age</span> <span>Shape</span>
+            <span>Color</span> <span>Origin</span> <span>Material</span> <span>Purpose</span>
+          </div>
+          <div class="level-grid" id="levelGrid"></div>
         </div>
       </div>
 
-      <div class="feedback-area" style="border-top:1px solid var(--color-border);">
-        <div class="tip"><span class="tip-icon" aria-hidden="true">💡</span><span>Tap adjectives in order: <strong>Opinion → Size → Age → Shape → Color → Origin → Material → Purpose</strong> (OSASCOMP). Click a filled slot to remove it.</span></div>
+      <!-- GAME SCREEN -->
+      <div class="screen" id="screenGame">
+        <div class="game-layout" style="margin:0 auto;">
+          <button class="back-btn" id="backBtn">← Levels</button>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span id="levelBadge" style="display:inline-block;padding:5px 14px;border-radius:999px;background:var(--color-primary-bg);border:1px solid var(--color-primary);color:var(--color-primary);font-size:12px;font-weight:800;">A1</span>
+            <span id="qCounter" style="font-size:13px;font-weight:600;color:var(--color-text-muted);">1 / 8</span>
+            <span style="flex:1"></span>
+            <span style="font-size:13px;font-weight:700;color:var(--color-text);">⭐ <span id="scoreDisp">0</span></span>
+          </div>
+
+          <div class="ao-question" id="aoQuestion"></div>
+
+          <div class="order-key">
+            <span>Opinion</span> <span>Size</span> <span>Age</span> <span>Shape</span>
+            <span>Color</span> <span>Origin</span> <span>Material</span> <span>Purpose</span>
+          </div>
+
+          <div class="ao-slots" id="aoSlots"></div>
+
+          <div class="ao-word-bank" id="aoWordBank"></div>
+
+          <div class="button-group" style="padding-top:16px;">
+            <button class="btn btn-primary" id="aoCheck">✓ Check</button>
+            <button class="btn btn-secondary" id="aoNext">→ Next</button>
+          </div>
+
+          <div id="aoResult" class="result-message" style="margin:14px 0;"></div>
+
+          <div class="game-stat" style="display:inline-block;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 24px;">
+            <div class="game-stat-label" style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--color-text-muted);">Score</div>
+            <div class="game-stat-value" style="font-size:28px;font-weight:800;color:var(--color-primary);" id="aoScore">0</div>
+          </div>
+        </div>
+
+        <div class="feedback-area" style="border-top:1px solid var(--color-border);">
+          <div class="tip"><span class="tip-icon" aria-hidden="true">💡</span><span>Tap adjectives in order: <strong>Opinion → Size → Age → Shape → Color → Origin → Material → Purpose</strong> (OSASCOMP). Click a filled slot to remove it.</span></div>
+        </div>
+      </div>
+
+      <!-- RESULTS SCREEN -->
+      <div class="screen" id="screenResults">
+        <div class="game-layout" style="margin:0 auto;text-align:center;">
+          <div style="font-size:64px;margin-bottom:12px;" id="resTrophy">🏆</div>
+          <div id="resLevelBadge" style="display:inline-block;padding:6px 18px;border-radius:999px;background:var(--color-primary-bg);border:1px solid var(--color-primary);color:var(--color-primary);font-size:13px;font-weight:800;margin-bottom:12px;">A1 Complete</div>
+          <h2 style="font-size:30px;font-weight:800;color:var(--color-text);margin-bottom:20px;" id="resTitle">Well done!</h2>
+          <div class="progress-ring">
+            <svg viewBox="0 0 130 130" width="130" height="130">
+              <circle class="ring-bg" cx="65" cy="65" r="55"/>
+              <circle class="ring-fill" id="ringFill" cx="65" cy="65" r="55" stroke-dasharray="345" stroke-dashoffset="345"/>
+            </svg>
+            <div class="ring-mid">
+              <div class="ring-num" id="ringNum">0/8</div>
+              <div class="ring-lbl">Correct</div>
+            </div>
+          </div>
+          <div class="res-stats" style="margin-top:20px;">
+            <div class="rs"><div class="rs-val" id="resAcc">0%</div><div class="rs-lbl">Accuracy</div></div>
+            <div class="rs"><div class="rs-val" id="resXP">+0</div><div class="rs-lbl">XP Earned</div></div>
+            <div class="rs"><div class="rs-val" id="resStreak">0</div><div class="rs-lbl">Best Streak</div></div>
+          </div>
+          <div class="res-btns" style="margin-top:24px;">
+            <button class="btn btn-primary" id="btnRetry">Try Again</button>
+            <button class="btn btn-secondary" id="btnNextLv">Next Level →</button>
+            <button class="btn btn-secondary" id="btnBackLevels">All Levels</button>
+          </div>
+        </div>
       </div>
     </main>
   </div>
-  <script>window.PAGE_TENSE = "Hub";</script>
-  <script type="module" src="/src/main.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", initAdjectiveOrderGame);</script>
+
+  <script>
+  /* ═══════════════════════════════════════════════════
+     ADJECTIVE ORDER GAME — CEFR A1–C1
+     OSASCOMP: Opinion Size Age Shape Color Origin Material Purpose
+     ═══════════════════════════════════════════════════ */
+
+  const LEVELS = {
+    A1: {
+      label: 'Beginner', emoji: '🌱', color: '#4ade80', desc: '2 adjectives, basic vocabulary',
+      canDo: ['Order 2 simple adjectives', 'Use basic color + size words'],
+    },
+    A2: {
+      label: 'Elementary', emoji: '📘', color: '#22d3ee', desc: '2–3 adjectives, common descriptors',
+      canDo: ['Order 2–3 adjectives naturally', 'Use opinion + color + size'],
+    },
+    B1: {
+      label: 'Intermediate', emoji: '🔶', color: '#818cf8', desc: '3 adjectives, more categories',
+      canDo: ['Handle 3+ adjective orders', 'Use age, shape, and material words'],
+    },
+    B2: {
+      label: 'Upper-Intermediate', emoji: '🔥', color: '#fb923c', desc: '3–4 adjectives, complex sentences',
+      canDo: ['Order 3–4 adjectives fluently', 'Use origin and purpose adjectives'],
+    },
+    C1: {
+      label: 'Advanced', emoji: '💎', color: '#f472b6', desc: '4+ adjectives, nuanced descriptions',
+      canDo: ['Master full OSASCOMP ordering', 'Use subtle opinion and origin distinctions'],
+    },
+  };
+
+  const QUESTIONS = {
+    A1: [
+      { noun: 'car', adjectives: [
+        { word: 'big', category: 'size' },
+        { word: 'red', category: 'color' },
+      ], hint: 'Size comes before color' },
+      { noun: 'house', adjectives: [
+        { word: 'small', category: 'size' },
+        { word: 'white', category: 'color' },
+      ], hint: 'Size comes before color' },
+      { noun: 'dog', adjectives: [
+        { word: 'big', category: 'size' },
+        { word: 'brown', category: 'color' },
+      ], hint: 'Size comes before color' },
+      { noun: 'table', adjectives: [
+        { word: 'old', category: 'age' },
+        { word: 'round', category: 'shape' },
+      ], hint: 'Age comes before shape' },
+      { noun: 'cat', adjectives: [
+        { word: 'small', category: 'size' },
+        { word: 'black', category: 'color' },
+      ], hint: 'Size comes before color' },
+      { noun: 'bag', adjectives: [
+        { word: 'new', category: 'age' },
+        { word: 'blue', category: 'color' },
+      ], hint: 'Age comes before color' },
+      { noun: 'shoe', adjectives: [
+        { word: 'big', category: 'size' },
+        { word: 'old', category: 'age' },
+      ], hint: 'Size comes before age' },
+      { noun: 'cup', adjectives: [
+        { word: 'little', category: 'size' },
+        { word: 'green', category: 'color' },
+      ], hint: 'Size comes before color' },
+    ],
+    A2: [
+      { noun: 'dress', adjectives: [
+        { word: 'beautiful', category: 'opinion' },
+        { word: 'long', category: 'size' },
+        { word: 'red', category: 'color' },
+      ], hint: 'Opinion → Size → Color' },
+      { noun: 'house', adjectives: [
+        { word: 'lovely', category: 'opinion' },
+        { word: 'big', category: 'size' },
+        { word: 'old', category: 'age' },
+      ], hint: 'Opinion → Size → Age' },
+      { noun: 'knife', adjectives: [
+        { word: 'sharp', category: 'opinion' },
+        { word: 'small', category: 'size' },
+        { word: 'silver', category: 'color' },
+      ], hint: 'Opinion → Size → Color' },
+      { noun: 'garden', adjectives: [
+        { word: 'beautiful', category: 'opinion' },
+        { word: 'big', category: 'size' },
+        { word: 'old', category: 'age' },
+      ], hint: 'Opinion → Size → Age' },
+      { noun: 'jacket', adjectives: [
+        { word: 'nice', category: 'opinion' },
+        { word: 'warm', category: 'opinion' },
+        { word: 'black', category: 'color' },
+      ], hint: 'Opinion → Opinion → Color' },
+      { noun: 'chair', adjectives: [
+        { word: 'comfortable', category: 'opinion' },
+        { word: 'big', category: 'size' },
+        { word: 'brown', category: 'color' },
+      ], hint: 'Opinion → Size → Color' },
+      { noun: 'ring', adjectives: [
+        { word: 'pretty', category: 'opinion' },
+        { word: 'small', category: 'size' },
+        { word: 'gold', category: 'material' },
+      ], hint: 'Opinion → Size → Material' },
+      { noun: 'blanket', adjectives: [
+        { word: 'soft', category: 'opinion' },
+        { word: 'thick', category: 'size' },
+        { word: 'blue', category: 'color' },
+      ], hint: 'Opinion → Size → Color' },
+    ],
+    B1: [
+      { noun: 'car', adjectives: [
+        { word: 'lovely', category: 'opinion' },
+        { word: 'big', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'Italian', category: 'origin' },
+      ], hint: 'Opinion → Size → Age → Origin' },
+      { noun: 'table', adjectives: [
+        { word: 'ugly', category: 'opinion' },
+        { word: 'round', category: 'shape' },
+        { word: 'old', category: 'age' },
+        { word: 'wooden', category: 'material' },
+      ], hint: 'Opinion → Shape → Age → Material' },
+      { noun: 'clock', adjectives: [
+        { word: 'beautiful', category: 'opinion' },
+        { word: 'small', category: 'size' },
+        { word: 'round', category: 'shape' },
+        { word: 'French', category: 'origin' },
+      ], hint: 'Opinion → Size → Shape → Origin' },
+      { noun: 'coat', adjectives: [
+        { word: 'nice', category: 'opinion' },
+        { word: 'long', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'leather', category: 'material' },
+      ], hint: 'Opinion → Size → Age → Material' },
+      { noun: 'vase', adjectives: [
+        { word: 'gorgeous', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'thin', category: 'shape' },
+        { word: 'Japanese', category: 'origin' },
+      ], hint: 'Opinion → Size → Shape → Origin' },
+      { noun: 'sweater', adjectives: [
+        { word: 'warm', category: 'opinion' },
+        { word: 'big', category: 'size' },
+        { word: 'green', category: 'color' },
+        { word: 'woollen', category: 'material' },
+      ], hint: 'Opinion → Size → Color → Material' },
+      { noun: 'pen', adjectives: [
+        { word: 'nice', category: 'opinion' },
+        { word: 'thin', category: 'shape' },
+        { word: 'blue', category: 'color' },
+        { word: 'British', category: 'origin' },
+      ], hint: 'Opinion → Shape → Color → Origin' },
+      { noun: 'bookshelf', adjectives: [
+        { word: 'big', category: 'size' },
+        { word: 'tall', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'wooden', category: 'material' },
+      ], hint: 'Size → Size → Age → Material' },
+    ],
+    B2: [
+      { noun: 'painting', adjectives: [
+        { word: 'stunning', category: 'opinion' },
+        { word: 'huge', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'rectangular', category: 'shape' },
+        { word: 'Italian', category: 'origin' },
+      ], hint: 'Opinion → Size → Age → Shape → Origin' },
+      { noun: 'cathedral', adjectives: [
+        { word: 'magnificent', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'ancient', category: 'age' },
+        { word: 'Gothic', category: 'style' },
+        { word: 'stone', category: 'material' },
+      ], hint: 'Opinion → Size → Age → Style → Material' },
+      { noun: 'bottle', adjectives: [
+        { word: 'elegant', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'green', category: 'color' },
+        { word: 'French', category: 'origin' },
+        { word: 'wine', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Color → Origin → Purpose' },
+      { noun: 'sword', adjectives: [
+        { word: 'magnificent', category: 'opinion' },
+        { word: 'long', category: 'size' },
+        { word: 'ancient', category: 'age' },
+        { word: 'sharp', category: 'opinion' },
+        { word: 'Japanese', category: 'origin' },
+        { word: 'steel', category: 'material' },
+      ], hint: 'Opinion → Size → Age → Origin → Material' },
+      { noun: 'necklace', adjectives: [
+        { word: 'gorgeous', category: 'opinion' },
+        { word: 'delicate', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'gold', category: 'material' },
+        { word: 'wedding', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Material → Purpose' },
+      { noun: 'building', adjectives: [
+        { word: 'impressive', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'modern', category: 'age' },
+        { word: 'glass', category: 'material' },
+        { word: 'office', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Material → Purpose' },
+      { noun: 'ring', adjectives: [
+        { word: 'beautiful', category: 'opinion' },
+        { word: 'thin', category: 'shape' },
+        { word: 'old', category: 'age' },
+        { word: 'silver', category: 'material' },
+        { word: 'Indian', category: 'origin' },
+      ], hint: 'Opinion → Shape → Age → Material → Origin' },
+      { noun: 'dress', adjectives: [
+        { word: 'elegant', category: 'opinion' },
+        { word: 'long', category: 'size' },
+        { word: 'modern', category: 'age' },
+        { word: 'silk', category: 'material' },
+        { word: 'evening', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Material → Purpose' },
+    ],
+    C1: [
+      { noun: 'portrait', adjectives: [
+        { word: 'breathtaking', category: 'opinion' },
+        { word: 'large', category: 'size' },
+        { word: 'centuries-old', category: 'age' },
+        { word: 'oval', category: 'shape' },
+        { word: 'dark', category: 'color' },
+        { word: 'Dutch', category: 'origin' },
+        { word: 'oil', category: 'material' },
+        { word: 'gallery', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Shape → Color → Origin → Material → Purpose' },
+      { noun: 'mansion', adjectives: [
+        { word: 'magnificent', category: 'opinion' },
+        { word: 'enormous', category: 'size' },
+        { word: 'centuries-old', category: 'age' },
+        { word: 'rectangular', category: 'shape' },
+        { word: 'white', category: 'color' },
+        { word: 'Italian', category: 'origin' },
+        { word: 'marble', category: 'material' },
+        { word: 'summer', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Shape → Color → Origin → Material → Purpose' },
+      { noun: 'vase', adjectives: [
+        { word: 'exquisite', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'antique', category: 'age' },
+        { word: 'slim', category: 'shape' },
+        { word: 'blue', category: 'color' },
+        { word: 'Chinese', category: 'origin' },
+        { word: 'porcelain', category: 'material' },
+        { word: 'flower', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Shape → Color → Origin → Material → Purpose' },
+      { noun: 'watch', adjectives: [
+        { word: 'elegant', category: 'opinion' },
+        { word: 'slim', category: 'shape' },
+        { word: 'antique', category: 'age' },
+        { word: 'golden', category: 'color' },
+        { word: 'Swiss', category: 'origin' },
+        { word: 'luxury', category: 'purpose' },
+      ], hint: 'Opinion → Shape → Age → Color → Origin → Purpose' },
+      { noun: 'carpet', adjectives: [
+        { word: 'magnificent', category: 'opinion' },
+        { word: 'huge', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'red', category: 'color' },
+        { word: 'Persian', category: 'origin' },
+        { word: 'silk', category: 'material' },
+        { word: 'living room', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Color → Origin → Material → Purpose' },
+      { noun: 'cabinet', adjectives: [
+        { word: 'lovely', category: 'opinion' },
+        { word: 'tall', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'dark', category: 'color' },
+        { word: 'French', category: 'origin' },
+        { word: 'oak', category: 'material' },
+        { word: 'display', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Color → Origin → Material → Purpose' },
+      { noun: 'scarf', adjectives: [
+        { word: 'lovely', category: 'opinion' },
+        { word: 'long', category: 'size' },
+        { word: 'new', category: 'age' },
+        { word: 'striped', category: 'shape' },
+        { word: 'red', category: 'color' },
+        { word: 'Scottish', category: 'origin' },
+        { word: 'woollen', category: 'material' },
+        { word: 'winter', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Shape → Color → Origin → Material → Purpose' },
+      { noun: 'boat', adjectives: [
+        { word: 'beautiful', category: 'opinion' },
+        { word: 'small', category: 'size' },
+        { word: 'old', category: 'age' },
+        { word: 'wooden', category: 'material' },
+        { word: 'green', category: 'color' },
+        { word: 'fishing', category: 'purpose' },
+      ], hint: 'Opinion → Size → Age → Material → Color → Purpose' },
+    ],
+  };
+
+  const ORDER = ['opinion','size','age','shape','color','origin','material','purpose'];
+
+  const S = {
+    lv: null, qi: 0, score: 0, correct: 0, streak: 0, bestStreak: 0,
+    placed: [], answered: false,
+    xp: JSON.parse(localStorage.getItem('ao_xp') || '{}'),
+    done: JSON.parse(localStorage.getItem('ao_done') || '{}'),
+  };
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  /* ── LEVEL GRID ── */
+  function buildLevels() {
+    const g = document.getElementById('levelGrid');
+    g.innerHTML = '';
+    Object.keys(LEVELS).forEach(lv => {
+      const d = LEVELS[lv];
+      const done = !!S.done[lv];
+      const el = document.createElement('div');
+      el.className = 'level-card' + (done ? ' done' : '');
+      el.innerHTML = `
+        <div class="lv-emoji">${d.emoji}</div>
+        <div class="lv-code" style="color:${d.color}">${lv}</div>
+        <div class="lv-name">${d.label}</div>
+        <div class="lv-desc">${d.desc}</div>
+        <div class="lv-count">8 questions${S.xp[lv] ? ' · ⭐' + S.xp[lv] + ' XP' : ''}</div>
+      `;
+      el.addEventListener('click', () => startLevel(lv));
+      g.appendChild(el);
+    });
+  }
+
+  /* ── START LEVEL ── */
+  function startLevel(lv) {
+    S.lv = lv;
+    S.qi = 0;
+    S.score = 0;
+    S.correct = 0;
+    S.streak = 0;
+    S.bestStreak = 0;
+
+    const d = LEVELS[lv];
+    document.getElementById('gameSubtitle').textContent = `${d.emoji} ${lv} — ${d.label}`;
+    document.getElementById('levelBadge').textContent = lv;
+    document.getElementById('levelBadge').style.background = d.color + '22';
+    document.getElementById('levelBadge').style.borderColor = d.color;
+    document.getElementById('levelBadge').style.color = d.color;
+
+    showScreen('screenGame');
+    renderQ();
+  }
+
+  /* ── RENDER QUESTION ── */
+  function renderQ() {
+    const q = QUESTIONS[S.lv][S.qi];
+    S.answered = false;
+    S.placed = [];
+
+    document.getElementById('qCounter').textContent = `${S.qi + 1} / ${QUESTIONS[S.lv].length}`;
+    document.getElementById('scoreDisp').textContent = S.score;
+    document.getElementById('aoScore').textContent = S.score;
+
+    const questionEl = document.getElementById('aoQuestion');
+    questionEl.innerHTML = `Put in correct order: <strong>___ ${q.noun}</strong>`;
+
+    const slotsEl = document.getElementById('aoSlots');
+    slotsEl.innerHTML = '';
+    for (let i = 0; i < q.adjectives.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'ao-slot';
+      slot.dataset.index = i;
+      slot.textContent = `${ORDER[i]}`;
+      slot.style.color = 'var(--color-text-muted)';
+      slot.addEventListener('click', () => {
+        if (S.answered) return;
+        if (slot.classList.contains('filled')) {
+          removeFromSlot(i);
+        }
+      });
+      slotsEl.appendChild(slot);
+    }
+
+    const bankEl = document.getElementById('aoWordBank');
+    bankEl.innerHTML = '';
+    const shuffled = shuffle(q.adjectives);
+    shuffled.forEach((adj, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-secondary ao-word';
+      btn.textContent = adj.word;
+      btn.dataset.category = adj.category;
+      btn.dataset.idx = idx;
+      btn.addEventListener('click', () => placeWord(adj, btn));
+      bankEl.appendChild(btn);
+    });
+
+    document.getElementById('aoResult').textContent = '';
+    document.getElementById('aoResult').className = 'result-message';
+    document.getElementById('aoCheck').disabled = false;
+    document.getElementById('aoCheck').style.display = '';
+    document.getElementById('aoNext').style.display = 'none';
+  }
+
+  function placeWord(adj, btn) {
+    if (S.answered) return;
+    if (btn.classList.contains('placed')) return;
+
+    const emptySlot = S.placed.length;
+    const slots = document.querySelectorAll('.ao-slot');
+    if (emptySlot >= slots.length) return;
+
+    btn.classList.add('placed');
+    S.placed.push({ word: adj.word, category: adj.category, btn });
+
+    const slot = slots[emptySlot];
+    slot.textContent = adj.word;
+    slot.classList.add('filled');
+    slot.dataset.word = adj.word;
+    slot.dataset.category = adj.category;
+
+    document.getElementById('aoCheck').disabled = S.placed.length < slots.length;
+  }
+
+  function removeFromSlot(index) {
+    if (index >= S.placed.length) return;
+    const removed = S.placed.splice(index, 1)[0];
+    removed.btn.classList.remove('placed');
+
+    const slots = document.querySelectorAll('.ao-slot');
+    slots.forEach((s, i) => {
+      if (i < S.placed.length) {
+        const p = S.placed[i];
+        s.textContent = p.word;
+        s.classList.add('filled');
+        s.dataset.word = p.word;
+        s.dataset.category = p.category;
+        s.classList.remove('correct', 'wrong');
+      } else {
+        s.textContent = ORDER[i];
+        s.classList.remove('filled', 'correct', 'wrong');
+        s.style.color = 'var(--color-text-muted)';
+        delete s.dataset.word;
+        delete s.dataset.category;
+      }
+    });
+
+    document.getElementById('aoCheck').disabled = S.placed.length < slots.length;
+  }
+
+  /* ── CHECK ANSWER ── */
+  function checkAnswer() {
+    if (S.answered) return;
+    S.answered = true;
+
+    const q = QUESTIONS[S.lv][S.qi];
+    const slots = document.querySelectorAll('.ao-slot');
+
+    const userOrder = S.placed.map(p => p.category);
+    const correctOrder = q.adjectives.map(a => a.category);
+    const correct = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+
+    slots.forEach((slot, i) => {
+      if (i < S.placed.length) {
+        if (S.placed[i].category === correctOrder[i]) {
+          slot.classList.add('correct');
+        } else {
+          slot.classList.add('wrong');
+        }
+      }
+    });
+
+    const resultEl = document.getElementById('aoResult');
+    if (correct) {
+      S.correct++;
+      S.score += 15;
+      S.streak++;
+      if (S.streak > S.bestStreak) S.bestStreak = S.streak;
+      resultEl.textContent = '🎉 Correct! ' + q.hint;
+      resultEl.className = 'result-message result-success';
+    } else {
+      S.streak = 0;
+      const correctSentence = q.adjectives.map(a => a.word).join(' + ');
+      resultEl.innerHTML = `❌ Not quite. Correct order: <strong>${correctSentence}</strong><br><em>${q.hint}</em>`;
+      resultEl.className = 'result-message result-error';
+    }
+
+    document.getElementById('scoreDisp').textContent = S.score;
+    document.getElementById('aoScore').textContent = S.score;
+    document.getElementById('aoCheck').style.display = 'none';
+    document.getElementById('aoNext').style.display = '';
+    document.getElementById('aoNext').textContent = S.qi + 1 < QUESTIONS[S.lv].length ? '→ Next' : 'See Results →';
+  }
+
+  /* ── NEXT / RESULTS ── */
+  function nextQ() {
+    S.qi++;
+    if (S.qi >= QUESTIONS[S.lv].length) showResults();
+    else renderQ();
+  }
+
+  function showResults() {
+    const total = QUESTIONS[S.lv].length;
+    const acc = Math.round((S.correct / total) * 100);
+
+    S.xp[S.lv] = (S.xp[S.lv] || 0) + S.score;
+    if (acc >= 60) S.done[S.lv] = true;
+    localStorage.setItem('ao_xp', JSON.stringify(S.xp));
+    localStorage.setItem('ao_done', JSON.stringify(S.done));
+
+    const trophies = [[100, '🏆'], [80, '🥇'], [60, '🥈'], [0, '🥉']];
+    document.getElementById('resTrophy').textContent = trophies.find(([t]) => acc >= t)[1];
+    const titles = [[100, 'Perfect Score!'], [80, 'Excellent!'], [60, 'Good Job!'], [0, 'Keep Practising!']];
+    document.getElementById('resTitle').textContent = titles.find(([t]) => acc >= t)[1];
+
+    const badge = document.getElementById('resLevelBadge');
+    badge.textContent = `${S.lv} · ${LEVELS[S.lv].label}`;
+    badge.style.background = LEVELS[S.lv].color + '22';
+    badge.style.borderColor = LEVELS[S.lv].color;
+    badge.style.color = LEVELS[S.lv].color;
+
+    document.getElementById('ringNum').textContent = `${S.correct}/${total}`;
+    const circ = 2 * Math.PI * 55;
+    setTimeout(() => {
+      const rf = document.getElementById('ringFill');
+      rf.style.strokeDashoffset = circ * (1 - S.correct / total);
+      rf.style.stroke = LEVELS[S.lv].color;
+    }, 150);
+
+    document.getElementById('resAcc').textContent = acc + '%';
+    document.getElementById('resAcc').style.color = LEVELS[S.lv].color;
+    document.getElementById('resXP').textContent = '+' + S.score;
+    document.getElementById('resXP').style.color = LEVELS[S.lv].color;
+    document.getElementById('resStreak').textContent = S.bestStreak;
+    document.getElementById('resStreak').style.color = LEVELS[S.lv].color;
+
+    const ni = Object.keys(LEVELS).indexOf(S.lv) + 1;
+    const btnNL = document.getElementById('btnNextLv');
+    if (ni < Object.keys(LEVELS).length) {
+      const nextLv = Object.keys(LEVELS)[ni];
+      btnNL.textContent = `Next: ${nextLv} →`;
+      btnNL.style.display = '';
+      btnNL.onclick = () => startLevel(nextLv);
+    } else {
+      btnNL.style.display = 'none';
+    }
+
+    showScreen('screenResults');
+  }
+
+  /* ── INIT ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    buildLevels();
+
+    document.getElementById('aoCheck').addEventListener('click', checkAnswer);
+    document.getElementById('aoNext').addEventListener('click', nextQ);
+    document.getElementById('backBtn').addEventListener('click', () => {
+      buildLevels();
+      showScreen('screenLevels');
+    });
+    document.getElementById('btnRetry').addEventListener('click', () => startLevel(S.lv));
+    document.getElementById('btnBackLevels').addEventListener('click', () => {
+      buildLevels();
+      showScreen('screenLevels');
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const activeScreen = document.querySelector('.screen.active');
+        if (activeScreen.id === 'screenGame') {
+          if (!document.getElementById('aoCheck').style.display ||
+              document.getElementById('aoCheck').style.display !== 'none') {
+            checkAnswer();
+          } else {
+            nextQ();
+          }
+        }
+      }
+    });
+  });
+  </script>
 </body>
 </html>

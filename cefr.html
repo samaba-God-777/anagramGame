@@ -403,6 +403,36 @@ body::before{
 }
 @media(max-width:380px){.lv-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── CATEGORY GRID ── */
+.cat-back{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:var(--r-full);
+  background:var(--sur);border:1px solid var(--bdr);
+  color:var(--tx2);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s var(--ease);
+  font-family:var(--font);margin-bottom:20px;
+}
+.cat-back:hover{border-color:var(--lv);color:var(--lv)}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cat-card{
+  border-radius:var(--r-md);border:1.5px solid var(--bdr);
+  background:var(--sur);backdrop-filter:blur(12px);
+  padding:16px 12px;cursor:pointer;
+  transition:all .3s var(--bounce);overflow:hidden;
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.cat-card:hover{
+  transform:translateY(-4px) scale(1.02);
+  border-color:var(--lv);box-shadow:0 12px 30px rgba(0,0,0,.2),0 0 0 1px var(--lv);
+}
+.cat-card .cat-emoji{font-size:24px;transition:transform .3s var(--bounce)}
+.cat-card:hover .cat-emoji{transform:scale(1.15)}
+.cat-card .cat-name{font-size:11px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;line-height:1.3}
+.cat-card .cat-count{font-size:10px;color:var(--tx3)}
+.cat-grid-landing{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media(max-width:700px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:6px}
   </style>
@@ -436,6 +466,19 @@ body::before{
       <p class="land-sub">Unscramble letters to find words · Rearrange words to build sentences · Levelled A1–C1</p>
     </div>
     <div class="lv-grid" id="lvGrid"></div>
+  </div>
+</section>
+
+<!-- CATEGORY SELECT -->
+<section class="scr" id="s-cat">
+  <div class="land-inner">
+    <button class="cat-back" id="catBack">← Back to Levels</button>
+    <div class="land-hero">
+      <div class="eyebrow" id="catEyebrow">🟢 A1 — Beginner</div>
+      <h1 class="land-title">Choose a Category <span id="catTitleSpan"></span></h1>
+      <p class="land-sub" id="catSub">8 exercises per category · 4 anagrams + 4 unscrambles</p>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
   </div>
 </section>
 
@@ -488,16 +531,17 @@ body::before{
 
 </div><!-- #app -->
 <script type="module">
-import { CEFR_DATA as DATA, CEFR_LEVEL_ORDER as LV_ORDER } from './src/data/cefrData.js';
+import { CEFR_DATA as DATA, CEFR_LEVEL_ORDER as LV_ORDER, CEFR_CATEGORIES } from './src/data/cefrData.js';
 
 /* ═══════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════ */
 const S = {
-  lv:'A1', qi:0, score:0, correct:0, streak:0, bestStreak:0,
+  lv:'A1', cat:null, qi:0, score:0, correct:0, streak:0, bestStreak:0,
   answered:false, dotSt:[],
   placed:[],    // letter ids (anagram) or word ids (unscramble)
   pool:[],      // available letter/word objects
+  questions:[], // flattened questions for current category+level
   xp: JSON.parse(localStorage.getItem('cefr_ag_xp')||'{}'),
   done: JSON.parse(localStorage.getItem('cefr_ag_done')||'{}'),
 };
@@ -549,17 +593,62 @@ function buildLanding(){
       </div>
       ${xpEarned?`<div class="card-xp">⭐ ${xpEarned} XP</div>`:''}
     `;
-    el.addEventListener('click',()=>startLevel(lv));
+    el.addEventListener('click',()=>showCategories(lv));
     g.appendChild(el);
   });
 }
 
 /* ═══════════════════════════════════════════
+   CATEGORY SELECT
+═══════════════════════════════════════════ */
+const CAT_EMOJIS = {
+  'Animals':'🐾','Food & Drinks':'🍽️','Travel':'✈️','Body Parts':'🦴','Clothing':'👕',
+  'Weather & Nature':'🌤️','Sports & Hobbies':'⚽','Technology':'💻','Emotions':'😊','Jobs & Professions':'💼',
+  'Home & Furniture':'🏠','School & Education':'📚','Music & Arts':'🎵','Shopping':'🛍️','Health':'💊',
+  'Environment':'🌍','Science':'🔬','Culture':'🏛️','Media':'📺','Abstract Concepts':'💭'
+};
+
+function showCategories(lv){
+  S.lv = lv;
+  applyTheme(lv);
+  const d = DATA[lv];
+  document.getElementById('catEyebrow').textContent = `${d.emo} ${lv} — ${d.label}`;
+  document.getElementById('catTitleSpan').textContent = `for ${lv}`;
+  document.getElementById('catSub').textContent = '8 exercises per category · 4 anagrams + 4 unscrambles';
+
+  const g = document.getElementById('catGrid');
+  g.innerHTML = '';
+  CEFR_CATEGORIES.forEach(cat=>{
+    const el = document.createElement('div');
+    el.className = 'cat-card';
+    const catDone = S.done[`${lv}:${cat}`];
+    el.innerHTML = `
+      <div class="cat-emoji">${CAT_EMOJIS[cat]||'📝'}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-count">${catDone?'✅ Done':'8 exercises'}</div>
+    `;
+    el.addEventListener('click',()=>startLevel(lv,cat));
+    g.appendChild(el);
+  });
+
+  document.getElementById('catBack').onclick = ()=>{ applyTheme(S.lv); buildLanding(); show('s-land'); };
+  show('s-cat');
+}
+
+/* ═══════════════════════════════════════════
    START LEVEL
 ═══════════════════════════════════════════ */
-function startLevel(lv){
-  S.lv=lv; S.qi=0; S.score=0; S.correct=0; S.streak=0; S.bestStreak=0;
-  S.dotSt = DATA[lv].questions.map(()=>'pending');
+function startLevel(lv,cat){
+  S.lv=lv; S.cat=cat; S.qi=0; S.score=0; S.correct=0; S.streak=0; S.bestStreak=0;
+  // flatten questions from the selected category
+  const catData = DATA[lv].categories[cat];
+  S.questions = [
+    ...catData.anagrams.map(a=>({t:'anagram',...a})),
+    ...catData.unscrambles.map(u=>({t:'unscramble',...u}))
+  ];
+  // shuffle the combined questions
+  S.questions = shuffle(S.questions);
+  S.dotSt = S.questions.map(()=>'pending');
   document.getElementById('qCounter').textContent='';
   applyTheme(lv);
   buildDots();
@@ -573,7 +662,7 @@ function startLevel(lv){
 ═══════════════════════════════════════════ */
 function buildDots(){
   const c = document.getElementById('dotsRow'); c.innerHTML='';
-  DATA[S.lv].questions.forEach((_,i)=>{
+  S.questions.forEach((_,i)=>{
     const d=document.createElement('div');
     d.className='dot'+(i===0?' cur':''); d.id=`dot${i}`;
     c.appendChild(d);
@@ -602,13 +691,13 @@ function shuffle(arr){
    RENDER QUESTION
 ═══════════════════════════════════════════ */
 function renderQ(){
-  const q = DATA[S.lv].questions[S.qi];
-  const qs = DATA[S.lv].questions;
+  const q = S.questions[S.qi];
+  const qs = S.questions;
   S.answered=false; S.placed=[]; S.pool=[];
 
   // header update
   const pill = document.getElementById('gamePill');
-  pill.textContent = `${DATA[S.lv].emo} ${S.lv} — ${DATA[S.lv].label}`;
+  pill.textContent = `${DATA[S.lv].emo} ${S.lv} — ${S.cat}`;
   document.getElementById('qCounter').textContent = `${S.qi+1} / ${qs.length}`;
   document.getElementById('scoreDisp').textContent = S.score;
   updateDots();
@@ -773,7 +862,7 @@ function toggleChip(wo,el,zone,poolEl){
 function checkAnswer(){
   if(S.answered)return;
   S.answered=true;
-  const q=DATA[S.lv].questions[S.qi];
+  const q=S.questions[S.qi];
   const fb=document.getElementById('fb');
   const ca=document.getElementById('correctAnswer');
 
@@ -841,18 +930,18 @@ function checkAnswer(){
 ═══════════════════════════════════════════ */
 function nextQ(){
   S.qi++;
-  if(S.qi>=DATA[S.lv].questions.length) showResults();
+  if(S.qi>=S.questions.length) showResults();
   else renderQ();
 }
 
 function showResults(){
   const d=DATA[S.lv];
-  const total=d.questions.length;
+  const total=S.questions.length;
   const acc=Math.round((S.correct/total)*100);
   const xpGained=S.score;
 
   S.xp[S.lv]=(S.xp[S.lv]||0)+xpGained;
-  if(acc>=60)S.done[S.lv]=true;
+  if(acc>=60)S.done[`${S.lv}:${S.cat}`]=true;
   localStorage.setItem('cefr_ag_xp',JSON.stringify(S.xp));
   localStorage.setItem('cefr_ag_done',JSON.stringify(S.done));
 
@@ -862,7 +951,7 @@ function showResults(){
   document.getElementById('resTitle').textContent=titles.find(([t])=>acc>=t)[1];
 
   const badge=document.getElementById('resLvBadge');
-  badge.textContent=`${S.lv} · ${d.label}`;
+  badge.textContent=`${S.lv} · ${S.cat}`;
   badge.style.cssText=`padding:7px 20px;border-radius:9999px;background:${d.bg};border:1.5px solid ${d.color};color:${d.color};font-size:14px;font-weight:800;display:inline-block`;
 
   // ring
@@ -893,7 +982,7 @@ function showResults(){
   if(ni<LV_ORDER.length){
     btnNL.textContent=`Next: ${LV_ORDER[ni]} →`;
     btnNL.style.display='';
-    btnNL.onclick=()=>startLevel(LV_ORDER[ni]);
+    btnNL.onclick=()=>showCategories(LV_ORDER[ni]);
   } else { btnNL.style.display='none'; }
 
   setXP(100);
@@ -928,6 +1017,7 @@ function confetti(n=3){
    INIT
 ═══════════════════════════════════════════ */
 function goHome(){
+  S.cat=null;
   applyTheme(S.lv||'A1');
   buildLanding();
   document.getElementById('qCounter').textContent='';
@@ -958,8 +1048,8 @@ function init(){
   document.getElementById('btnCheck').addEventListener('click',checkAnswer);
   document.getElementById('btnNext').addEventListener('click',nextQ);
   document.getElementById('btnQuit').addEventListener('click',goHome);
-  document.getElementById('btnRetry').addEventListener('click',()=>startLevel(S.lv));
-  document.getElementById('btnHome2').addEventListener('click',goHome);
+  document.getElementById('btnRetry').addEventListener('click',()=>startLevel(S.lv,S.cat));
+  document.getElementById('btnHome2').addEventListener('click',()=>showCategories(S.lv));
 
   // keyboard shortcuts
   document.addEventListener('keydown',e=>{

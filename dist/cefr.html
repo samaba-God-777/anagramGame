@@ -403,10 +403,40 @@ body::before{
 }
 @media(max-width:380px){.lv-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── CATEGORY GRID ── */
+.cat-back{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:var(--r-full);
+  background:var(--sur);border:1px solid var(--bdr);
+  color:var(--tx2);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s var(--ease);
+  font-family:var(--font);margin-bottom:20px;
+}
+.cat-back:hover{border-color:var(--lv);color:var(--lv)}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cat-card{
+  border-radius:var(--r-md);border:1.5px solid var(--bdr);
+  background:var(--sur);backdrop-filter:blur(12px);
+  padding:16px 12px;cursor:pointer;
+  transition:all .3s var(--bounce);overflow:hidden;
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.cat-card:hover{
+  transform:translateY(-4px) scale(1.02);
+  border-color:var(--lv);box-shadow:0 12px 30px rgba(0,0,0,.2),0 0 0 1px var(--lv);
+}
+.cat-card .cat-emoji{font-size:24px;transition:transform .3s var(--bounce)}
+.cat-card:hover .cat-emoji{transform:scale(1.15)}
+.cat-card .cat-name{font-size:11px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.5px;line-height:1.3}
+.cat-card .cat-count{font-size:10px;color:var(--tx3)}
+.cat-grid-landing{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+@media(max-width:700px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:6px}
   </style>
-  <script type="module" crossorigin src="/assets/cefr-BEhqGzsy.js"></script>
+  <script type="module" crossorigin src="/assets/cefr-B4dFQ7wj.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="stylesheet" crossorigin href="/assets/style-BObCwZKL.css">
 </head>
@@ -439,6 +469,19 @@ body::before{
       <p class="land-sub">Unscramble letters to find words · Rearrange words to build sentences · Levelled A1–C1</p>
     </div>
     <div class="lv-grid" id="lvGrid"></div>
+  </div>
+</section>
+
+<!-- CATEGORY SELECT -->
+<section class="scr" id="s-cat">
+  <div class="land-inner">
+    <button class="cat-back" id="catBack">← Back to Levels</button>
+    <div class="land-hero">
+      <div class="eyebrow" id="catEyebrow">🟢 A1 — Beginner</div>
+      <h1 class="land-title">Choose a Category <span id="catTitleSpan"></span></h1>
+      <p class="land-sub" id="catSub">8 exercises per category · 4 anagrams + 4 unscrambles</p>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
   </div>
 </section>
 
