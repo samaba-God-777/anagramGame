@@ -14,9 +14,15 @@ function renderTheoryHTML(tense) {
   const t = THEORY[tense]; if(!t) return "";
   const esc = s => {const d=document.createElement("div"); d.textContent=s; return d.innerHTML;};
   const F = ["affirmative","negative","questions"];
+  const cefrColors = {A1:"#22c55e",A2:"#3b82f6",B1:"#f59e0b",B2:"#ef4444",C1:"#a855f7",C2:"#ec4899"};
+  const cefrBg = (l) => {const c=cefrColors[l]||"#6b7280"; return `background:${c}15;color:${c};border:1px solid ${c}40;`;};
   return `
     <div class="theory-card">
-      <h2 class="theory-title">${esc(tense)}</h2>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+        <h2 class="theory-title" style="margin:0;">${esc(tense)}</h2>
+        ${t.cefr ? `<span class="theory-badge" style="font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;${cefrBg(t.cefr)}">${t.cefr}</span>` : ""}
+      </div>
+      ${t.cefrDescription ? `<p style="font-size:14px;color:var(--color-text-secondary);margin:0 0 16px 0;line-height:1.6;">${esc(t.cefrDescription)}</p>` : ""}
 
       <section class="theory-section">
         <h3 class="theory-section-title">📖 When to Use</h3>
@@ -106,6 +112,64 @@ function renderTheoryHTML(tense) {
         <h3 class="theory-section-title">📌 Important Notes</h3>
         <p class="theory-notes">${t.notes}</p>
       </section>
+
+      ${t.expressions ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">💬 Common Expressions & Collocations</h3>
+        <div style="display:grid;gap:8px;">
+          ${t.expressions.map(ex => `
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:flex-start;">
+              <span style="color:var(--color-accent);font-size:16px;">💬</span>
+              <div style="flex:1;">
+                <p style="font-size:14px;margin:0 0 4px 0;font-weight:600;">${esc(ex.phrase || ex.expression || ex)}</p>
+                ${ex.meaning ? `<p style="font-size:12px;color:var(--color-text-muted);margin:0;">${esc(ex.meaning)}</p>` : ""}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </section>` : ""}
+
+      ${t.spokenPatterns ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">🗣️ Spoken English Patterns</h3>
+        <div style="display:grid;gap:8px;">
+          ${t.spokenPatterns.map(sp => `
+            <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:12px;">
+              <p style="font-size:14px;margin:0 0 4px 0;font-weight:600;">${esc(sp.pattern || sp)}</p>
+              ${sp.example ? `<p style="font-size:12px;color:var(--color-text-muted);margin:0;font-style:italic;">"${esc(sp.example)}"</p>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </section>` : ""}
+
+      ${t.advancedStructures ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">🧩 Advanced Structures</h3>
+        <div style="display:grid;gap:8px;">
+          ${t.advancedStructures.map(a => `
+            <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.15);border-radius:8px;padding:12px;">
+              <p style="font-size:14px;margin:0 0 4px 0;font-weight:600;">${esc(a.structure || a)}</p>
+              ${a.example ? `<p style="font-size:12px;color:var(--color-text-muted);margin:0;font-style:italic;">${esc(a.example)}</p>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </section>` : ""}
+
+      ${t.challenges ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">🏋️ CEFR Challenge Exercises</h3>
+        <div style="display:grid;gap:10px;">
+          ${t.challenges.map(ch => `
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:14px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <span class="theory-badge" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;${cefrBg(ch.level || "B1")}">${ch.level || "B1"}</span>
+                <span style="font-size:13px;color:var(--color-text-secondary);">${esc(ch.question || ch.sentence || ch)}</span>
+              </div>
+              ${ch.answer ? `<details style="margin-top:6px;"><summary style="font-size:12px;color:var(--color-accent);cursor:pointer;">Show Answer</summary><p style="font-size:13px;margin:6px 0 0 0;"><strong>Answer:</strong> ${esc(ch.answer)}</p>${ch.explanation ? `<p style="font-size:12px;color:var(--color-text-muted);margin:4px 0 0 0;">${esc(ch.explanation)}</p>` : ""}</details>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </section>` : ""}
 
       <div class="theory-actions">
         <button class="btn btn-accent practice-btn" data-tense="${esc(tense)}">
