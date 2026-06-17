@@ -713,16 +713,23 @@ function renderConjunctionTheory() {
     <div class="theory-card">
       <div class="theory-hero">
         <h2 class="theory-title"><span class="theory-icon">🔗</span> Conjunctions</h2>
-        <p class="theory-subtitle">Coordinating, Subordinating & Correlative — the glue that connects words, phrases, and clauses.</p>
+        <p class="theory-subtitle">Coordinating, Subordinating, Correlative & Conjunctive Adverbs — the glue that connects words, phrases, and clauses.</p>
       </div>
+
+      <!-- WHAT ARE CONJUNCTIONS -->
       <section class="theory-section">
         <h3 class="theory-section-title">📖 What Are Conjunctions?</h3>
         <p class="theory-description">${esc(c.description)}</p>
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- COORDINATING CONJUNCTIONS (FANBOYS) -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">🔗 Coordinating Conjunctions (FANBOYS)</h3>
-        <p class="theory-description">${c.coordinating.text}</p>
+        <p class="theory-description">${esc(c.coordinating.text)}</p>
+
+        <!-- FANBOYS Table -->
         <table class="theory-table">
           <thead><tr><th>Conjunction</th><th>Meaning</th><th>Example</th></tr></thead>
           <tbody>
@@ -735,52 +742,179 @@ function renderConjunctionTheory() {
             `).join("")}
           </tbody>
         </table>
+
+        <!-- Detailed breakdown of each FANBOYS -->
+        <div style="margin-top:20px;">
+          <h4 style="color:var(--color-accent);margin-bottom:12px;font-size:15px;">📋 Detailed Breakdown</h4>
+          ${c.coordinating.items.map(co => `
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <span class="theory-badge badge-time" style="font-size:15px;font-weight:700;">${esc(co.word)}</span>
+                <span style="color:var(--color-text-secondary);font-size:13px;">— ${esc(co.meaning)}</span>
+              </div>
+              <p style="margin:8px 0;font-size:14px;color:var(--color-text-secondary);">${esc(co.details || "")}</p>
+              <div style="margin:8px 0;">
+                ${(co.moreExamples || []).map(ex => `<p style="font-size:13px;margin:4px 0;padding-left:12px;border-left:2px solid var(--color-accent);">• <em>${ex}</em></p>`).join("")}
+              </div>
+              ${co.note ? `<p style="font-size:12px;color:var(--color-text-muted);margin-top:8px;font-style:italic;">💡 ${esc(co.note)}</p>` : ""}
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- Rules -->
+        ${c.coordinating.rules ? `
+        <div style="margin-top:16px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;">
+          <h4 style="color:var(--color-accent);margin-bottom:8px;font-size:14px;">📏 Rules for Coordinating Conjunctions</h4>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:var(--color-text-secondary);">
+            ${c.coordinating.rules.map(r => `<li style="margin:6px 0;">${r}</li>`).join("")}
+          </ul>
+        </div>
+        ` : ""}
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- SUBORDINATING CONJUNCTIONS -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">🔀 Subordinating Conjunctions</h3>
         <p class="theory-description">${esc(c.subordinating.text)}</p>
-        <table class="theory-table">
-          <thead><tr><th>Category</th><th>Conjunctions</th><th>Example</th></tr></thead>
-          <tbody>
-            ${c.subordinating.categories.map(cat => `
-              <tr>
-                <td><span class="theory-badge badge-movement">${esc(cat.name)}</span></td>
-                <td>${esc(cat.conjunctions)}</td>
-                <td><em>${cat.example}</em></td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
+
+        <!-- Position Rules -->
+        ${c.subordinating.positionRules ? `
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-bottom:16px;">
+          <h4 style="color:var(--color-accent);margin-bottom:8px;font-size:14px;">📐 Comma Rules (Position Matters!)</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:12px;">
+              <p style="font-size:13px;font-weight:600;color:#22c55e;margin-bottom:4px;">✅ Clause First</p>
+              <p style="font-size:12px;color:var(--color-text-secondary);">${c.subordinating.positionRules.before}</p>
+            </div>
+            <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:12px;">
+              <p style="font-size:13px;font-weight:600;color:#3b82f6;margin-bottom:4px;">✅ Clause Last</p>
+              <p style="font-size:12px;color:var(--color-text-secondary);">${c.subordinating.positionRules.after}</p>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-top:8px;font-style:italic;">💡 ${c.subordinating.positionRules.note}</p>
+        </div>
+        ` : ""}
+
+        <!-- Categories - detailed cards -->
+        ${c.subordinating.categories.map(cat => `
+          <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span class="theory-badge badge-movement">${esc(cat.name)}</span>
+              <span style="font-size:12px;color:var(--color-text-muted);">Conjunctions: ${esc(cat.conjunctions)}</span>
+            </div>
+            ${cat.description ? `<p style="font-size:13px;color:var(--color-text-secondary);margin:8px 0;">${esc(cat.description)}</p>` : ""}
+            <div style="margin:8px 0;">
+              ${(cat.examples || [cat.example]).map(ex => `<p style="font-size:13px;margin:4px 0;padding-left:12px;border-left:2px solid var(--color-accent);">• <em>${ex}</em></p>`).join("")}
+            </div>
+            ${cat.tip ? `<p style="font-size:12px;color:var(--color-text-muted);margin-top:8px;font-style:italic;">💡 ${esc(cat.tip)}</p>` : ""}
+          </div>
+        `).join("")}
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- CORRELATIVE CONJUNCTIONS -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">🤝 Correlative Conjunctions (Paired)</h3>
         <p class="theory-description">${esc(c.correlative.text)}</p>
+
+        ${c.correlative.pairs.map(cr => `
+          <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span class="theory-badge badge-change" style="font-size:14px;">${esc(cr.pair)}</span>
+              <span style="font-size:13px;color:var(--color-text-secondary);">${esc(cr.meaning)}</span>
+            </div>
+            <div style="margin:8px 0;">
+              ${(cr.examples || [cr.example]).map(ex => `<p style="font-size:13px;margin:4px 0;padding-left:12px;border-left:2px solid var(--color-accent);">• <em>${ex}</em></p>`).join("")}
+            </div>
+            ${cr.parallelStructure ? `<p style="font-size:12px;margin:8px 0;color:var(--color-text-muted);">📐 <strong>Structure:</strong> ${esc(cr.parallelStructure)}</p>` : ""}
+            ${cr.note ? `<p style="font-size:12px;color:var(--color-text-muted);font-style:italic;">💡 ${esc(cr.note)}</p>` : ""}
+          </div>
+        `).join("")}
+
+        <!-- Correlative Rules -->
+        ${c.correlative.rules ? `
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;margin-top:8px;">
+          <h4 style="color:var(--color-accent);margin-bottom:8px;font-size:14px;">📏 Rules for Correlative Conjunctions</h4>
+          <ul style="margin:0;padding-left:20px;font-size:13px;color:var(--color-text-secondary);">
+            ${c.correlative.rules.map(r => `<li style="margin:6px 0;">${r}</li>`).join("")}
+          </ul>
+        </div>
+        ` : ""}
+      </section>
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- CONJUNCTIVE ADVERBS -->
+      <!-- ═══════════════════════════════════════════ -->
+      ${c.conjunctiveAdverbs ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">🔗 Conjunctive Adverbs (However, Therefore, Moreover...)</h3>
+        <p class="theory-description">${esc(c.conjunctiveAdverbs.text)}</p>
+
         <table class="theory-table">
-          <thead><tr><th>Pair</th><th>Meaning</th><th>Example</th></tr></thead>
+          <thead><tr><th>Sentence</th><th>Relationship</th></tr></thead>
           <tbody>
-            ${c.correlative.pairs.map(cr => `
+            ${c.conjunctiveAdverbs.examples.map(ex => `
               <tr>
-                <td><span class="theory-badge badge-change">${esc(cr.pair)}</span></td>
-                <td>${esc(cr.meaning)}</td>
-                <td><em>${cr.example}</em></td>
+                <td><em>${ex.sentence}</em></td>
+                <td><span class="theory-badge badge-movement">${esc(ex.meaning)}</span></td>
               </tr>
             `).join("")}
           </tbody>
         </table>
-      </section>
 
+        ${c.conjunctiveAdverbs.commonList ? `
+        <div style="margin-top:12px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;">
+          <h4 style="color:var(--color-accent);margin-bottom:8px;font-size:14px;">📋 Common Conjunctive Adverbs</h4>
+          <p style="font-size:13px;color:var(--color-text-secondary);">${esc(c.conjunctiveAdverbs.commonList)}</p>
+        </div>
+        ` : ""}
+
+        <div style="margin-top:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px;">
+          <h4 style="color:#ef4444;margin-bottom:8px;font-size:14px;">⚠️ Punctuation Rule</h4>
+          <p style="font-size:13px;color:var(--color-text-secondary);">${c.conjunctiveAdverbs.punctuation}</p>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-top:8px;font-style:italic;">💡 ${esc(c.conjunctiveAdverbs.note)}</p>
+        </div>
+      </section>
+      ` : ""}
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- STRUCTURE SUMMARY -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
-        <h3 class="theory-section-title">🔧 Structure Summary</h3>
+        <h3 class="theory-section-title">🔧 Structure & Punctuation Summary</h3>
         <div class="structure-grid">
           <div class="structure-card affirmative"><span class="structure-label">Coordinating</span><code class="structure-formula">${esc(c.structure.coordinating)}</code></div>
           <div class="structure-card question"><span class="structure-label">Subordinating (clause first)</span><code class="structure-formula">${esc(c.structure.subordinating_before)}</code></div>
           <div class="structure-card question"><span class="structure-label">Subordinating (clause last)</span><code class="structure-formula">${esc(c.structure.subordinating_after)}</code></div>
           <div class="structure-card affirmative"><span class="structure-label">Correlative</span><code class="structure-formula">${esc(c.structure.correlative)}</code></div>
+          ${c.structure.conjunctiveAdverb ? `<div class="structure-card question"><span class="structure-label">Conjunctive Adverb</span><code class="structure-formula">${esc(c.structure.conjunctiveAdverb)}</code></div>` : ""}
         </div>
+
+        ${c.structure.punctuationSummary ? `
+        <div style="margin-top:16px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:16px;">
+          <h4 style="color:var(--color-accent);margin-bottom:8px;font-size:14px;">📐 Punctuation Quick Reference</h4>
+          <table class="theory-table" style="margin:0;">
+            <thead><tr><th>Type</th><th>Rule</th><th>Example</th></tr></thead>
+            <tbody>
+              ${c.structure.punctuationSummary.map(ps => `
+                <tr>
+                  <td><span class="theory-badge badge-time" style="font-size:11px;">${esc(ps.type)}</span></td>
+                  <td style="font-size:12px;">${esc(ps.rule)}</td>
+                  <td style="font-size:12px;"><em>${ps.example}</em></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+        ` : ""}
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- COMMON MISTAKES -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">⚠️ Common Mistakes</h3>
         <div class="mistakes-grid">
@@ -794,11 +928,37 @@ function renderConjunctionTheory() {
         </div>
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- 20 EXAMPLE SENTENCES -->
+      <!-- ═══════════════════════════════════════════ -->
+      ${c.examples20 ? `
+      <section class="theory-section">
+        <h3 class="theory-section-title">📝 20 Example Sentences</h3>
+        <div style="display:grid;gap:8px;">
+          ${c.examples20.map((ex, i) => `
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:flex-start;">
+              <span style="background:var(--color-accent);color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${i + 1}</span>
+              <div style="flex:1;">
+                <p style="font-size:13px;margin:0 0 4px 0;"><em>${ex.text}</em></p>
+                <p style="font-size:11px;color:var(--color-text-muted);margin:0;">${esc(ex.note)} <span class="theory-badge badge-${ex.type === 'coordinating' ? 'time' : ex.type === 'subordinating' ? 'movement' : 'change'}" style="font-size:10px;padding:2px 6px;">${ex.type}</span></p>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+      ` : ""}
+
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- IMPORTANT NOTES -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">📌 Important Notes</h3>
         <p class="theory-notes">${c.notes}</p>
       </section>
 
+      <!-- ═══════════════════════════════════════════ -->
+      <!-- PRACTICE QUIZ -->
+      <!-- ═══════════════════════════════════════════ -->
       <section class="theory-section">
         <h3 class="theory-section-title">✏️ Practice Quiz</h3>
         <div class="quiz-container" id="conjQuizContainer">
@@ -973,7 +1133,7 @@ function renderPhrasalVerbTheory() {
           <table class="theory-table" id="pvRefTable">
             <thead><tr><th>#</th><th>Phrasal Verb</th><th>Meaning</th><th>Example</th></tr></thead>
             <tbody>
-              ${(typeof window.PHRASAL_VERBS_500 !== 'undefined' ? window.PHRASAL_VERBS_500 : []).map((item, i) => `
+              ${(typeof window.PHRASAL_VERBS_1000 !== 'undefined' ? window.PHRASAL_VERBS_1000 : typeof window.PHRASAL_VERBS_500 !== 'undefined' ? window.PHRASAL_VERBS_500 : []).map((item, i) => `
                 <tr>
                   <td>${i + 1}</td>
                   <td><span class="theory-badge badge-change">${esc(item.phrasal)}</span></td>

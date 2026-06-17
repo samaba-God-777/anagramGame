@@ -35,7 +35,7 @@ function wikiCard(data, term) {
 
 // ── Phrasal Verbs Theory Renderer ──
 async function renderPhrasalVerbTheory() {
-  const data = window.PHRASAL_VERBS_500 || [];
+  const data = window.PHRASAL_VERBS_1000 || window.PHRASAL_VERBS_500 || [];
   if (!data.length) return '<p style="color:var(--color-text-muted);">Loading phrasal verbs...</p>';
 
   // Group by particle
