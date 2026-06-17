@@ -1,11 +1,14 @@
 import 'dotenv/config';
 import express from 'express';
 import { fileURLToPath } from 'url';
-import { dirname, join, resolve } from 'path';
+import { dirname, join } from 'path';
 import { existsSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Root of the project (one level up from server/)
+const ROOT = join(__dirname, '..');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,15 +25,14 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // ── Static files ──
-// In production, serve from dist/ (built files)
-// In development, serve from project root
-const distPath = join(__dirname, 'dist');
-const rootPath = __dirname;
+const distPath = join(ROOT, 'dist');
 
 if (existsSync(distPath)) {
   app.use(express.static(distPath));
+} else {
+  // Fallback: serve from client/ in development
+  app.use(express.static(join(ROOT, 'client')));
 }
-app.use(express.static(rootPath));
 
 // ── Health check ──
 app.get('/api/health', (req, res) => {
@@ -83,14 +85,16 @@ app.post('/api/chat', async (req, res) => {
 
 // ── SPA fallback — serve index.html for unknown routes ──
 app.get('*', (req, res) => {
-  const indexPath = existsSync(distPath)
-    ? join(distPath, 'index.html')
-    : join(__dirname, 'index.html');
-  res.sendFile(indexPath);
+  const indexPath = join(distPath, 'index.html');
+  if (existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Not found');
+  }
 });
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`   Static files: ${existsSync(distPath) ? distPath : rootPath}`);
+  console.log(`   Static files: ${existsSync(distPath) ? distPath : '(not built yet)'}`);
   console.log(`   OpenAI API: ${process.env.OPENAI_API_KEY ? 'configured ✓' : 'NOT SET ✗'}`);
 });
