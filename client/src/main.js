@@ -647,7 +647,14 @@ async function init() {
           : null,
       };
       const fn = theoryRenderers[pageInfo.page] || theoryRenderers[pageInfo.clauseType ? "clauses" : ""];
-      if (fn) tv.innerHTML = fn();
+      if (fn) {
+        const result = fn();
+        if (result instanceof Promise) {
+          result.then(html => { if (html) tv.innerHTML = html; });
+        } else if (result) {
+          tv.innerHTML = result;
+        }
+      }
     }
 
     // Render dashboard if on dashboard page

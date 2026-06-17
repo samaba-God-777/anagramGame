@@ -1333,6 +1333,19 @@ function renderIdiomaticExpressionTheory() {
     </div>`;
 }
 
+// Reference table filter function
+window.filterRefTable = function(tableId) {
+  const input = document.getElementById(tableId.replace('Table', 'Search'));
+  const table = document.getElementById(tableId);
+  if (!input || !table) return;
+  const filter = input.value.toLowerCase();
+  const rows = table.querySelectorAll("tbody tr");
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(filter) ? "" : "none";
+  });
+};
+
 // Expose to window for main.js dynamic loading
 window.__renderConjunctionTheory = renderConjunctionTheory;
 window.__renderAdjectivePositionTheory = renderAdjectivePositionTheory;
