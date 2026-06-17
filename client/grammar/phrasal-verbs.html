@@ -51,6 +51,12 @@
   </div>
   <script>window.PAGE_TENSE = "Hub";</script>
   <script src="../data/pv500-data.js"></script>
-  <script type="module" src="/src/main.js"></script>
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    import '/src/grammarRenderers.js';
+    initTheme();
+    buildGlobalSidebar({}, false);
+  </script>
 </body>
 </html>
