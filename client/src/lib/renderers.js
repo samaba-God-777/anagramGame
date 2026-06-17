@@ -1333,4 +1333,9 @@ function renderIdiomaticExpressionTheory() {
     </div>`;
 }
 
+// Expose to window for main.js dynamic loading
+window.__renderConjunctionTheory = renderConjunctionTheory;
+window.__renderAdjectivePositionTheory = renderAdjectivePositionTheory;
+window.__renderAdverbPositionTheory = renderAdverbPositionTheory;
+
 export { renderTheoryHTML, renderClauseFullLesson, renderClauseTheory, renderAdjectivePositionTheory, renderAdverbPositionTheory, renderConjunctionTheory, renderPhrasalVerbTheory, renderIdiomaticExpressionTheory };
