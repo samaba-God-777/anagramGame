@@ -3188,3 +3188,574 @@ body::before {
   color: var(--color-text);
   margin: 0 0 8px;
 }
+
+/* ═══════════════════════════════════════════
+   PRINTABLE ACTIVITIES PAGE
+   ═══════════════════════════════════════════ */
+
+.activities-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 28px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-btn {
+  padding: 6px 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exercise-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 4px 12px;
+  background: var(--color-bg-secondary);
+  border-radius: 999px;
+}
+
+.toolbar-btn {
+  padding: 6px 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.toolbar-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.print-btn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.print-btn:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: #fff;
+}
+
+.activities-content {
+  padding: 28px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.loading-text {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  padding: 60px 0;
+}
+
+.tense-section {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.tense-section:last-of-type {
+  border-bottom: none;
+}
+
+.tense-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--color-primary-bg);
+}
+
+.tense-section-header .tense-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cefr-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+.structure-hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  background: var(--color-bg-secondary);
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.exercise-section {
+  margin-bottom: 24px;
+}
+
+.exercise-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 4px 0;
+}
+
+.exercise-instructions {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px 0;
+}
+
+.exercise-list {
+  list-style: decimal;
+  padding-left: 28px;
+}
+
+.exercise-list li {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.7;
+  page-break-inside: avoid;
+}
+
+.form-tag {
+  display: inline-block;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.exercise-blank {
+  display: inline-block;
+  min-width: 110px;
+  border-bottom: 2px solid var(--color-text);
+  margin: 0 3px;
+  height: 1.2em;
+}
+
+.correct-prompt {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.identify-prompt {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* Answer Key */
+.answer-key {
+  display: none;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 3px solid var(--color-primary);
+}
+
+.answer-key.visible {
+  display: block;
+}
+
+.answer-key-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.answer-key-note {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px 0;
+}
+
+.ak-tense {
+  margin-bottom: 20px;
+}
+
+.ak-tense-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 8px 0;
+}
+
+.ak-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ak-table th {
+  text-align: left;
+  padding: 6px 10px;
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.ak-table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.ak-num {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  width: 50px;
+}
+
+.ak-ex {
+  color: var(--color-text-muted);
+  width: 80px;
+}
+
+.ak-answer {
+  font-weight: 600;
+  color: var(--color-success-dark);
+}
+
+/* Print header/footer (hidden on screen) */
+.print-header, .print-footer {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════ */
+@media print {
+  @page {
+    margin: 0.6in 0.75in;
+    size: A4;
+  }
+
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    color: #000;
+    font-size: 11pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  a { color: #000; text-decoration: none; }
+
+  /* Hide interactive elements */
+  .sidebar, .sidebar-overlay, .game-header, .sidebar-toggle, .header-controls,
+  .activities-toolbar, .filter-tabs, .toolbar-actions, #toggleAnswersBtn, #printBtn,
+  .theme-toggle, .feedback-area, .stat-badge,
+  .print-header, .print-footer { display: none !important; }
+
+  /* Show answer key in print */
+  .answer-key { display: block !important; }
+
+  /* Remove surface/background */
+  .tense-section { border-bottom: 1px solid #ccc; margin-bottom: 24pt; padding-bottom: 16pt; }
+  .exercise-list li { border: 1px solid #ddd; background: #fff !important; }
+
+  .exercise-blank {
+    border-bottom: 1.5px solid #000;
+    min-width: 100px;
+  }
+
+  .cefr-badge { border: 1px solid #999 !important; }
+  .structure-hint { background: #f5f5f5 !important; border: 1px solid #eee; }
+
+  /* Page breaks */
+  .tense-section { page-break-before: always; }
+  .tense-section:first-of-type { page-break-before: avoid; }
+  .answer-key { page-break-before: always; }
+  .exercise-list li { page-break-inside: avoid; }
+  .ak-table tr { page-break-inside: avoid; }
+
+  .print-header {
+    display: block !important;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    padding: 8pt 0;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 18pt;
+  }
+
+  .print-footer {
+    display: block !important;
+    text-align: center;
+    font-size: 8pt;
+    color: #999;
+    padding: 6pt 0;
+    border-top: 1px solid #eee;
+    margin-top: 18pt;
+  }
+
+  .tense-section-header .tense-section-title { font-size: 16pt; }
+  .exercise-title { font-size: 12pt; }
+  .exercise-instructions { font-size: 10pt; }
+  .exercise-list li { font-size: 10pt; padding: 6pt 10pt; }
+}
+
+/* ═══════════════════════════════════════════
+   ACHIEVEMENTS
+   ═══════════════════════════════════════════ */
+
+/* Toast notification */
+.achievement-toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.achievement-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 0 0 1px rgba(79,70,229,0.15);
+  max-width: 380px;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.achievement-toast.show {
+  transform: translateX(0);
+}
+
+.achievement-toast-icon {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.achievement-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.achievement-toast-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-primary);
+  margin-bottom: 2px;
+}
+
+.achievement-toast-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.achievement-toast-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 1px;
+}
+
+.achievement-toast-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.achievement-toast-close:hover {
+  color: var(--color-text);
+}
+
+/* Dashboard achievements section */
+.dash-achievements {
+  margin-top: 12px;
+}
+
+.dash-achievements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-achievements-header h3 {
+  margin: 0;
+}
+
+.achievement-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.achievement-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 16px 10px;
+  border-radius: 12px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  position: relative;
+  transition: all .2s;
+  cursor: default;
+}
+
+.achievement-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.achievement-badge.unlocked {
+  border-color: rgba(79,70,229,0.25);
+  background: rgba(79,70,229,0.04);
+}
+
+.achievement-badge.locked {
+  opacity: 0.55;
+  filter: grayscale(0.6);
+}
+
+.achievement-badge.locked:hover {
+  opacity: 0.8;
+  filter: grayscale(0.3);
+}
+
+.achievement-badge-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.achievement-badge-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.achievement-badge-desc {
+  display: none;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.achievement-badge:hover .achievement-badge-desc {
+  display: block;
+}
+
+.achievement-badge.secret .achievement-badge-title::after {
+  content: ' 🔒';
+  font-size: 10px;
+}
+
+/* Unlocked indicator dot */
+.achievement-badge.unlocked .achievement-badge-icon {
+  position: relative;
+}
+
+.achievement-badge.unlocked .achievement-badge-icon::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 6px rgba(22,163,74,0.4);
+}
+
+@media (max-width: 640px) {
+  .achievement-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .achievement-badge {
+    padding: 12px 8px;
+  }
+  .achievement-toast {
+    max-width: calc(100vw - 32px);
+  }
+}

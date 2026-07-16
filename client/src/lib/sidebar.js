@@ -18,6 +18,7 @@ const SIDEBAR_STRUCTURE = [
   { type: "link", icon: "📖", label: "Dictionary", href: "/dictionary/index.html" },
   { type: "section", icon: "📚", label: "Grammar", children: [
     { type: "group", icon: "📖", label: "English Tenses", href: "/grammar/present-simple.html", isTense: true, forms: ["Affirmative","Negative","Questions"] },
+    { type: "link", icon: "📝", label: "Printable Activities", href: "/grammar/verb-tenses-activities.html" },
     { type: "group", icon: "🔗", label: "Clauses", href: "/grammar/clauses.html", children: [
       { label: "Noun Clauses", href: "/grammar/noun-clauses.html" },
       { label: "Adjective Clauses", href: "/grammar/adjective-clauses.html" },

@@ -3,11 +3,12 @@
    Hybrid: localStorage (fast) + Supabase (persistent)
    ═══════════════════════════════════════════ */
 
-import { 
+import {
   loadTenseProgress, saveTenseProgress,
   loadGameScores, saveGameScore as saveGameScoreToDb,
   syncFromSupabase, updateUserStreak
 } from './hybridStorage.js';
+import { check as checkAchievements } from '../features/achievements.js';
 
 const STORAGE_KEY = "anagramGame_progress";
 const GAME_STORAGE_KEY = "englishGames_progress";
@@ -73,6 +74,9 @@ function saveGameScore(game, score) {
     level: 'normal',
     completed: true
   });
+
+  // Check game-related achievements
+  checkAchievements({ type: 'game-score', game, score, allGames: Object.keys(gameState) });
 }
 
 // Initialize: sync from Supabase on first load

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-page="verb-tenses-activities">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Printable activity worksheets for all 12 English verb tenses. Practice fill-in-the-blank, error correction, and form identification exercises." />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Printable Activities — English Verb Tenses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Open sidebar" title="Menu">☰</button>
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">📝</span>
+          <div>
+            <h1 class="game-title">Printable Activities</h1>
+            <p class="game-subtitle">Practice worksheets for all 12 English verb tenses</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="verb-tenses.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;">⬅ Back</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <span class="icon-sun" aria-hidden="true">☀️</span>
+            <span class="icon-moon" aria-hidden="true">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Print info bar (hidden on screen, visible in print) -->
+      <div class="print-header">
+        <span>English Learning Hub — Verb Tense Activities</span>
+        <span class="print-date"></span>
+      </div>
+
+      <!-- Activities toolbar -->
+      <div class="activities-toolbar">
+        <div class="filter-tabs">
+          <button data-filter="all" class="filter-btn active">All Tenses</button>
+          <button data-filter="present" class="filter-btn">Present</button>
+          <button data-filter="past" class="filter-btn">Past</button>
+          <button data-filter="future" class="filter-btn">Future</button>
+        </div>
+        <div class="toolbar-actions">
+          <span id="totalExercises" class="exercise-count">Loading...</span>
+          <button id="toggleAnswersBtn" class="toolbar-btn">🔍 Show Answer Key</button>
+          <button id="printBtn" class="toolbar-btn print-btn">🖨 Print / PDF</button>
+        </div>
+      </div>
+
+      <!-- Activity content -->
+      <section id="activitiesContent" class="activities-content">
+        <p class="loading-text">Loading exercises...</p>
+      </section>
+
+      <!-- Print-only footer -->
+      <div class="print-footer">
+        <span>English Learning Hub — verb-tenses-activities</span>
+      </div>
+
+      <div class="feedback-area" style="border-top:1px solid var(--color-border);">
+        <div class="tip">
+          <span class="tip-icon" aria-hidden="true">💡</span>
+          <span>Use the <strong>Print / PDF</strong> button to save these worksheets. The answer key is automatically included when printing. You can filter by tense group using the tabs above.</span>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    import { renderActivitiesPage } from '/src/lib/activitiesRenderer.js';
+
+    initTheme();
+    buildGlobalSidebar({}, false);
+    renderActivitiesPage();
+  </script>
+</body>
+</html>

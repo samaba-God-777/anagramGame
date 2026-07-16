@@ -18,6 +18,7 @@ import { initOnboarding } from './ux/onboarding.js';
 import { $, shuffle, spawnConfetti, showFeedback } from './lib/utils.js';
 import { state, loadProgress, saveProgress, loadGameState } from './lib/storage.js';
 import { renderTheoryHTML, renderClauseFullLesson, renderClauseTheory } from './lib/renderers.js';
+import { check as checkAchievements, initAchievements } from './features/achievements.js';
 
 /* ── SENTENCE DATA ── */
 const SENTENCES = {
@@ -339,6 +340,7 @@ function checkAnswer() {
     } catch (e) { /* SR module not available */ }
   }
   saveProgress();
+  checkAchievements({ type: 'sentence-complete', state: { ...state }, tense: state.currentTense });
 }
 
 function resetGame() {
@@ -611,6 +613,7 @@ async function init() {
   initTheme();
   buildGlobalSidebar(state, isTensePage);
   initOnboarding();
+  initAchievements();
 
   const pageInfo = detectPage();
 

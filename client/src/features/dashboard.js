@@ -4,6 +4,7 @@
    ═══════════════════════════════════════════ */
 
 import { loadAllTenseProgress, loadGameScores, loadSpacedRepetition, loadBookmarks, getUserStats } from '../lib/hybridStorage.js';
+import { getAllAchievements, getStats as getAchievementStats } from './achievements.js';
 
 // ═══════════════════════════════════════════
 // CONSTANTS
@@ -256,6 +257,8 @@ function createRadarChart(tenseStats, gameStats, vocabStats) {
 export function renderDashboard(container) {
   const data = collectAllData();
   const { tenseStats, gameStats, vocabStats, bookmarks, cefrScore } = data;
+  const allAchievements = getAllAchievements();
+  const achStats = getAchievementStats();
 
   const html = `
     <div class="dashboard">
@@ -291,6 +294,23 @@ export function renderDashboard(container) {
         ${createStatCard(vocabStats.mastered, "Words Mastered", "var(--color-info)", "📚")}
         ${createStatCard(bookmarks.length, "Bookmarks", "var(--color-warning)", "⭐")}
         ${createStatCard(vocabStats.reviewDue, "Due for Review", "var(--color-error)", "🔄")}
+      </div>
+
+      <!-- Achievements -->
+      <div class="dash-card dash-achievements">
+        <div class="dash-achievements-header">
+          <h3 class="dash-card-title" style="margin:0;">🏆 Achievements</h3>
+          <span class="achievement-counter">${achStats.unlocked} / ${achStats.total} unlocked</span>
+        </div>
+        <div class="achievement-grid">
+          ${allAchievements.map(a => `
+            <div class="achievement-badge ${a.unlocked ? 'unlocked' : 'locked'}${a.secret && !a.unlocked ? ' secret' : ''}" title="${a.unlocked ? a.desc : '🔒 Keep learning to unlock this achievement'}">
+              <span class="achievement-badge-icon">${a.icon}</span>
+              <span class="achievement-badge-title">${a.title}</span>
+              <span class="achievement-badge-desc">${a.desc}</span>
+            </div>
+          `).join('')}
+        </div>
       </div>
 
       <!-- Skills Overview -->
