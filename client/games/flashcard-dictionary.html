@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-page="flashcard-dictionary">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Study vocabulary with flashcards and spaced repetition. English-Spanish dictionary, phrasal verbs, and idioms." />
+  <meta name="theme-color" content="#059669" />
+  <title>Flashcard Dictionary — English Learning Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <div class="app-layout">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Menu</h2>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="game-header">
+        <div class="header-left">
+          <span class="game-icon" aria-hidden="true">🃏</span>
+          <div>
+            <h1 class="game-title">Flashcard Dictionary</h1>
+            <p class="game-subtitle">Study vocabulary with spaced repetition</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <a href="../index.html" class="stat-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;">🏠 Home</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="flashcard-page">
+
+        <!-- Stats bar -->
+        <div class="flashcard-stats-bar" id="statsBar">
+          <span class="flashcard-stat">📊 Studied: <strong>0</strong></span>
+          <span class="flashcard-stat">✅ Correct: <strong>0%</strong></span>
+          <span class="flashcard-stat">⏰ Due: <strong>0</strong></span>
+          <span class="flashcard-stat">📚 Total: <strong>0</strong></span>
+        </div>
+
+        <!-- Deck selector tabs -->
+        <div class="flashcard-deck-tabs" id="deckTabs">
+          <button class="deck-tab" data-deck="all">📚 All Words</button>
+          <button class="deck-tab" data-deck="phrasal">💬 Phrasal Verbs</button>
+          <button class="deck-tab" data-deck="idioms">🎭 Idioms</button>
+          <button class="deck-tab" data-deck="due">⏰ Due for Review</button>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="flashcard-progress">
+          <div class="flashcard-progress-track">
+            <div class="flashcard-progress-bar" id="progressBar"></div>
+          </div>
+          <span class="flashcard-progress-text" id="progressText">Card 0 of 0</span>
+        </div>
+
+        <!-- Loader -->
+        <div class="flashcard-loader" id="flashcardLoader">
+          <div class="dict-spinner"></div>
+          <p>Loading vocabulary data...</p>
+        </div>
+
+        <!-- Error state -->
+        <div class="flashcard-empty" id="errorState" hidden>
+          <div class="flashcard-empty-icon">⚠️</div>
+          <h3>Failed to load</h3>
+          <p id="errorMsg">Could not load vocabulary data.</p>
+          <button class="flashcard-new-session" onclick="location.reload()">🔄 Retry</button>
+        </div>
+
+        <!-- Empty state -->
+        <div class="flashcard-empty" id="emptyState" hidden>
+          <div class="flashcard-empty-icon">📭</div>
+          <h3>No cards available</h3>
+          <p id="emptyMsg">Select a deck to start studying.</p>
+        </div>
+
+        <!-- Session complete -->
+        <div class="flashcard-empty" id="sessionComplete" hidden></div>
+
+        <!-- Flashcard -->
+        <div class="flashcard-card" id="flashcardContainer" hidden>
+          <div class="flashcard-inner" id="flashcardInner">
+            <div class="flashcard-front" id="cardFront">word</div>
+            <div class="flashcard-back" id="cardBack">translation</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flashcard-controls" id="flashcardControls" hidden>
+          <button class="flashcard-btn flashcard-btn-study" id="studyAgainBtn">📖 Study Again</button>
+          <button class="flashcard-btn flashcard-btn-know" id="knowItBtn">✅ Know It</button>
+        </div>
+
+        <!-- New session button -->
+        <div class="flashcard-new-session-wrap">
+          <button class="flashcard-new-session" id="newSessionBtn">🔄 New Session</button>
+        </div>
+
+      </div>
+
+      <div class="feedback-area">
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <span>Click the card to flip it. Rate how well you knew it — spaced repetition will schedule review cards for you.</span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>window.PAGE_TENSE = "Hub";</script>
+  <script src="../data/pv500-data.js"></script>
+  <script src="../data/idioms500-data.js"></script>
+  <script type="module">
+    import { initTheme } from '/src/lib/theme.js';
+    import { buildGlobalSidebar } from '/src/lib/sidebar.js';
+    import { initFlashcardDictionary } from '/src/features/flashcardDictionary.js';
+    initTheme();
+    buildGlobalSidebar({}, false);
+    initFlashcardDictionary();
+  </script>
+</body>
+</html>

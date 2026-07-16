@@ -33,6 +33,7 @@ const SIDEBAR_STRUCTURE = [
   ]},
   { type: "section", icon: "🎯", label: "My Progress", children: [
     { type: "link", icon: "📊", label: "Dashboard", href: "/games/dashboard.html" },
+    { type: "link", icon: "🃏", label: "Flashcard Dictionary", href: "/games/flashcard-dictionary.html" },
     { type: "stats" },
   ]},
   { type: "section", icon: "🎮", label: "Games", children: [

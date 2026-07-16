@@ -51,6 +51,7 @@ export default defineConfig({
         'verb-tenses': resolve(__dirname, 'grammar/verb-tenses.html'),
         'verb-tenses-activities': resolve(__dirname, 'grammar/verb-tenses-activities.html'),
         'dashboard': resolve(__dirname, 'games/dashboard.html'),
+        'flashcard-dictionary': resolve(__dirname, 'games/flashcard-dictionary.html'),
       },
     },
     cssCodeSplit: false,
