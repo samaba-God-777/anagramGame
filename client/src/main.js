@@ -19,6 +19,7 @@ import { $, shuffle, spawnConfetti, showFeedback } from './lib/utils.js';
 import { state, loadProgress, saveProgress, loadGameState } from './lib/storage.js';
 import { renderTheoryHTML, renderClauseFullLesson, renderClauseTheory } from './lib/renderers.js';
 import { check as checkAchievements, initAchievements } from './features/achievements.js';
+import { getSession, getUser, signIn, signUp, signOut, isAuthenticated, getDisplayName, getEmail, onAuthStateChange } from './lib/auth.js';
 
 /* ── SENTENCE DATA ── */
 const SENTENCES = {
@@ -608,12 +609,171 @@ function detectPage() {
   };
 }
 
+/* ── AUTH MODAL ── */
+function initAuthModal() {
+  const overlay = $('authModalOverlay');
+  const closeBtn = $('authModalClose');
+  const authBtn = $('authBtn');
+  const authBtnIcon = $('authBtnIcon');
+  const authBtnText = $('authBtnText');
+  const tabs = overlay?.querySelectorAll('.auth-tab');
+  const loginForm = $('loginForm');
+  const signupForm = $('signupForm');
+  const userPanel = $('userPanel');
+  const loginError = $('loginError');
+  const signupError = $('signupError');
+  const loginSubmit = $('loginSubmit');
+  const signupSubmit = $('signupSubmit');
+  const logoutBtn = $('logoutBtn');
+
+  if (!overlay) return;
+
+  function openModal() {
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+    updateModalView();
+  }
+
+  function closeModal() {
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+    if (loginError) loginError.hidden = true;
+    if (signupError) signupError.hidden = true;
+  }
+
+  function updateModalView() {
+    const loggedIn = isAuthenticated();
+    const showLogin = !loggedIn;
+
+    tabs?.forEach(t => t.closest('.auth-tabs').style.display = showLogin ? '' : 'none');
+    if (loginForm) loginForm.hidden = loggedIn;
+    if (signupForm) signupForm.hidden = true;
+    if (userPanel) userPanel.hidden = !loggedIn;
+
+    if (loggedIn) {
+      const name = getDisplayName();
+      const email = getEmail();
+      const avatarEl = $('userAvatar');
+      const nameEl = $('userName');
+      const emailEl = $('userEmail');
+      if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
+      if (nameEl) nameEl.textContent = name;
+      if (emailEl) emailEl.textContent = email;
+    }
+
+    // Update header button
+    if (authBtn) {
+      authBtn.classList.toggle('logged-in', loggedIn);
+    }
+    if (authBtnIcon) authBtnIcon.textContent = loggedIn ? '👤' : '👤';
+    if (authBtnText) authBtnText.textContent = loggedIn ? getDisplayName() : 'Login';
+  }
+
+  // Tab switching
+  tabs?.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const isLogin = tab.dataset.tab === 'login';
+      if (loginForm) loginForm.hidden = !isLogin;
+      if (signupForm) signupForm.hidden = isLogin;
+      if (loginError) loginError.hidden = true;
+      if (signupError) signupError.hidden = true;
+    });
+  });
+
+  // Login form
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('loginEmail')?.value?.trim();
+    const password = $('loginPassword')?.value;
+    if (!email || !password) return;
+
+    loginSubmit.disabled = true;
+    loginSubmit.querySelector('.auth-submit-text').hidden = true;
+    loginSubmit.querySelector('.auth-submit-spinner').hidden = false;
+    if (loginError) loginError.hidden = true;
+
+    const { data, error } = await signIn(email, password);
+
+    loginSubmit.disabled = false;
+    loginSubmit.querySelector('.auth-submit-text').hidden = false;
+    loginSubmit.querySelector('.auth-submit-spinner').hidden = true;
+
+    if (error) {
+      if (loginError) { loginError.textContent = error; loginError.hidden = false; }
+    } else {
+      closeModal();
+      updateModalView();
+      showFeedback('Logged in successfully!', 'success');
+    }
+  });
+
+  // Signup form
+  signupForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('signupEmail')?.value?.trim();
+    const password = $('signupPassword')?.value;
+    const confirm = $('signupPasswordConfirm')?.value;
+    if (!email || !password) return;
+
+    if (password !== confirm) {
+      if (signupError) { signupError.textContent = 'Passwords do not match'; signupError.hidden = false; }
+      return;
+    }
+
+    signupSubmit.disabled = true;
+    signupSubmit.querySelector('.auth-submit-text').hidden = true;
+    signupSubmit.querySelector('.auth-submit-spinner').hidden = false;
+    if (signupError) signupError.hidden = true;
+
+    const { data, error } = await signUp(email, password);
+
+    signupSubmit.disabled = false;
+    signupSubmit.querySelector('.auth-submit-text').hidden = false;
+    signupSubmit.querySelector('.auth-submit-spinner').hidden = true;
+
+    if (error) {
+      if (signupError) { signupError.textContent = error; signupError.hidden = false; }
+    } else {
+      closeModal();
+      updateModalView();
+      showFeedback('Account created! Check your email to confirm.', 'success');
+    }
+  });
+
+  // Logout
+  logoutBtn?.addEventListener('click', async () => {
+    await signOut();
+    closeModal();
+    updateModalView();
+    showFeedback('Signed out', 'info');
+  });
+
+  // Open/close
+  authBtn?.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.hidden) closeModal();
+  });
+
+  // Listen for auth changes
+  onAuthStateChange(() => updateModalView());
+
+  // Initial state
+  updateModalView();
+}
+
 /* ── INIT ── */
 async function init() {
   initTheme();
   buildGlobalSidebar(state, isTensePage);
   initOnboarding();
   initAchievements();
+  initAuthModal();
 
   const pageInfo = detectPage();
 

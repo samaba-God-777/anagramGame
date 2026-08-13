@@ -24,14 +24,34 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 
 // ═══════════════════════════════════════════════════════════════
+// AUTH STATE CACHE (for synchronous access)
+// ═══════════════════════════════════════════════════════════════
+let _authUserId = null;
+
+// Listen to auth state changes to keep _authUserId in sync
+supabase.auth.onAuthStateChange((event, session) => {
+  _authUserId = session?.user?.id || null;
+});
+
+// Initialize from existing session
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user?.id) _authUserId = session.user.id;
+})();
+
+// ═══════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Get or create anonymous user ID
+ * Get user ID - authenticated user or anonymous fallback
  * @returns {string} User ID
  */
 export function getUserId() {
+  // Use authenticated user ID if available
+  if (_authUserId) return _authUserId;
+
+  // Fallback to anonymous ID
   let userId = localStorage.getItem('englishHub_userId');
   if (!userId) {
     userId = 'user_' + Math.random().toString(36).substring(2, 15);

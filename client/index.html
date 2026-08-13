@@ -90,6 +90,10 @@
             <span class="icon-sun" aria-hidden="true">☀️</span>
             <span class="icon-moon" aria-hidden="true">🌙</span>
           </button>
+          <button class="auth-btn" id="authBtn" aria-label="Login or Sign up">
+            <span class="auth-btn-icon" id="authBtnIcon">👤</span>
+            <span class="auth-btn-text" id="authBtnText">Login</span>
+          </button>
         </div>
       </header>
 
@@ -223,6 +227,68 @@
       </div>
     </main>
   </div>
+  <!-- Auth Modal -->
+  <div class="auth-modal-overlay" id="authModalOverlay" hidden>
+    <div class="auth-modal">
+      <button class="auth-modal-close" id="authModalClose" aria-label="Close">&times;</button>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Login</button>
+        <button class="auth-tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="loginForm">
+        <h3 class="auth-form-title">Welcome back</h3>
+        <p class="auth-form-subtitle">Sign in to sync your progress across devices</p>
+        <div class="auth-field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <div class="auth-error" id="loginError" hidden></div>
+        <button type="submit" class="auth-submit-btn" id="loginSubmit">
+          <span class="auth-submit-text">Login</span>
+          <span class="auth-submit-spinner" hidden></span>
+        </button>
+      </form>
+
+      <!-- Signup Form -->
+      <form class="auth-form" id="signupForm" hidden>
+        <h3 class="auth-form-title">Create account</h3>
+        <p class="auth-form-subtitle">Save your progress to the cloud</p>
+        <div class="auth-field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="auth-field">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="auth-field">
+          <label for="signupPasswordConfirm">Confirm Password</label>
+          <input type="password" id="signupPasswordConfirm" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+        </div>
+        <div class="auth-error" id="signupError" hidden></div>
+        <button type="submit" class="auth-submit-btn" id="signupSubmit">
+          <span class="auth-submit-text">Sign Up</span>
+          <span class="auth-submit-spinner" hidden></span>
+        </button>
+      </form>
+
+      <!-- User Panel (when logged in) -->
+      <div class="auth-user-panel" id="userPanel" hidden>
+        <div class="auth-user-avatar" id="userAvatar">👤</div>
+        <h3 class="auth-user-name" id="userName">User</h3>
+        <p class="auth-user-email" id="userEmail">user@email.com</p>
+        <button class="auth-logout-btn" id="logoutBtn">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
   <script>window.PAGE_TENSE = "Hub";</script>
   <script type="module" src="/src/main.js"></script>
 </body>
