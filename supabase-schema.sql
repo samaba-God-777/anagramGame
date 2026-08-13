@@ -175,3 +175,44 @@ CREATE POLICY "Allow all" ON conversations FOR ALL USING (true);
 CREATE POLICY "Allow all" ON user_streaks FOR ALL USING (true);
 CREATE POLICY "Allow all" ON achievements FOR ALL USING (true);
 CREATE POLICY "Allow all" ON daily_challenges FOR ALL USING (true);
+
+-- ═══════════════════════════════════════════════════════════════
+-- 11. TEACHER GROUPS TABLE
+-- Teachers create groups, students join with code
+-- ═══════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS teacher_groups (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  teacher_id TEXT NOT NULL,
+  group_name TEXT NOT NULL,
+  group_code TEXT NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ═══════════════════════════════════════════════════════════════
+-- 12. GROUP MEMBERS TABLE
+-- Students join groups via code
+-- ═══════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS group_members (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  group_id UUID NOT NULL REFERENCES teacher_groups(id) ON DELETE CASCADE,
+  student_id TEXT NOT NULL,
+  student_name TEXT,
+  joined_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(group_id, student_id)
+);
+
+-- INDEXES for new tables
+CREATE INDEX IF NOT EXISTS idx_groups_teacher ON teacher_groups(teacher_id);
+CREATE INDEX IF NOT EXISTS idx_groups_code ON teacher_groups(group_code);
+CREATE INDEX IF NOT EXISTS idx_members_group ON group_members(group_id);
+CREATE INDEX IF NOT EXISTS idx_members_student ON group_members(student_id);
+
+-- ROW LEVEL SECURITY
+ALTER TABLE teacher_groups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE group_members ENABLE ROW LEVEL SECURITY;
+
+-- POLICIES
+CREATE POLICY "Allow all" ON teacher_groups FOR ALL USING (true);
+CREATE POLICY "Allow all" ON group_members FOR ALL USING (true);

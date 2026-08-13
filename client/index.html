@@ -240,7 +240,7 @@
       <!-- Login Form -->
       <form class="auth-form" id="loginForm">
         <h3 class="auth-form-title">Welcome back</h3>
-        <p class="auth-form-subtitle">Sign in to sync your progress across devices</p>
+        <p class="auth-form-subtitle">Sign in to continue your learning streak</p>
         <div class="auth-field">
           <label for="loginEmail">Email</label>
           <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email" />
@@ -251,7 +251,7 @@
         </div>
         <div class="auth-error" id="loginError" hidden></div>
         <button type="submit" class="auth-submit-btn" id="loginSubmit">
-          <span class="auth-submit-text">Login</span>
+          <span class="auth-submit-text">Sign in</span>
           <span class="auth-submit-spinner" hidden></span>
         </button>
       </form>
@@ -259,22 +259,53 @@
       <!-- Signup Form -->
       <form class="auth-form" id="signupForm" hidden>
         <h3 class="auth-form-title">Create account</h3>
-        <p class="auth-form-subtitle">Save your progress to the cloud</p>
+        <p class="auth-form-subtitle">Join EnglishAI Pro as a Teacher or Student</p>
+
+        <div class="auth-field">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" placeholder="Your name" required />
+        </div>
+
         <div class="auth-field">
           <label for="signupEmail">Email</label>
           <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
         </div>
+
         <div class="auth-field">
           <label for="signupPassword">Password</label>
           <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password" />
         </div>
+
         <div class="auth-field">
           <label for="signupPasswordConfirm">Confirm Password</label>
           <input type="password" id="signupPasswordConfirm" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
         </div>
+
+        <div class="auth-field">
+          <label>I am a...</label>
+          <div class="auth-role-selector">
+            <button type="button" class="auth-role-btn active" data-role="student" id="roleStudent">
+              <span class="auth-role-icon">🎓</span>
+              <span class="auth-role-label">Student</span>
+              <span class="auth-role-desc">Join a class and learn</span>
+            </button>
+            <button type="button" class="auth-role-btn" data-role="teacher" id="roleTeacher">
+              <span class="auth-role-icon">👨‍🏫</span>
+              <span class="auth-role-label">Teacher</span>
+              <span class="auth-role-desc">Create classes & track progress</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Student: join group code -->
+        <div class="auth-field auth-group-code-field" id="groupCodeField" hidden>
+          <label for="signupGroupCode">Group Code (optional)</label>
+          <input type="text" id="signupGroupCode" placeholder="Enter your teacher's group code" maxlength="8" />
+        </div>
+
         <div class="auth-error" id="signupError" hidden></div>
         <button type="submit" class="auth-submit-btn" id="signupSubmit">
-          <span class="auth-submit-text">Sign Up</span>
+          <span class="auth-submit-text">Create Account</span>
           <span class="auth-submit-spinner" hidden></span>
         </button>
       </form>
@@ -284,7 +315,63 @@
         <div class="auth-user-avatar" id="userAvatar">👤</div>
         <h3 class="auth-user-name" id="userName">User</h3>
         <p class="auth-user-email" id="userEmail">user@email.com</p>
+        <span class="auth-role-badge" id="userRoleBadge">Student</span>
+
+        <!-- Teacher Panel -->
+        <div class="auth-teacher-panel" id="teacherPanel" hidden>
+          <div class="auth-group-section">
+            <h4>Your Groups</h4>
+            <div id="teacherGroupsList"></div>
+            <button class="auth-create-group-btn" id="createGroupBtn">+ Create New Group</button>
+          </div>
+        </div>
+
+        <!-- Student Panel -->
+        <div class="auth-student-panel" id="studentPanel" hidden>
+          <div class="auth-group-section">
+            <h4>My Class</h4>
+            <div id="studentGroupInfo"></div>
+            <button class="auth-join-group-btn" id="joinGroupBtn">Join a Group</button>
+          </div>
+        </div>
+
         <button class="auth-logout-btn" id="logoutBtn">Sign Out</button>
+      </div>
+
+      <!-- Create Group Modal (inline) -->
+      <div class="auth-create-group-form" id="createGroupForm" hidden>
+        <h4>Create a New Group</h4>
+        <div class="auth-field">
+          <label for="newGroupName">Group Name</label>
+          <input type="text" id="newGroupName" placeholder="e.g. English 101 - Morning" required />
+        </div>
+        <div class="auth-field">
+          <label for="newGroupDesc">Description (optional)</label>
+          <input type="text" id="newGroupDesc" placeholder="e.g. Intermediate level, Mon/Wed" />
+        </div>
+        <div class="auth-group-actions">
+          <button class="auth-submit-btn" id="submitGroupBtn" style="flex:1">
+            <span class="auth-submit-text">Create</span>
+            <span class="auth-submit-spinner" hidden></span>
+          </button>
+          <button type="button" class="auth-cancel-btn" id="cancelGroupBtn">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Join Group Modal (inline) -->
+      <div class="auth-join-group-form" id="joinGroupForm" hidden>
+        <h4>Join a Group</h4>
+        <div class="auth-field">
+          <label for="joinGroupCode">Enter Group Code</label>
+          <input type="text" id="joinGroupCode" placeholder="e.g. ABC123" maxlength="8" required style="text-transform:uppercase;font-size:20px;letter-spacing:4px;text-align:center;" />
+        </div>
+        <div class="auth-group-actions">
+          <button class="auth-submit-btn" id="submitJoinBtn" style="flex:1">
+            <span class="auth-submit-text">Join</span>
+            <span class="auth-submit-spinner" hidden></span>
+          </button>
+          <button type="button" class="auth-cancel-btn" id="cancelJoinBtn">Cancel</button>
+        </div>
       </div>
     </div>
   </div>

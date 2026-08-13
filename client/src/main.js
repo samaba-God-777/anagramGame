@@ -19,7 +19,7 @@ import { $, shuffle, spawnConfetti, showFeedback } from './lib/utils.js';
 import { state, loadProgress, saveProgress, loadGameState } from './lib/storage.js';
 import { renderTheoryHTML, renderClauseFullLesson, renderClauseTheory } from './lib/renderers.js';
 import { check as checkAchievements, initAchievements } from './features/achievements.js';
-import { getSession, getUser, signIn, signUp, signOut, isAuthenticated, getDisplayName, getEmail, onAuthStateChange } from './lib/auth.js';
+import { getSession, getUser, signIn, signUp, signOut, isAuthenticated, getDisplayName, getEmail, getRole, isTeacher, onAuthStateChange } from './lib/auth.js';
 
 /* ── SENTENCE DATA ── */
 const SENTENCES = {
@@ -626,7 +626,33 @@ function initAuthModal() {
   const signupSubmit = $('signupSubmit');
   const logoutBtn = $('logoutBtn');
 
+  // Role selector
+  const roleStudentBtn = $('roleStudent');
+  const roleTeacherBtn = $('roleTeacher');
+  const groupCodeField = $('groupCodeField');
+  let selectedRole = 'student';
+
+  // Teacher panel
+  const teacherPanel = $('teacherPanel');
+  const teacherGroupsList = $('teacherGroupsList');
+  const createGroupBtn = $('createGroupBtn');
+  const createGroupForm = $('createGroupForm');
+  const submitGroupBtn = $('submitGroupBtn');
+  const cancelGroupBtn = $('cancelGroupBtn');
+
+  // Student panel
+  const studentPanel = $('studentPanel');
+  const studentGroupInfo = $('studentGroupInfo');
+  const joinGroupBtn = $('joinGroupBtn');
+  const joinGroupForm = $('joinGroupForm');
+  const submitJoinBtn = $('submitJoinBtn');
+  const cancelJoinBtn = $('cancelJoinBtn');
+
   if (!overlay) return;
+
+  // Supabase import (dynamic to avoid circular deps)
+  let supabaseClient = null;
+  import('./lib/supabase.js').then(m => { supabaseClient = m.supabase; });
 
   function openModal() {
     overlay.hidden = false;
@@ -639,6 +665,8 @@ function initAuthModal() {
     document.body.style.overflow = '';
     if (loginError) loginError.hidden = true;
     if (signupError) signupError.hidden = true;
+    if (createGroupForm) createGroupForm.hidden = true;
+    if (joinGroupForm) joinGroupForm.hidden = true;
   }
 
   function updateModalView() {
@@ -653,23 +681,51 @@ function initAuthModal() {
     if (loggedIn) {
       const name = getDisplayName();
       const email = getEmail();
+      const role = getRole();
       const avatarEl = $('userAvatar');
       const nameEl = $('userName');
       const emailEl = $('userEmail');
+      const roleBadge = $('userRoleBadge');
       if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
       if (nameEl) nameEl.textContent = name;
       if (emailEl) emailEl.textContent = email;
+      if (roleBadge) {
+        roleBadge.textContent = role === 'teacher' ? '👨‍🏫 Teacher' : '🎓 Student';
+        roleBadge.className = 'auth-role-badge ' + role;
+      }
+      if (teacherPanel) teacherPanel.hidden = role !== 'teacher';
+      if (studentPanel) studentPanel.hidden = role !== 'student';
+
+      if (role === 'teacher') loadTeacherGroups();
+      else loadStudentGroup();
     }
 
-    // Update header button
-    if (authBtn) {
-      authBtn.classList.toggle('logged-in', loggedIn);
-    }
+    if (authBtn) authBtn.classList.toggle('logged-in', loggedIn);
     if (authBtnIcon) authBtnIcon.textContent = loggedIn ? '👤' : '👤';
     if (authBtnText) authBtnText.textContent = loggedIn ? getDisplayName() : 'Login';
   }
 
-  // Tab switching
+  // ── Role selector ──
+  roleStudentBtn?.addEventListener('click', () => {
+    selectedRole = 'student';
+    roleStudentBtn.classList.add('active');
+    roleTeacherBtn?.classList.remove('active');
+    if (groupCodeField) {
+      groupCodeField.classList.add('visible');
+      groupCodeField.hidden = false;
+    }
+  });
+  roleTeacherBtn?.addEventListener('click', () => {
+    selectedRole = 'teacher';
+    roleTeacherBtn.classList.add('active');
+    roleStudentBtn?.classList.remove('active');
+    if (groupCodeField) {
+      groupCodeField.classList.remove('visible');
+      setTimeout(() => { groupCodeField.hidden = true; }, 300);
+    }
+  });
+
+  // ── Tab switching ──
   tabs?.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
@@ -679,10 +735,12 @@ function initAuthModal() {
       if (signupForm) signupForm.hidden = isLogin;
       if (loginError) loginError.hidden = true;
       if (signupError) signupError.hidden = true;
+      if (createGroupForm) createGroupForm.hidden = true;
+      if (joinGroupForm) joinGroupForm.hidden = true;
     });
   });
 
-  // Login form
+  // ── Login form ──
   loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = $('loginEmail')?.value?.trim();
@@ -703,19 +761,20 @@ function initAuthModal() {
     if (error) {
       if (loginError) { loginError.textContent = error; loginError.hidden = false; }
     } else {
-      closeModal();
       updateModalView();
       showFeedback('Logged in successfully!', 'success');
     }
   });
 
-  // Signup form
+  // ── Signup form ──
   signupForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const name = $('signupName')?.value?.trim();
     const email = $('signupEmail')?.value?.trim();
     const password = $('signupPassword')?.value;
     const confirm = $('signupPasswordConfirm')?.value;
-    if (!email || !password) return;
+    const groupCode = $('signupGroupCode')?.value?.trim().toUpperCase();
+    if (!email || !password || !name) return;
 
     if (password !== confirm) {
       if (signupError) { signupError.textContent = 'Passwords do not match'; signupError.hidden = false; }
@@ -727,7 +786,7 @@ function initAuthModal() {
     signupSubmit.querySelector('.auth-submit-spinner').hidden = false;
     if (signupError) signupError.hidden = true;
 
-    const { data, error } = await signUp(email, password);
+    const { data, error } = await signUp(email, password, selectedRole, name);
 
     signupSubmit.disabled = false;
     signupSubmit.querySelector('.auth-submit-text').hidden = false;
@@ -736,13 +795,18 @@ function initAuthModal() {
     if (error) {
       if (signupError) { signupError.textContent = error; signupError.hidden = false; }
     } else {
-      closeModal();
+      // If student and has group code, join the group
+      if (selectedRole === 'student' && groupCode && supabaseClient && data?.user) {
+        await joinGroupByCode(groupCode, data.user.id, name);
+      }
       updateModalView();
-      showFeedback('Account created! Check your email to confirm.', 'success');
+      showFeedback(selectedRole === 'teacher'
+        ? 'Teacher account created! Create your first group.'
+        : 'Account created! You can now start learning.', 'success');
     }
   });
 
-  // Logout
+  // ── Logout ──
   logoutBtn?.addEventListener('click', async () => {
     await signOut();
     closeModal();
@@ -750,7 +814,176 @@ function initAuthModal() {
     showFeedback('Signed out', 'info');
   });
 
-  // Open/close
+  // ═══════════════════════════════════════════
+  // TEACHER: Create & manage groups
+  // ═══════════════════════════════════════════
+  async function loadTeacherGroups() {
+    if (!supabaseClient) return;
+    const user = await getUser();
+    if (!user) return;
+    const { data } = await supabaseClient.from('teacher_groups')
+      .select('*')
+      .eq('teacher_id', user.id)
+      .order('created_at', { ascending: false });
+    if (!teacherGroupsList) return;
+    if (!data || data.length === 0) {
+      teacherGroupsList.innerHTML = '<div class="auth-no-group">No groups yet. Create one to get started!</div>';
+      return;
+    }
+    // Get member counts
+    let html = '';
+    for (const g of data) {
+      const { count } = await supabaseClient.from('group_members')
+        .select('*', { count: 'exact', head: true })
+        .eq('group_id', g.id);
+      html += `
+        <div class="auth-group-card">
+          <div class="auth-group-card-name">${escapeHtml(g.group_name)}</div>
+          <div class="auth-group-card-code">${g.group_code}</div>
+          <div class="auth-group-card-members">${count || 0} student${(count || 0) !== 1 ? 's' : ''} enrolled</div>
+          <button class="auth-group-card-copy" onclick="navigator.clipboard.writeText('${g.group_code}');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Code',1500)">Copy Code</button>
+        </div>`;
+    }
+    teacherGroupsList.innerHTML = html;
+  }
+
+  createGroupBtn?.addEventListener('click', () => {
+    if (createGroupForm) createGroupForm.hidden = false;
+    if (joinGroupForm) joinGroupForm.hidden = true;
+  });
+
+  cancelGroupBtn?.addEventListener('click', () => {
+    if (createGroupForm) createGroupForm.hidden = true;
+  });
+
+  submitGroupBtn?.addEventListener('click', async () => {
+    const name = $('newGroupName')?.value?.trim();
+    const desc = $('newGroupDesc')?.value?.trim();
+    if (!name || !supabaseClient) return;
+
+    const user = await getUser();
+    if (!user) return;
+
+    submitGroupBtn.disabled = true;
+    submitGroupBtn.querySelector('.auth-submit-text').hidden = true;
+    submitGroupBtn.querySelector('.auth-submit-spinner').hidden = false;
+
+    // Generate unique 6-char code
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    const { error } = await supabaseClient.from('teacher_groups').insert({
+      teacher_id: user.id,
+      group_name: name,
+      group_code: code,
+      description: desc || null
+    });
+
+    submitGroupBtn.disabled = false;
+    submitGroupBtn.querySelector('.auth-submit-text').hidden = false;
+    submitGroupBtn.querySelector('.auth-submit-spinner').hidden = true;
+
+    if (!error) {
+      if (createGroupForm) createGroupForm.hidden = true;
+      $('newGroupName').value = '';
+      $('newGroupDesc').value = '';
+      loadTeacherGroups();
+      showFeedback(`Group "${name}" created! Code: ${code}`, 'success');
+    }
+  });
+
+  // ═══════════════════════════════════════════
+  // STUDENT: Join group
+  // ═══════════════════════════════════════════
+  async function loadStudentGroup() {
+    if (!supabaseClient) return;
+    const user = await getUser();
+    if (!user) return;
+    const { data } = await supabaseClient.from('group_members')
+      .select('*, teacher_groups(group_name, group_code)')
+      .eq('student_id', user.id);
+    if (!studentGroupInfo) return;
+    if (!data || data.length === 0) {
+      studentGroupInfo.innerHTML = '<div class="auth-no-group">Not enrolled in any group yet.</div>';
+      return;
+    }
+    let html = '';
+    for (const m of data) {
+      const group = m.teacher_groups;
+      if (group) {
+        html += `
+          <div class="auth-group-card">
+            <div class="auth-group-card-name">${escapeHtml(group.group_name)}</div>
+            <div class="auth-group-card-code" style="font-size:14px;color:var(--color-text-secondary)">Code: ${group.group_code}</div>
+          </div>`;
+      }
+    }
+    studentGroupInfo.innerHTML = html;
+  }
+
+  joinGroupBtn?.addEventListener('click', () => {
+    if (joinGroupForm) joinGroupForm.hidden = false;
+    if (createGroupForm) createGroupForm.hidden = true;
+  });
+
+  cancelJoinBtn?.addEventListener('click', () => {
+    if (joinGroupForm) joinGroupForm.hidden = true;
+  });
+
+  submitJoinBtn?.addEventListener('click', async () => {
+    const code = $('joinGroupCode')?.value?.trim().toUpperCase();
+    if (!code || !supabaseClient) return;
+
+    const user = await getUser();
+    if (!user) return;
+
+    submitJoinBtn.disabled = true;
+    submitJoinBtn.querySelector('.auth-submit-text').hidden = true;
+    submitJoinBtn.querySelector('.auth-submit-spinner').hidden = false;
+
+    const result = await joinGroupByCode(code, user.id, getDisplayName());
+
+    submitJoinBtn.disabled = false;
+    submitJoinBtn.querySelector('.auth-submit-text').hidden = false;
+    submitJoinBtn.querySelector('.auth-submit-spinner').hidden = true;
+
+    if (result) {
+      if (joinGroupForm) joinGroupForm.hidden = true;
+      $('joinGroupCode').value = '';
+      loadStudentGroup();
+    }
+  });
+
+  async function joinGroupByCode(code, userId, name) {
+    if (!supabaseClient) return false;
+    const { data: group, error: findErr } = await supabaseClient.from('teacher_groups')
+      .select('id, group_name')
+      .eq('group_code', code)
+      .single();
+
+    if (findErr || !group) {
+      showFeedback('Invalid group code. Check with your teacher.', 'error');
+      return false;
+    }
+
+    const { error } = await supabaseClient.from('group_members').insert({
+      group_id: group.id,
+      student_id: userId,
+      student_name: name
+    });
+
+    if (error && error.code === '23505') {
+      showFeedback('You are already in this group!', 'info');
+      return false;
+    }
+
+    if (!error) {
+      showFeedback(`Joined "${group.group_name}"!`, 'success');
+      return true;
+    }
+    return false;
+  }
+
+  // ── Open/close ──
   authBtn?.addEventListener('click', openModal);
   closeBtn?.addEventListener('click', closeModal);
   overlay.addEventListener('click', (e) => {

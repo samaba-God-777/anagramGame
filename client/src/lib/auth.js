@@ -35,14 +35,19 @@ export async function getUser() {
  * Sign up with email and password
  * @param {string} email
  * @param {string} password
+ * @param {string} role - 'teacher' or 'student'
+ * @param {string} displayName
  * @returns {Promise<{data: object|null, error: string|null}>}
  */
-export async function signUp(email, password) {
+export async function signUp(email, password, role = 'student', displayName = '') {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { display_name: email.split('@')[0] }
+      data: {
+        display_name: displayName || email.split('@')[0],
+        role: role
+      }
     }
   });
 
@@ -124,6 +129,22 @@ export function getDisplayName() {
  */
 export function getEmail() {
   return currentSession?.user?.email || '';
+}
+
+/**
+ * Get user role (teacher or student)
+ * @returns {string}
+ */
+export function getRole() {
+  return currentSession?.user?.user_metadata?.role || 'student';
+}
+
+/**
+ * Check if user is a teacher
+ * @returns {boolean}
+ */
+export function isTeacher() {
+  return getRole() === 'teacher';
 }
 
 // ═══════════════════════════════════════════════════════════════
