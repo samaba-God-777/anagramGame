@@ -1,0 +1,17 @@
+{
+  "services": {
+    "english-learning-hub": {
+      "root": ".",
+      "framework": "vite"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "english-learning-hub"
+      }
+    }
+  ]
+}
